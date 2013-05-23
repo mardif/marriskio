@@ -1,0 +1,30 @@
+{% extends 'template.html' %}
+{% block content%}
+        <div>
+            {% if error.length > 0 %}
+                <div class="alert alert-error">
+                  <strong>{{error}}</strong>
+                </div>
+            {% endif %}
+            <form action="/loginAuth" method="POST" class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label" for="email">Email:</label>
+                    <div class="controls">
+                        <input type="text" name="email" placeholder="email@email.com">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="pass">Password:</label>
+                    <div class="controls">
+                        <input type="password" name="pass" placeholder="password">
+                    </div>
+                </div>
+                <div>
+                    <input type='hidden' name='_csrf' value="{{token}}">
+                    <div class="controls">
+                        <input type="submit" value="Log Me In! NOW!" class="btn">
+                    </div>
+                </div>
+            </form>
+        </div>
+{% endblock %}

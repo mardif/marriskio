@@ -1,0 +1,582 @@
+[32minfo[39m:    Welcome to [90mNodejitsu[39m [35mmardif[39m
+[32minfo[39m:    jitsu v0.11.6, node v0.8.15
+[32minfo[39m:    It worked if it ends with [90mNodejitsu[39m[1m[32m ok[39m[22m
+[32minfo[39m:    Executing command [35mlogs app[39m
+[32minfo[39m:    Attempting to load logs for [90mC:\eclipse\ws\risiko/package.json[39m
+[32minfo[39m:    Listing logs for [35mrisiko[39m
+[[33m02/09 21:29:25 GMT+0100[39m] 9 Feb 20:29:25 - getActualWorld: { nextStep: true,
+[[33m02/09 21:29:25 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:29:25 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:30:23 GMT+0100[39m] 9 Feb 20:30:23 - utente maura disconnesso!
+[[33m02/09 21:30:23 GMT+0100[39m] 9 Feb 20:30:23 - sessioni totali attive: 2
+[[33m02/09 21:30:23 GMT+0100[39m] 9 Feb 20:30:23 - disconnect
+[[33m02/09 21:30:24 GMT+0100[39m] 9 Feb 20:30:24 - sessioni totali attive: 2
+[[33m02/09 21:30:29 GMT+0100[39m] 9 Feb 20:30:29 - disconnect
+[[33m02/09 21:30:29 GMT+0100[39m] 9 Feb 20:30:29 - utente maura disconnesso!
+[[33m02/09 21:30:29 GMT+0100[39m] 9 Feb 20:30:29 - sessioni totali attive: 2
+[[33m02/09 21:30:30 GMT+0100[39m] 9 Feb 20:30:30 - sessioni totali attive: 2
+[[33m02/09 21:31:02 GMT+0100[39m] 9 Feb 20:31:02 - getConfini: { stato: '29',
+[[33m02/09 21:31:02 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:31:02 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:31:02 GMT+0100[39m]    [ '25',
+[[33m02/09 21:31:02 GMT+0100[39m]      '34',
+[[33m02/09 21:31:02 GMT+0100[39m]      '35',
+[[33m02/09 21:31:02 GMT+0100[39m]      '26',
+[[33m02/09 21:31:02 GMT+0100[39m]      '29',
+[[33m02/09 21:31:02 GMT+0100[39m]      '35',
+[[33m02/09 21:31:02 GMT+0100[39m]      '41',
+[[33m02/09 21:31:02 GMT+0100[39m]      '38',
+[[33m02/09 21:31:02 GMT+0100[39m]      '41',
+[[33m02/09 21:31:02 GMT+0100[39m]      '38',
+[[33m02/09 21:31:02 GMT+0100[39m]      '32',
+[[33m02/09 21:31:02 GMT+0100[39m]      '30',
+[[33m02/09 21:31:02 GMT+0100[39m]      '31',
+[[33m02/09 21:31:02 GMT+0100[39m]      '27',
+[[33m02/09 21:31:02 GMT+0100[39m]      '35',
+[[33m02/09 21:31:02 GMT+0100[39m]      '29',
+[[33m02/09 21:31:02 GMT+0100[39m]      '27',
+[[33m02/09 21:31:02 GMT+0100[39m]      '35',
+[[33m02/09 21:31:02 GMT+0100[39m]      '29',
+[[33m02/09 21:31:02 GMT+0100[39m]      '27',
+[[33m02/09 21:31:02 GMT+0100[39m]      '35',
+[[33m02/09 21:31:02 GMT+0100[39m]      '29',
+[[33m02/09 21:31:02 GMT+0100[39m]      '26',
+[[33m02/09 21:31:02 GMT+0100[39m]      '29',
+[[33m02/09 21:31:02 GMT+0100[39m]      '35' ],
+[[33m02/09 21:31:02 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:02 GMT+0100[39m]   offenderName: 'Siam' } -> highlightStatiConfinanti
+[[33m02/09 21:31:05 GMT+0100[39m] 9 Feb 20:31:05 - attack: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:31:05 GMT+0100[39m]   stateToAttack: '27',
+[[33m02/09 21:31:05 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:05 GMT+0100[39m]   defenderName: 'Cina' } -> showDices && attackResults
+[[33m02/09 21:31:21 GMT+0100[39m] 9 Feb 20:31:21 - getMyBonusCard: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:31:21 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:31:36 GMT+0100[39m] 9 Feb 20:31:35 - attack: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:31:36 GMT+0100[39m]   stateToAttack: '27',
+[[33m02/09 21:31:36 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:36 GMT+0100[39m]   defenderName: 'Cina' } -> showDices && attackResults
+[[33m02/09 21:31:37 GMT+0100[39m] 9 Feb 20:31:37 - getActualWorld: { nextStep: false,
+[[33m02/09 21:31:37 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:37 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:31:37 GMT+0100[39m] 9 Feb 20:31:37 - Il giocatore maura sta effettuando un'operazione che non pu??? eseguire in quanto non ??? il suo turno!
+[[33m02/09 21:31:39 GMT+0100[39m] 9 Feb 20:31:39 - getActualWorld: { nextStep: false,
+[[33m02/09 21:31:39 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:39 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:31:47 GMT+0100[39m] 9 Feb 20:31:47 - getActualWorld: { nextStep: true,
+[[33m02/09 21:31:47 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:47 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:31:50 GMT+0100[39m] 9 Feb 20:31:50 - getActualWorld: { nextStep: true,
+[[33m02/09 21:31:50 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:31:50 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:31:50 GMT+0100[39m] 9 Feb 20:31:50 - aggiungo la carta Rinforzo a quelle disponibili per il giocatore Mariano
+[[33m02/09 21:31:50 GMT+0100[39m] 9 Feb 20:31:50 - il giocatore maura ha nel suo mazzo queste carte: 
+[[33m02/09 21:32:49 GMT+0100[39m] 9 Feb 20:32:38 - getMyBonusCard: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:32:49 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:32:49 GMT+0100[39m] loading images/test/animal8.png...
+[[33m02/09 21:32:49 GMT+0100[39m] static file images/test/animal8.png loaded
+[[33m02/09 21:32:49 GMT+0100[39m] 9 Feb 20:32:48 - addTroup: { mapping: { '14': 3, '18': 1, '36': 2, '38': 1 },
+[[33m02/09 21:32:49 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:32:49 GMT+0100[39m]   matchId: 1360441231519 } -> troupAddedOnTurn
+[[33m02/09 21:32:51 GMT+0100[39m] 9 Feb 20:32:50 - getActualWorld: { nextStep: true,
+[[33m02/09 21:32:51 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:32:51 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:32:53 GMT+0100[39m] 9 Feb 20:32:53 - getConfini: { stato: '14',
+[[33m02/09 21:32:53 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:32:53 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:32:53 GMT+0100[39m]    [ '25',
+[[33m02/09 21:32:53 GMT+0100[39m]      '34',
+[[33m02/09 21:32:53 GMT+0100[39m]      '35',
+[[33m02/09 21:32:53 GMT+0100[39m]      '26',
+[[33m02/09 21:32:53 GMT+0100[39m]      '29',
+[[33m02/09 21:32:53 GMT+0100[39m]      '35',
+[[33m02/09 21:32:53 GMT+0100[39m]      '41',
+[[33m02/09 21:32:53 GMT+0100[39m]      '38',
+[[33m02/09 21:32:53 GMT+0100[39m]      '41',
+[[33m02/09 21:32:53 GMT+0100[39m]      '38',
+[[33m02/09 21:32:53 GMT+0100[39m]      '32',
+[[33m02/09 21:32:53 GMT+0100[39m]      '30',
+[[33m02/09 21:32:53 GMT+0100[39m]      '31',
+[[33m02/09 21:32:53 GMT+0100[39m]      '27',
+[[33m02/09 21:32:53 GMT+0100[39m]      '35',
+[[33m02/09 21:32:53 GMT+0100[39m]      '29',
+[[33m02/09 21:32:53 GMT+0100[39m]      '27',
+[[33m02/09 21:32:53 GMT+0100[39m]      '35',
+[[33m02/09 21:32:53 GMT+0100[39m]      '29',
+[[33m02/09 21:32:53 GMT+0100[39m]      '27',
+[[33m02/09 21:32:53 GMT+0100[39m]      '35',
+[[33m02/09 21:32:53 GMT+0100[39m]      '29',
+[[33m02/09 21:32:53 GMT+0100[39m]      '26',
+[[33m02/09 21:32:53 GMT+0100[39m]      '29',
+[[33m02/09 21:32:53 GMT+0100[39m]      '35',
+[[33m02/09 21:32:53 GMT+0100[39m]      '29',
+[[33m02/09 21:32:53 GMT+0100[39m]      '26',
+[[33m02/09 21:32:53 GMT+0100[39m]      '27',
+[[33m02/09 21:32:53 GMT+0100[39m]      '30' ],
+[[33m02/09 21:32:53 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:32:53 GMT+0100[39m]   offenderName: 'Congo' } -> highlightStatiConfinanti
+[[33m02/09 21:32:56 GMT+0100[39m] 9 Feb 20:32:55 - attack: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:32:56 GMT+0100[39m]   stateToAttack: '15',
+[[33m02/09 21:32:56 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:32:56 GMT+0100[39m]   defenderName: 'Africa del Sud' } -> showDices && attackResults
+[[33m02/09 21:32:58 GMT+0100[39m] 9 Feb 20:32:56 - Il giocatore Mariano sta effettuando un'operazione che non pu??? eseguire in quanto non ??? il suo turno!
+[[33m02/09 21:32:58 GMT+0100[39m] 9 Feb 20:32:56 - getActualWorld: { nextStep: false,
+[[33m02/09 21:32:58 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:32:58 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:32:58 GMT+0100[39m] 9 Feb 20:32:57 - getActualWorld: { nextStep: false,
+[[33m02/09 21:32:58 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:32:58 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:33:07 GMT+0100[39m] 9 Feb 20:33:06 - moveTroupToStateConquered: { statoFrom: 14,
+[[33m02/09 21:33:07 GMT+0100[39m]   statoTo: 15,
+[[33m02/09 21:33:07 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:33:07 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:33:13 GMT+0100[39m] 9 Feb 20:33:12 - getConfini: { stato: '15',
+[[33m02/09 21:33:13 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:33:13 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:33:13 GMT+0100[39m]    [ '25',
+[[33m02/09 21:33:13 GMT+0100[39m]      '34',
+[[33m02/09 21:33:13 GMT+0100[39m]      '35',
+[[33m02/09 21:33:13 GMT+0100[39m]      '26',
+[[33m02/09 21:33:13 GMT+0100[39m]      '29',
+[[33m02/09 21:33:13 GMT+0100[39m]      '35',
+[[33m02/09 21:33:13 GMT+0100[39m]      '41',
+[[33m02/09 21:33:13 GMT+0100[39m]      '38',
+[[33m02/09 21:33:13 GMT+0100[39m]      '41',
+[[33m02/09 21:33:13 GMT+0100[39m]      '38',
+[[33m02/09 21:33:13 GMT+0100[39m]      '32',
+[[33m02/09 21:33:13 GMT+0100[39m]      '30',
+[[33m02/09 21:33:13 GMT+0100[39m]      '31',
+[[33m02/09 21:33:13 GMT+0100[39m]      '27',
+[[33m02/09 21:33:13 GMT+0100[39m]      '35',
+[[33m02/09 21:33:13 GMT+0100[39m]      '29',
+[[33m02/09 21:33:13 GMT+0100[39m]      '27',
+[[33m02/09 21:33:13 GMT+0100[39m]      '35',
+[[33m02/09 21:33:13 GMT+0100[39m]      '29',
+[[33m02/09 21:33:13 GMT+0100[39m]      '27',
+[[33m02/09 21:33:13 GMT+0100[39m]      '35',
+[[33m02/09 21:33:13 GMT+0100[39m]      '29',
+[[33m02/09 21:33:13 GMT+0100[39m]      '26',
+[[33m02/09 21:33:13 GMT+0100[39m]      '29',
+[[33m02/09 21:33:13 GMT+0100[39m]      '35',
+[[33m02/09 21:33:13 GMT+0100[39m]      '29',
+[[33m02/09 21:33:13 GMT+0100[39m]      '26',
+[[33m02/09 21:33:13 GMT+0100[39m]      '27',
+[[33m02/09 21:33:13 GMT+0100[39m]      '30',
+[[33m02/09 21:33:13 GMT+0100[39m]      '14',
+[[33m02/09 21:33:13 GMT+0100[39m]      '15' ],
+[[33m02/09 21:33:13 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:33:13 GMT+0100[39m]   offenderName: 'Africa del Sud' } -> highlightStatiConfinanti
+[[33m02/09 21:33:14 GMT+0100[39m] 9 Feb 20:33:14 - attack: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:33:14 GMT+0100[39m]   stateToAttack: '16',
+[[33m02/09 21:33:14 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:33:14 GMT+0100[39m]   defenderName: 'Madagascar' } -> showDices && attackResults
+[[33m02/09 21:33:21 GMT+0100[39m] 9 Feb 20:33:21 - getActualWorld: { nextStep: true,
+[[33m02/09 21:33:21 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:33:21 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:33:33 GMT+0100[39m] 9 Feb 20:33:32 - aggiungo la carta Attacco aereo a quelle disponibili per il giocatore maura
+[[33m02/09 21:33:33 GMT+0100[39m] 9 Feb 20:33:32 - il giocatore Mariano ha nel suo mazzo queste carte: Rinforzo
+[[33m02/09 21:33:33 GMT+0100[39m] 9 Feb 20:33:32 - getActualWorld: { nextStep: true,
+[[33m02/09 21:33:33 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:33:33 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:33:37 GMT+0100[39m] 9 Feb 20:33:37 - getMyBonusCard: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:33:37 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:33:37 GMT+0100[39m] loading images/test/animal5.png...
+[[33m02/09 21:33:37 GMT+0100[39m] static file images/test/animal5.png loaded
+[[33m02/09 21:34:38 GMT+0100[39m] 9 Feb 20:34:38 - addTroup: { mapping: { '16': 2, '24': 4 },
+[[33m02/09 21:34:38 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:34:38 GMT+0100[39m]   matchId: 1360441231519 } -> troupAddedOnTurn
+[[33m02/09 21:34:40 GMT+0100[39m] 9 Feb 20:34:40 - getActualWorld: { nextStep: true,
+[[33m02/09 21:34:40 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:34:40 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:34:45 GMT+0100[39m] 9 Feb 20:34:45 - getMyBonusCard: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:34:45 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:34:51 GMT+0100[39m] 9 Feb 20:34:51 - getConfini: { stato: '24',
+[[33m02/09 21:34:51 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:34:51 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:34:51 GMT+0100[39m]    [ '25',
+[[33m02/09 21:34:51 GMT+0100[39m]      '34',
+[[33m02/09 21:34:51 GMT+0100[39m]      '35',
+[[33m02/09 21:34:51 GMT+0100[39m]      '26',
+[[33m02/09 21:34:51 GMT+0100[39m]      '29',
+[[33m02/09 21:34:51 GMT+0100[39m]      '35',
+[[33m02/09 21:34:51 GMT+0100[39m]      '41',
+[[33m02/09 21:34:51 GMT+0100[39m]      '38',
+[[33m02/09 21:34:51 GMT+0100[39m]      '41',
+[[33m02/09 21:34:51 GMT+0100[39m]      '38',
+[[33m02/09 21:34:51 GMT+0100[39m]      '32',
+[[33m02/09 21:34:51 GMT+0100[39m]      '30',
+[[33m02/09 21:34:51 GMT+0100[39m]      '31',
+[[33m02/09 21:34:51 GMT+0100[39m]      '27',
+[[33m02/09 21:34:51 GMT+0100[39m]      '35',
+[[33m02/09 21:34:51 GMT+0100[39m]      '29',
+[[33m02/09 21:34:51 GMT+0100[39m]      '27',
+[[33m02/09 21:34:51 GMT+0100[39m]      '35',
+[[33m02/09 21:34:51 GMT+0100[39m]      '29',
+[[33m02/09 21:34:51 GMT+0100[39m]      '27',
+[[33m02/09 21:34:51 GMT+0100[39m]      '35',
+[[33m02/09 21:34:51 GMT+0100[39m]      '29',
+[[33m02/09 21:34:51 GMT+0100[39m]      '26',
+[[33m02/09 21:34:51 GMT+0100[39m]      '29',
+[[33m02/09 21:34:51 GMT+0100[39m]      '35',
+[[33m02/09 21:34:51 GMT+0100[39m]      '29',
+[[33m02/09 21:34:51 GMT+0100[39m]      '26',
+[[33m02/09 21:34:51 GMT+0100[39m]      '27',
+[[33m02/09 21:34:51 GMT+0100[39m]      '30',
+[[33m02/09 21:34:51 GMT+0100[39m]      '14',
+[[33m02/09 21:34:51 GMT+0100[39m]      '15',
+[[33m02/09 21:34:51 GMT+0100[39m]      '15',
+[[33m02/09 21:34:51 GMT+0100[39m]      '16' ],
+[[33m02/09 21:34:51 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:34:51 GMT+0100[39m]   offenderName: 'Europa Settentrionale' } -> highlightStatiConfinanti
+[[33m02/09 21:34:53 GMT+0100[39m] 9 Feb 20:34:53 - attack: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:34:53 GMT+0100[39m]   stateToAttack: '23',
+[[33m02/09 21:34:53 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:34:53 GMT+0100[39m]   defenderName: 'Europa meridionale' } -> showDices && attackResults
+[[33m02/09 21:34:59 GMT+0100[39m] 9 Feb 20:34:59 - getMyBonusCard: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:34:59 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:35:02 GMT+0100[39m] 9 Feb 20:35:02 - useCardBonus: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:02 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:02 GMT+0100[39m]   cardId: '1360441231844' }
+[[33m02/09 21:35:02 GMT+0100[39m] 9 Feb 20:35:02 - cards dell'utente Mariano: Rinforzo
+[[33m02/09 21:35:02 GMT+0100[39m] 9 Feb 20:35:02 - l'utente Mariano ha giocato la carta Rinforzo
+[[33m02/09 21:35:04 GMT+0100[39m] 9 Feb 20:35:04 - getReinforcements: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:04 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:04 GMT+0100[39m]   statoId: '24' }
+[[33m02/09 21:35:16 GMT+0100[39m] 9 Feb 20:35:16 - getConfini: { stato: '24',
+[[33m02/09 21:35:16 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:16 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:35:16 GMT+0100[39m]    [ '25',
+[[33m02/09 21:35:16 GMT+0100[39m]      '34',
+[[33m02/09 21:35:16 GMT+0100[39m]      '35',
+[[33m02/09 21:35:16 GMT+0100[39m]      '26',
+[[33m02/09 21:35:16 GMT+0100[39m]      '29',
+[[33m02/09 21:35:16 GMT+0100[39m]      '35',
+[[33m02/09 21:35:16 GMT+0100[39m]      '41',
+[[33m02/09 21:35:16 GMT+0100[39m]      '38',
+[[33m02/09 21:35:16 GMT+0100[39m]      '41',
+[[33m02/09 21:35:16 GMT+0100[39m]      '38',
+[[33m02/09 21:35:16 GMT+0100[39m]      '32',
+[[33m02/09 21:35:16 GMT+0100[39m]      '30',
+[[33m02/09 21:35:16 GMT+0100[39m]      '31',
+[[33m02/09 21:35:16 GMT+0100[39m]      '27',
+[[33m02/09 21:35:16 GMT+0100[39m]      '35',
+[[33m02/09 21:35:16 GMT+0100[39m]      '29',
+[[33m02/09 21:35:16 GMT+0100[39m]      '27',
+[[33m02/09 21:35:16 GMT+0100[39m]      '35',
+[[33m02/09 21:35:16 GMT+0100[39m]      '29',
+[[33m02/09 21:35:16 GMT+0100[39m]      '27',
+[[33m02/09 21:35:16 GMT+0100[39m]      '35',
+[[33m02/09 21:35:16 GMT+0100[39m]      '29',
+[[33m02/09 21:35:16 GMT+0100[39m]      '26',
+[[33m02/09 21:35:16 GMT+0100[39m]      '29',
+[[33m02/09 21:35:16 GMT+0100[39m]      '35',
+[[33m02/09 21:35:16 GMT+0100[39m]      '29',
+[[33m02/09 21:35:16 GMT+0100[39m]      '26',
+[[33m02/09 21:35:16 GMT+0100[39m]      '27',
+[[33m02/09 21:35:16 GMT+0100[39m]      '30',
+[[33m02/09 21:35:16 GMT+0100[39m]      '14',
+[[33m02/09 21:35:16 GMT+0100[39m]      '15',
+[[33m02/09 21:35:16 GMT+0100[39m]      '15',
+[[33m02/09 21:35:16 GMT+0100[39m]      '16',
+[[33m02/09 21:35:16 GMT+0100[39m]      '24',
+[[33m02/09 21:35:16 GMT+0100[39m]      '23' ],
+[[33m02/09 21:35:16 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:16 GMT+0100[39m]   offenderName: 'Europa Settentrionale' } -> highlightStatiConfinanti
+[[33m02/09 21:35:17 GMT+0100[39m] 9 Feb 20:35:17 - getConfini: { stato: '24',
+[[33m02/09 21:35:17 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:17 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:35:17 GMT+0100[39m]    [ '25',
+[[33m02/09 21:35:17 GMT+0100[39m]      '34',
+[[33m02/09 21:35:17 GMT+0100[39m]      '35',
+[[33m02/09 21:35:17 GMT+0100[39m]      '26',
+[[33m02/09 21:35:17 GMT+0100[39m]      '29',
+[[33m02/09 21:35:17 GMT+0100[39m]      '35',
+[[33m02/09 21:35:17 GMT+0100[39m]      '41',
+[[33m02/09 21:35:17 GMT+0100[39m]      '38',
+[[33m02/09 21:35:17 GMT+0100[39m]      '41',
+[[33m02/09 21:35:17 GMT+0100[39m]      '38',
+[[33m02/09 21:35:17 GMT+0100[39m]      '32',
+[[33m02/09 21:35:17 GMT+0100[39m]      '30',
+[[33m02/09 21:35:17 GMT+0100[39m]      '31',
+[[33m02/09 21:35:17 GMT+0100[39m]      '27',
+[[33m02/09 21:35:17 GMT+0100[39m]      '35',
+[[33m02/09 21:35:17 GMT+0100[39m]      '29',
+[[33m02/09 21:35:17 GMT+0100[39m]      '27',
+[[33m02/09 21:35:17 GMT+0100[39m]      '35',
+[[33m02/09 21:35:17 GMT+0100[39m]      '29',
+[[33m02/09 21:35:17 GMT+0100[39m]      '27',
+[[33m02/09 21:35:17 GMT+0100[39m]      '35',
+[[33m02/09 21:35:17 GMT+0100[39m]      '29',
+[[33m02/09 21:35:17 GMT+0100[39m]      '26',
+[[33m02/09 21:35:17 GMT+0100[39m]      '29',
+[[33m02/09 21:35:17 GMT+0100[39m]      '35',
+[[33m02/09 21:35:17 GMT+0100[39m]      '29',
+[[33m02/09 21:35:17 GMT+0100[39m]      '26',
+[[33m02/09 21:35:17 GMT+0100[39m]      '27',
+[[33m02/09 21:35:17 GMT+0100[39m]      '30',
+[[33m02/09 21:35:17 GMT+0100[39m]      '14',
+[[33m02/09 21:35:17 GMT+0100[39m]      '15',
+[[33m02/09 21:35:17 GMT+0100[39m]      '15',
+[[33m02/09 21:35:17 GMT+0100[39m]      '16',
+[[33m02/09 21:35:17 GMT+0100[39m]      '24',
+[[33m02/09 21:35:17 GMT+0100[39m]      '23' ],
+[[33m02/09 21:35:17 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:17 GMT+0100[39m]   offenderName: 'Europa Settentrionale' } -> highlightStatiConfinanti
+[[33m02/09 21:35:18 GMT+0100[39m] 9 Feb 20:35:18 - attack: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:18 GMT+0100[39m]   stateToAttack: '23',
+[[33m02/09 21:35:18 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:18 GMT+0100[39m]   defenderName: 'Europa meridionale' } -> showDices && attackResults
+[[33m02/09 21:35:19 GMT+0100[39m] 9 Feb 20:35:19 - getActualWorld: { nextStep: false,
+[[33m02/09 21:35:19 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:19 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:35:19 GMT+0100[39m] 9 Feb 20:35:19 - Il giocatore maura sta effettuando un'operazione che non pu??? eseguire in quanto non ??? il suo turno!
+[[33m02/09 21:35:21 GMT+0100[39m] 9 Feb 20:35:21 - getActualWorld: { nextStep: false,
+[[33m02/09 21:35:21 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:21 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:35:24 GMT+0100[39m] 9 Feb 20:35:24 - moveTroupToStateConquered: { statoFrom: 24,
+[[33m02/09 21:35:24 GMT+0100[39m]   statoTo: 23,
+[[33m02/09 21:35:24 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:24 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:35:26 GMT+0100[39m] 9 Feb 20:35:26 - moveTroupToStateConquered: { statoFrom: 24,
+[[33m02/09 21:35:26 GMT+0100[39m]   statoTo: 23,
+[[33m02/09 21:35:26 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:26 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:35:34 GMT+0100[39m] 9 Feb 20:35:34 - getActualWorld: { nextStep: true,
+[[33m02/09 21:35:34 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:34 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:35:37 GMT+0100[39m] 9 Feb 20:35:37 - getMyConfini: { stato: '21',
+[[33m02/09 21:35:37 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:37 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:35:37 GMT+0100[39m]    [ '25',
+[[33m02/09 21:35:37 GMT+0100[39m]      '34',
+[[33m02/09 21:35:37 GMT+0100[39m]      '35',
+[[33m02/09 21:35:37 GMT+0100[39m]      '26',
+[[33m02/09 21:35:37 GMT+0100[39m]      '29',
+[[33m02/09 21:35:37 GMT+0100[39m]      '35',
+[[33m02/09 21:35:37 GMT+0100[39m]      '41',
+[[33m02/09 21:35:37 GMT+0100[39m]      '38',
+[[33m02/09 21:35:37 GMT+0100[39m]      '41',
+[[33m02/09 21:35:37 GMT+0100[39m]      '38',
+[[33m02/09 21:35:37 GMT+0100[39m]      '32',
+[[33m02/09 21:35:37 GMT+0100[39m]      '30',
+[[33m02/09 21:35:37 GMT+0100[39m]      '31',
+[[33m02/09 21:35:37 GMT+0100[39m]      '27',
+[[33m02/09 21:35:37 GMT+0100[39m]      '35',
+[[33m02/09 21:35:37 GMT+0100[39m]      '29',
+[[33m02/09 21:35:37 GMT+0100[39m]      '27',
+[[33m02/09 21:35:37 GMT+0100[39m]      '35',
+[[33m02/09 21:35:37 GMT+0100[39m]      '29',
+[[33m02/09 21:35:37 GMT+0100[39m]      '27',
+[[33m02/09 21:35:37 GMT+0100[39m]      '35',
+[[33m02/09 21:35:37 GMT+0100[39m]      '29',
+[[33m02/09 21:35:37 GMT+0100[39m]      '26',
+[[33m02/09 21:35:37 GMT+0100[39m]      '29',
+[[33m02/09 21:35:37 GMT+0100[39m]      '35',
+[[33m02/09 21:35:37 GMT+0100[39m]      '29',
+[[33m02/09 21:35:37 GMT+0100[39m]      '26',
+[[33m02/09 21:35:37 GMT+0100[39m]      '27',
+[[33m02/09 21:35:37 GMT+0100[39m]      '30',
+[[33m02/09 21:35:37 GMT+0100[39m]      '14',
+[[33m02/09 21:35:37 GMT+0100[39m]      '15',
+[[33m02/09 21:35:37 GMT+0100[39m]      '15',
+[[33m02/09 21:35:37 GMT+0100[39m]      '16',
+[[33m02/09 21:35:37 GMT+0100[39m]      '24',
+[[33m02/09 21:35:37 GMT+0100[39m]      '23',
+[[33m02/09 21:35:37 GMT+0100[39m]      '24',
+[[33m02/09 21:35:37 GMT+0100[39m]      '23',
+[[33m02/09 21:35:37 GMT+0100[39m]      '24',
+[[33m02/09 21:35:37 GMT+0100[39m]      '23' ],
+[[33m02/09 21:35:37 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:37 GMT+0100[39m]   defenderName: 'Gran Bretagna' } -> highlightStatiConfinanti
+[[33m02/09 21:35:39 GMT+0100[39m] 9 Feb 20:35:39 - moveTroupTo: { statoFrom: '21',
+[[33m02/09 21:35:39 GMT+0100[39m]   statoTo: '22',
+[[33m02/09 21:35:39 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:39 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:35:42 GMT+0100[39m] 9 Feb 20:35:42 - getActualWorld: { nextStep: true,
+[[33m02/09 21:35:42 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:35:42 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:35:42 GMT+0100[39m] 9 Feb 20:35:42 - aggiungo la carta Attacco da lontano a quelle disponibili per il giocatore Mariano
+[[33m02/09 21:35:42 GMT+0100[39m] 9 Feb 20:35:42 - il giocatore maura ha nel suo mazzo queste carte: Attacco aereo
+[[33m02/09 21:35:46 GMT+0100[39m] 9 Feb 20:35:46 - getMyBonusCard: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:35:46 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:35:46 GMT+0100[39m] loading images/test/animal7.png...
+[[33m02/09 21:35:46 GMT+0100[39m] static file images/test/animal7.png loaded
+[[33m02/09 21:36:03 GMT+0100[39m] 9 Feb 20:36:02 - addTroup: { mapping: { '15': 1, '25': 6 },
+[[33m02/09 21:36:03 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:03 GMT+0100[39m]   matchId: 1360441231519 } -> troupAddedOnTurn
+[[33m02/09 21:36:04 GMT+0100[39m] 9 Feb 20:36:04 - getActualWorld: { nextStep: true,
+[[33m02/09 21:36:04 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:04 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:36:08 GMT+0100[39m] 9 Feb 20:36:08 - getMyBonusCard: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:08 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:36:09 GMT+0100[39m] 9 Feb 20:36:09 - cards dell'utente maura: Attacco aereo
+[[33m02/09 21:36:09 GMT+0100[39m] 9 Feb 20:36:09 - l'utente maura ha giocato la carta Attacco aereo
+[[33m02/09 21:36:09 GMT+0100[39m] 9 Feb 20:36:09 - useCardBonus: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:09 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:09 GMT+0100[39m]   cardId: '1360441231682' }
+[[33m02/09 21:36:12 GMT+0100[39m] 9 Feb 20:36:12 - sendAttack: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:12 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:12 GMT+0100[39m]   statoId: '34',
+[[33m02/09 21:36:12 GMT+0100[39m]   near: true }
+[[33m02/09 21:36:22 GMT+0100[39m] 9 Feb 20:36:22 - getConfini: { stato: '25',
+[[33m02/09 21:36:22 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:22 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:36:22 GMT+0100[39m]    [ '25',
+[[33m02/09 21:36:22 GMT+0100[39m]      '34',
+[[33m02/09 21:36:22 GMT+0100[39m]      '35',
+[[33m02/09 21:36:22 GMT+0100[39m]      '26',
+[[33m02/09 21:36:22 GMT+0100[39m]      '29',
+[[33m02/09 21:36:22 GMT+0100[39m]      '35',
+[[33m02/09 21:36:22 GMT+0100[39m]      '41',
+[[33m02/09 21:36:22 GMT+0100[39m]      '38',
+[[33m02/09 21:36:22 GMT+0100[39m]      '41',
+[[33m02/09 21:36:22 GMT+0100[39m]      '38',
+[[33m02/09 21:36:22 GMT+0100[39m]      '32',
+[[33m02/09 21:36:22 GMT+0100[39m]      '30',
+[[33m02/09 21:36:22 GMT+0100[39m]      '31',
+[[33m02/09 21:36:22 GMT+0100[39m]      '27',
+[[33m02/09 21:36:22 GMT+0100[39m]      '35',
+[[33m02/09 21:36:22 GMT+0100[39m]      '29',
+[[33m02/09 21:36:22 GMT+0100[39m]      '27',
+[[33m02/09 21:36:22 GMT+0100[39m]      '35',
+[[33m02/09 21:36:22 GMT+0100[39m]      '29',
+[[33m02/09 21:36:22 GMT+0100[39m]      '27',
+[[33m02/09 21:36:22 GMT+0100[39m]      '35',
+[[33m02/09 21:36:22 GMT+0100[39m]      '29',
+[[33m02/09 21:36:22 GMT+0100[39m]      '26',
+[[33m02/09 21:36:22 GMT+0100[39m]      '29',
+[[33m02/09 21:36:22 GMT+0100[39m]      '35',
+[[33m02/09 21:36:22 GMT+0100[39m]      '29',
+[[33m02/09 21:36:22 GMT+0100[39m]      '26',
+[[33m02/09 21:36:22 GMT+0100[39m]      '27',
+[[33m02/09 21:36:22 GMT+0100[39m]      '30',
+[[33m02/09 21:36:22 GMT+0100[39m]      '14',
+[[33m02/09 21:36:22 GMT+0100[39m]      '15',
+[[33m02/09 21:36:22 GMT+0100[39m]      '15',
+[[33m02/09 21:36:22 GMT+0100[39m]      '16',
+[[33m02/09 21:36:22 GMT+0100[39m]      '24',
+[[33m02/09 21:36:22 GMT+0100[39m]      '23',
+[[33m02/09 21:36:22 GMT+0100[39m]      '24',
+[[33m02/09 21:36:22 GMT+0100[39m]      '23',
+[[33m02/09 21:36:22 GMT+0100[39m]      '24',
+[[33m02/09 21:36:22 GMT+0100[39m]      '23',
+[[33m02/09 21:36:22 GMT+0100[39m]      '21' ],
+[[33m02/09 21:36:22 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:22 GMT+0100[39m]   offenderName: 'Medio Oriente' } -> highlightStatiConfinanti
+[[33m02/09 21:36:23 GMT+0100[39m] 9 Feb 20:36:23 - attack: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:23 GMT+0100[39m]   stateToAttack: '34',
+[[33m02/09 21:36:23 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:23 GMT+0100[39m]   defenderName: 'Ucraina' } -> showDices && attackResults
+[[33m02/09 21:36:25 GMT+0100[39m] 9 Feb 20:36:25 - getActualWorld: { nextStep: false,
+[[33m02/09 21:36:25 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:25 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:36:25 GMT+0100[39m] 9 Feb 20:36:25 - getActualWorld: { nextStep: false,
+[[33m02/09 21:36:25 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:25 GMT+0100[39m]   sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg' } -> buildEntireMap
+[[33m02/09 21:36:25 GMT+0100[39m] 9 Feb 20:36:25 - Il giocatore Mariano sta effettuando un'operazione che non pu??? eseguire in quanto non ??? il suo turno!
+[[33m02/09 21:36:28 GMT+0100[39m] 9 Feb 20:36:28 - moveTroupToStateConquered: { statoFrom: 25,
+[[33m02/09 21:36:28 GMT+0100[39m]   statoTo: 34,
+[[33m02/09 21:36:28 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:28 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:36:29 GMT+0100[39m] 9 Feb 20:36:29 - moveTroupToStateConquered: { statoFrom: 25,
+[[33m02/09 21:36:29 GMT+0100[39m]   statoTo: 34,
+[[33m02/09 21:36:29 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:29 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:36:32 GMT+0100[39m] 9 Feb 20:36:32 - moveTroupToStateConquered: { statoFrom: 25,
+[[33m02/09 21:36:32 GMT+0100[39m]   statoTo: 34,
+[[33m02/09 21:36:32 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:32 GMT+0100[39m]   matchId: 1360441231519 } -> resultMoveTroupesTo
+[[33m02/09 21:36:38 GMT+0100[39m] 9 Feb 20:36:38 - getConfini: { stato: '34',
+[[33m02/09 21:36:38 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:38 GMT+0100[39m]   activeStates: 
+[[33m02/09 21:36:38 GMT+0100[39m]    [ '25',
+[[33m02/09 21:36:38 GMT+0100[39m]      '34',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35',
+[[33m02/09 21:36:38 GMT+0100[39m]      '26',
+[[33m02/09 21:36:38 GMT+0100[39m]      '29',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35',
+[[33m02/09 21:36:38 GMT+0100[39m]      '41',
+[[33m02/09 21:36:38 GMT+0100[39m]      '38',
+[[33m02/09 21:36:38 GMT+0100[39m]      '41',
+[[33m02/09 21:36:38 GMT+0100[39m]      '38',
+[[33m02/09 21:36:38 GMT+0100[39m]      '32',
+[[33m02/09 21:36:38 GMT+0100[39m]      '30',
+[[33m02/09 21:36:38 GMT+0100[39m]      '31',
+[[33m02/09 21:36:38 GMT+0100[39m]      '27',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35',
+[[33m02/09 21:36:38 GMT+0100[39m]      '29',
+[[33m02/09 21:36:38 GMT+0100[39m]      '27',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35',
+[[33m02/09 21:36:38 GMT+0100[39m]      '29',
+[[33m02/09 21:36:38 GMT+0100[39m]      '27',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35',
+[[33m02/09 21:36:38 GMT+0100[39m]      '29',
+[[33m02/09 21:36:38 GMT+0100[39m]      '26',
+[[33m02/09 21:36:38 GMT+0100[39m]      '29',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35',
+[[33m02/09 21:36:38 GMT+0100[39m]      '29',
+[[33m02/09 21:36:38 GMT+0100[39m]      '26',
+[[33m02/09 21:36:38 GMT+0100[39m]      '27',
+[[33m02/09 21:36:38 GMT+0100[39m]      '30',
+[[33m02/09 21:36:38 GMT+0100[39m]      '14',
+[[33m02/09 21:36:38 GMT+0100[39m]      '15',
+[[33m02/09 21:36:38 GMT+0100[39m]      '15',
+[[33m02/09 21:36:38 GMT+0100[39m]      '16',
+[[33m02/09 21:36:38 GMT+0100[39m]      '24',
+[[33m02/09 21:36:38 GMT+0100[39m]      '23',
+[[33m02/09 21:36:38 GMT+0100[39m]      '24',
+[[33m02/09 21:36:38 GMT+0100[39m]      '23',
+[[33m02/09 21:36:38 GMT+0100[39m]      '24',
+[[33m02/09 21:36:38 GMT+0100[39m]      '23',
+[[33m02/09 21:36:38 GMT+0100[39m]      '21',
+[[33m02/09 21:36:38 GMT+0100[39m]      '25',
+[[33m02/09 21:36:38 GMT+0100[39m]      '23',
+[[33m02/09 21:36:38 GMT+0100[39m]      '34',
+[[33m02/09 21:36:38 GMT+0100[39m]      '35' ],
+[[33m02/09 21:36:38 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:38 GMT+0100[39m]   offenderName: 'Ucraina' } -> highlightStatiConfinanti
+[[33m02/09 21:36:40 GMT+0100[39m] 9 Feb 20:36:40 - attack: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:36:40 GMT+0100[39m]   stateToAttack: '24',
+[[33m02/09 21:36:40 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:40 GMT+0100[39m]   defenderName: 'Europa Settentrionale' } -> showDices && attackResults
+[[33m02/09 21:36:59 GMT+0100[39m] 9 Feb 20:36:59 - getActualWorld: { nextStep: true,
+[[33m02/09 21:36:59 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:36:59 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:37:03 GMT+0100[39m] 9 Feb 20:37:03 - getActualWorld: { nextStep: true,
+[[33m02/09 21:37:03 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:37:03 GMT+0100[39m]   sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc' } -> buildEntireMap
+[[33m02/09 21:37:03 GMT+0100[39m] 9 Feb 20:37:03 - aggiungo la carta Sabotaggio a quelle disponibili per il giocatore maura
+[[33m02/09 21:37:03 GMT+0100[39m] 9 Feb 20:37:03 - il giocatore Mariano ha nel suo mazzo queste carte: Attacco da lontano
+[[33m02/09 21:37:07 GMT+0100[39m] 9 Feb 20:37:07 - getMyBonusCard: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:37:07 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:37:12 GMT+0100[39m] 9 Feb 20:37:11 - getMyBonusCard: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:37:12 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:37:17 GMT+0100[39m] 9 Feb 20:37:17 - getMyBonusCard: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:37:17 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:37:53 GMT+0100[39m] 9 Feb 20:37:53 - sessioni totali attive: 2
+[[33m02/09 21:37:54 GMT+0100[39m] 9 Feb 20:37:54 - getMyBonusCard: { sessionId: 'c729EyQjzlgzH4BcOTIBxZ13.UKojDbbmpdDlnzxqTZOdqyHxZHQTZLgdbVxQkSzDgxc',
+[[33m02/09 21:37:54 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:38:12 GMT+0100[39m] 9 Feb 20:38:12 - getMyBonusCard: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:38:12 GMT+0100[39m]   matchId: 1360441231519 }
+[[33m02/09 21:38:14 GMT+0100[39m] 9 Feb 20:38:13 - disconnect
+[[33m02/09 21:38:14 GMT+0100[39m] 9 Feb 20:38:13 - utente maura disconnesso!
+[[33m02/09 21:38:14 GMT+0100[39m] 9 Feb 20:38:13 - sessioni totali attive: 2
+[[33m02/09 21:38:17 GMT+0100[39m] 9 Feb 20:38:17 - useCardBonus: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:38:17 GMT+0100[39m]   matchId: 1360441231519,
+[[33m02/09 21:38:17 GMT+0100[39m]   cardId: '1360441231783' }
+[[33m02/09 21:38:17 GMT+0100[39m] 9 Feb 20:38:17 - cards dell'utente Mariano: Attacco da lontano
+[[33m02/09 21:38:17 GMT+0100[39m] 9 Feb 20:38:17 - l'utente Mariano ha giocato la carta Attacco da lontano
+[[33m02/09 21:39:24 GMT+0100[39m] loading map.html...
+[[33m02/09 21:39:24 GMT+0100[39m] static file map.html loaded
+[[33m02/09 21:39:27 GMT+0100[39m] warn: websocket connection invalid
+[[33m02/09 21:39:36 GMT+0100[39m] 9 Feb 20:39:36 - sessioni totali attive: 2
+[[33m02/09 21:39:38 GMT+0100[39m] 9 Feb 20:39:38 - getActualWorld: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:39:38 GMT+0100[39m]   matchId: 1360441231519 } -> buildEntireMap
+[[33m02/09 21:39:39 GMT+0100[39m] 9 Feb 20:39:39 - getStatesOfContinent: { sessionId: '4HO3N5VEmAcd9keFqE7QKbTG.lSOb1GFfzi+aQLyFdRLJeDi7MS6cyIvQtWKCfbwjCZg',
+[[33m02/09 21:39:39 GMT+0100[39m]   matchId: 1360441231519 } -> returnStatesMap
+[[33m02/09 21:40:22 GMT+0100[39m] 9 Feb 20:40:22 - disconnect
+[[33m02/09 21:40:22 GMT+0100[39m] 9 Feb 20:40:22 - utente Mariano disconnesso!
+[[33m02/09 21:40:22 GMT+0100[39m] 9 Feb 20:40:22 - sessioni totali attive: 2
+[[33m02/09 21:45:42 GMT+0100[39m] 9 Feb 20:45:42 - disconnect
+[[33m02/09 21:45:42 GMT+0100[39m] 9 Feb 20:45:42 - utente Mariano disconnesso!
+[[33m02/09 21:45:42 GMT+0100[39m] 9 Feb 20:45:42 - sessioni totali attive: 2
+[32minfo[39m:    [90mNodejitsu[39m[1m[32m ok[39m[22m

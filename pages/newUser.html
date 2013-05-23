@@ -1,0 +1,131 @@
+{% extends 'template.html' %}
+{% block head %}
+    {% parent %}
+    {% block title %}Debellum - {{__("new user")}}{% endblock %}
+    <script>
+        function validatePass(p1, p2) {
+            if (p1.value != p2.value || p1.value == '' || p2.value == '') {
+                p2.setCustomValidity('{{__("Password incorrect")}}');
+            } else {
+                p2.setCustomValidity('');
+            }
+        }
+        var RecaptchaOptions = {
+            theme : 'white',
+            custom_translations : {
+                        instructions_visual : '{{__("Write 2 words:")}}',
+                        instructions_audio : '{{__("Type what you hear:")}}',
+                        play_again : '{{__("Listen again track audio")}}',
+                        cant_hear_this : '{{__("Download the track in MP3 format")',
+                        visual_challenge : '{{__("Visual mode")}}',
+                        audio_challenge : '{{__("Audio mode")}}',
+                        refresh_btn : '{{__("ask two new words")}}',
+                        help_btn : '{{__("help")}}',
+                        incorrect_try_again : '{{__("Invalid. Retry")}}',
+            }
+        };
+
+        {% if action %}
+            $(document).ready(function(){
+                eval('{% autoescape false %}{{action}}{% endautoescape %}');
+            });
+        {% endif %}
+    </script>
+{% endblock %}
+{% block content%}
+    <div class="hero-unit" style="margin-top:70px;">
+        <div>
+            <div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="span3">
+                        </div>
+                        <div class="span9">
+                            {% if error.length > 0 %}
+                                <div class="alert alert-error" style="margin:10px 0;">
+                                    <a class="close" data-dismiss="alert" href="#">×</a>{{error}}
+                                </div>
+                            {% endif %}
+                            <form class="form-horizontal" action='/register' method="POST">
+                              <fieldset>
+                                <div id="legend">
+                                  <legend class="">{{__("Register")}}</legend> <small><strong>{{__("All fields are required")}}</strong></small>
+                                </div>
+                                <div class="control-group">
+                                  <!-- Username -->
+                                  <label class="control-label"  for="cognome">{{__("Surname")}}</label>
+                                  <div class="controls">
+                                    <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("Your surname")}}' value="{{newuser.cognome}}" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Your Surname")}} <span class='verysmall'>{{__("min 2, max 15 chars")}}</span></p>
+                                  </div>
+                                </div>
+                                <div class="control-group">
+                                  <!-- Username -->
+                                  <label class="control-label"  for="username">{{__("Name")}}</label>
+                                  <div class="controls">
+                                    <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("Your name")}}' value="{{newuser.nome}}" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Your Name")}} <span class='verysmall'>{{__("min 2, max 15 chars")}}</span></p>
+                                  </div>
+                                </div>
+                                <div class="control-group">
+                                  <!-- Username -->
+                                  <label class="control-label"  for="nick">{{__("Nick")}}</label>
+                                  <div class="controls">
+                                    <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Your nickname")}}' value="{{newuser.nick}}" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Nickname used in matches identification")}} <span class='verysmall'>{{__("min 4, max 10 chars")}}</span></p>
+                                  </div>
+                                </div>
+
+                                <div class="control-group">
+                                  <!-- E-mail -->
+                                  <label class="control-label" for="email">{{__("E-mail")}}</label>
+                                  <div class="controls">
+                                    <input type="email" id="email" name="email" placeholder='{{__("Your email")}}' value="{{newuser.email}}" required class="input-xlarge">
+                                    <p class="help-block">{{__("Please provide your E-mail")}}</p>
+                                  </div>
+                                </div>
+
+                                <div class="control-group">
+                                  <!-- Password-->
+                                  <label class="control-label" for="password">{{__("Password")}}</label>
+                                  <div class="controls">
+                                    <input pattern=".{4,}" type="password" id="pass" name="pass" placeholder="password" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Password should be at least 4 characters")}}</p>
+                                  </div>
+                                </div>
+
+                                <div class="control-group">
+                                  <!-- Password -->
+                                  <label class="control-label"  for="password_confirm">Password ({{__("Confirm")}})</label>
+                                  <div class="controls">
+                                    <input pattern=".{4,}" type="password" id="password_confirm" name="password_confirm" placeholder="confirm password" class="input-xlarge" required onfocus="validatePass(document.getElementById('pass'), this);" oninput="validatePass(document.getElementById('pass'), this);">
+                                    <p class="help-block">{{__("Please confirm password")}}</p>
+                                  </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label"  for="password_confirm"></label>
+                                    <div class="controls">
+                                        {% autoescape false %}
+                                            {{recaptcha_form}}
+                                        {% endautoescape %}
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                  <!-- Button -->
+                                  <div class="controls">
+                                    <button class="btn btn-success">{{__("Register")}}</button>
+                                    <a href="javascript:history.go(-1);" class="btn btn-inverse">{{__("Back")}}</a>
+                                  </div>
+                                </div>
+                              </fieldset>
+                              <input type="hidden" name="_csrf" value="{{token}}">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

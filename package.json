@@ -1,0 +1,23 @@
+{
+  "name": "risiko",
+  "subdomain": "mardif.risiko",
+  "scripts": {
+    "start": "server.js"
+  },
+  "version": "0.0.2-frontend",
+  "engines": {
+    "node": "0.8.x"
+  },
+  "dependencies": {
+    "express": "2.5.x",
+    "socket.io": "0.9.x",
+    "connect": "2.1.x",
+    "forever-monitor": "1.1.x"
+  },
+  "description": "There are a couple of things you should do first, before you can use all of Git's power:",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": "",
+  "author": "",
+  "license": "BSD"
+}

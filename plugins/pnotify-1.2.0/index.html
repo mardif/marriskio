@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Risiko demo</title>
+    <!--meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"-->
+    <meta charset="UTF-8">
+	<link href="jquery.pnotify.default.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="bootstrap.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="bootstrap-responsive.css" media="screen" rel="stylesheet" type="text/css">
+	
+	<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery.pnotify.js"></script>
+	
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css" media="all" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>	
+	<style>
+		.ui-pnotify.stack-bottomright {
+			/* These are just CSS default values to reset the pnotify CSS. */
+			right: auto;
+			top: auto;
+		}
+	</style>
+	<script>
+		//$(document).ready(function(){
+			$(document).on("click", "#btn", function(){
+				show_stack_bottomright("info", $("#testo").val());
+			});
+		//});
+		
+		//var stack_bottomright = {"dir1": "up", "dir2": "left"};
+		function show_stack_bottomright(type, message) {
+			var opts = {
+				title: "Over Here",
+				text: message,
+				//addclass: "stack-bottomright",
+				//stack: stack_bottomright,
+				type: type,
+				delay: 60000
+			};
+			$.pnotify(opts);
+		}		
+	</script>
+  </head>
+  <body>
+	<input type="text" id="testo"> <input id="btn" type="button" value="scrivi">
+  </body>
+</html>

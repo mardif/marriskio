@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <!--<link rel="stylesheet" href="style.css" type="text/css"/>-->
+    <!--script src="jquery.js" type="text/javascript"></script-->
+    <!--script src="login" type="text/javascript"></script-->
+    <title>Riskio Join!!!</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="connect">
+        <form action="#">
+          <fieldset>
+            <p>
+              Benvenuto a Riskio!!!<br/>
+              Scritto interamente in javascript client/server, grazie a NodeJS (thx Google & Ryan!)<br/>
+              Inserisci il tuo nickname per partecipare alla partita
+            </p>
+
+            <label for="nick">Username</label>
+            <input id="nickInput" class="text" type="text" name="nick" value=""/><br/>
+            <label for="color">Colour</label>
+            <select name="color" id="color">
+				<option value="#26ad1f">verde</option>
+				<option value="#003fff">blu</option>
+				<option value="#cca226">arancio</option>
+				<option value="#10d3d0">celeste</option>
+				<option value="#b967e5">viola</option>
+				<option value="#ff0000">rosso</option>
+            </select><br/>
+			<input id="connectButton" class="button" type="submit" name="" value="Crea una nuova partita"/>
+            oppure partecipa ad una partita:
+            <select name="matchListConnectTo" id="matchListConnectTo">
+			</select>
+			<input id="matchListConnectToButton" class="button" type="submit" name="" value="Partecipa"/><br/><br/>
+			<input id="alreadyInGame" class="button" type="button" name="" value="NO NO!!! Ero gi&agrave; in partita!!!"/>
+          </fieldset>
+        </form>
+      </div>
+  </body>
+</html>

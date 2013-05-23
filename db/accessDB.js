@@ -1,0 +1,198 @@
+// Module dependencies
+var mongoStore = require('connect-mongodb');
+var mongoose = require('mongoose');
+var	Schema = mongoose.Schema;
+
+// dependencies for authentication
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+
+var User = require('./models/user');
+var Match = require('./models/match');
+//var PlayerMatch = require('./models/playerMatch');
+
+// Define local strategy for Passport
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'pass'
+  },
+  function(email, password, done) {
+    User.authenticate(email, password, function(err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+            return done(null, false, { message: 'Incorrect username/password' });
+        }
+        return done(err, user);
+    });
+  }
+));
+
+// serialize user on login
+passport.serializeUser(function(user, done) {
+  done(null, {_id: user._id, nick: user.nick, name: user.name});
+});
+
+// deserialize user on logout
+passport.deserializeUser(function(user, done) {
+  User.findById(user._id, function (err, user) {
+    done(err, user);
+  });
+});
+
+var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+
+var sessionStore = new mongoStore({url: conn});
+
+// connect to database
+var AccessDB = function(){
+
+  // Define class variable
+  var myEventID = null
+
+  // initialize DB
+  this.startup = function() {
+    mongoose.connect(conn);
+    // Check connection to mongoDB
+    mongoose.connection.on('open', function() {
+      console.log('We have connected to mongodb');
+    });
+
+  },
+
+  // save a user
+  this.saveUser = function(userInfo, callback) {
+    //console.log(userInfo['fname']);
+    var newUser = new User ({
+      name : { first: userInfo.nome, last: userInfo.cognome }
+    , email: userInfo.email
+    , password: userInfo.password
+    , nick: userInfo.nick
+    });
+
+    newUser.save(function(err) {
+      if (err) return errorHelper(err, callback);
+
+      User.findById(newUser, function (err, doc) {
+
+        if (err) return errorHelper(err, callback);
+
+        userInfo.id = doc._id;
+        console.log("id: "+doc._id);
+        callback(null, userInfo);
+
+      })
+
+    });
+  },
+
+  this.getAllMatchesOpen = function(userId, callback){
+      Match.find({running: false, "players.player": {$nin: [userId]}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
+      //PlayerMatch.find({running: false, $not: {player: userId}}).populate("player").populate("match").exec(function(err, results){
+          if ( err ){
+              throw err;
+          }
+          callback(null, results);
+      });
+
+  },
+
+  this.getMatchesAssociated = function(user, callback){
+      Match.find({"players.player": {$in: [user._id]}  }).populate('masterPlayer').populate("players.player").exec(function (err, results) {
+      //PlayerMatch.find({player: user._id}).populate("player").populate("match").exec(function(err, results){
+        if (err) throw err;
+        callback(null, results);
+      });
+  },
+
+  this.createNewMatch = function(req, callback){
+      var newMatch = new Match({
+          name: (req.body.name.trim() ? req.body.name : ""+Date.now()),
+          num_players: req.body.num_players,
+          players: [ {player: req.user._id, color: req.body.player_color} ],
+          masterPlayer: req.user._id
+      });
+      newMatch.save(function(err) {
+      if (err) return errorHelper(err, callback);
+      callback(null, newMatch);
+    });
+  },
+
+  this.createPlayerMatch = function(matchId, playerId, color, callback){
+    var playerMatch = new PlayerMatch({
+      match: matchId,
+      player: playerId,
+      color: color
+    });
+    playerMatch.save(function(err){
+      if ( err ) return errorHelper(err, callback);
+      callback(null, playerMatch);
+    });
+  },
+
+  // disconnect from database
+  this.closeDB = function() {
+    mongoose.disconnect();
+  },
+
+  // get all the users
+  this.getUsers = function(filters, fields, callback) {
+    User.find(filters, fields, function(err, users) {
+      callback(null, users);
+    });
+  },
+
+  this.getSessionStore = function(){
+      return mongoose;
+  },
+
+  this.getMatchById = function(matchId, fields, callback){
+      Match.findById(matchId, fields, function(err, match){
+          callback(err, match);
+      });
+  },
+
+  this.getColoursAvailableOnMatch = function(matchId, callback){
+    Match.findById(matchId, "players", function(err, players){
+      callback(err, players);
+    });
+  };
+
+}
+
+function errorHelper(err, cb) {
+    //If it isn't a mongoose-validation error, just throw it.
+    if (err.name !== 'ValidationError') return cb(err);
+    var messages = {
+        'required': "%s is required.",
+        'min': "%s below minimum.",
+        'max': "%s above maximum.",
+        'enum': "%s not an allowed value."
+    };
+
+    //A validationerror can contain more than one error.
+    var errors = [];
+
+    //Loop over the errors object of the Validation Error
+    Object.keys(err.errors).forEach(function (field) {
+        var eObj = err.errors[field];
+
+        //If we don't have a message for `type`, just push the error through
+        if (!messages.hasOwnProperty(eObj.type)){
+            errors.push(eObj.type);
+        }
+
+        //Otherwise, use util.format to format the message, and passing the path
+        else{
+            var errMsg = require('util').format(messages[eObj.type], eObj.path);
+            console.log(errMsg)
+            errors.push(errMsg);
+        }
+    });
+
+    return cb(errors);
+  }
+
+var accessDB = new AccessDB();
+exports.getDBInstance = accessDB;
+exports.getSessionStore = sessionStore;
+exports.conn = conn;

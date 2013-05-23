@@ -1,0 +1,433 @@
+  html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: Tahoma, Verdana;
+	font-size: 10pt;
+  }
+  #map_canvas {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+  }
+  #users{
+	position:absolute;
+	margin:right;
+	border: 1px solid black;
+	background-color:#cacaca;
+	width:200px;
+	height:200px;
+	top:70px;
+	left:10px;
+	/*overflow:auto;*/
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .70;
+	filter:Alpha(Opacity=70);
+	z-index: 100;
+
+  }
+  #chat{
+	position:absolute;
+	margin:right;
+	border: 1px solid black;
+	background-color:#cacaca;
+	width:200px;
+	height:250px;
+	top:280px;
+	left:10px;
+	word-wrap: break-word;
+	/*overflow:auto;*/
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .95;
+	filter:Alpha(Opacity=95);
+	z-index: 100;
+
+  }
+  #actions{
+	position:absolute;
+	border: 2px solid black;
+	background-color:#cacaca;
+	width:600px;
+	height:65px;
+	top:0px;
+	left: 50%;
+	margin-left:-300px;
+	/*overflow:auto;*/
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .80;
+	filter:Alpha(Opacity=80);
+	z-index: 100;
+
+  }
+  
+  #continents{
+	position:absolute;
+	border: 2px solid black;
+	background-color:#cacaca;
+	width:450px;
+	bottom:0px;
+	left: 50%;
+	margin-left:-240px;
+	padding:5px;
+	/*overflow:auto;*/
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .80;
+	filter:Alpha(Opacity=80);
+	z-index: 100;
+  }
+  
+  DIV.continent{
+	border:2px solid #4c4c4c;
+	background-color: #0f0f0f;
+	color: #f0f0f0;
+	border-radius: 5px;
+	/*float:left;*/
+	width:70px;
+	font-weight: bold;
+	font-size: 0.8em;
+	margin:1px;
+	height:34px;
+	text-align:center;
+	display:table-cell;
+	vertical-align: middle;
+  }
+
+  DIV.continent:hover{
+	background-color: transparent;
+	color: #000000;
+	cursor: pointer;
+  }
+
+  #dices{
+	position:absolute;
+	border: 2px solid #7a7a7a;
+	background-color:#cacaca;
+	width:130px;
+	height:110px;
+	top:-120px;
+	left: 50%;
+	margin-left:-65px;
+	text-align:center;
+	display:none;
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .80;
+	filter:Alpha(Opacity=80);
+	z-index: 100;
+
+  }
+  
+  #dices table{
+	width:100%;
+  }
+  
+  #dices table th{
+	text-align:center;
+	font-family: Tahoma, Verdana;
+	font-size: 0.8em;
+  }
+  
+  #dices table td {
+	text-align:center;
+  }
+  
+  
+  #movement{
+	position:absolute;
+	border: 5px solid #d3727d;
+	background-color:#dbc5c7;
+	width:300px;
+	height:100px;
+	top:-220px;
+	right: 10px;
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .90;
+	filter:Alpha(Opacity=90);
+	z-index: 210;
+
+  }
+  
+  #movement h4{
+	margin:2px;
+  }
+  
+  #locker{
+	position:absolute;
+	background-color:black;
+	width:100%;
+	top:0px;
+	left:0px;
+	z-index:200;
+	opacity: .10;
+	filter:Alpha(Opacity=10);
+	display:none;
+  }
+  
+  .head{
+	  width: 100%;
+	  text-align: center;
+	  margin-top:5px;
+	  height:30px;
+  }
+  #buffer{
+	  overflow: auto;
+	  padding-left:3px;
+	  width: 190px;
+	  height: 185px;
+	  font-size: 12px;
+  }
+  .bandellaButton, .bandellaButtonV{
+	  position:absolute;
+	  float:right;
+	  margin-top:2px;
+	  right: 0px;
+	  top: -1px;
+  }
+  
+  #arrow{
+	position: absolute;
+	top:10px;
+	left:10px;
+	background-color: transparent;
+	width:1px;
+	height:1px;
+  }
+  
+  #buttonbar{
+	position:absolute;
+	border: 2px solid black;
+	background-color:#cacaca;
+	width:200px;
+	height:54px;
+	top:5px;
+	left: 10px;
+	/*overflow:auto;*/
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .80;
+	filter:Alpha(Opacity=80);
+	z-index: 100;	  
+  }
+  
+  #cards{
+	cursor: pointer;
+	border:2px solid #7e7e7e;
+	border-radius: 6px;
+	background-color: #dedede;
+  }
+  
+  #cards:hover{
+	background-color: #ffffff;
+  }
+  
+  #cards:active{
+	background-color: #e3e3e3;
+  }
+  
+  #deck{
+	position:absolute;
+	border: 2px solid black;
+	background-color:#cacaca;
+	width:500px;
+	height:300px;
+	top:160px;
+	left: 30%;
+	/*overflow:auto;*/
+
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.35);
+
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	opacity: .80;
+	filter:Alpha(Opacity=80);
+	z-index: 100;
+	overflow:auto;
+	display:none;
+	}
+	
+	.test{
+		float:left;
+		width:180px;
+		height:280;
+		border:1px solid red;
+		border-radius: 10px;
+		margin-right:20px;
+	}
+	
+	#deck .scrollable {
+		height: 260px;
+		width: 890px;
+		overflow: hidden;
+		position: relative;
+		margin-left: -25px;
+	}
+
+	#deck .scrollable li {
+		float: left;
+		margin: 0;
+		display: block;
+		position: relative;
+	}    
+		
+	#deck .scrollable a {
+		position: relative;
+		float: left;
+		display: block;
+		outline: none;
+		width: 158px;
+		height: 250px;
+		margin: 25px 0 0 0;
+		text-align: center;
+		padding: 0 10px;
+		z-index:1
+	}
+	#deck .scrollable a img.box {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 14px;
+		width: 150px;
+		height: 184px;
+		margin: 0 auto;
+		z-index: 4
+	} 
+	#deck .scrollable a img {
+		display: block;
+		border: 0;
+		outline: none;
+		-ms-interpolation-mode: bicubic;
+		width: 140px;
+		height: 140px;
+		margin: 0 auto;
+	} 
+	#deck .scrollable a:hover, #deck .scrollable a.active {
+		width: 178px;
+		margin: 25px 0 0 0;
+		padding: 0;
+		background-image /**/: url(/shadow.png);
+		background-position: center 93%;
+		background-repeat: no-repeat;
+	}
+	#deck .scrollable a.active img {
+		width: 160px;
+		height: 160px;
+		margin: 9px;
+	} 
+
+	#btn_carousel_next, #btn_carousel_prev{
+		position: absolute;
+		display: block;
+		width: 37px;
+		height: 37px;
+		text-indent: -999px;
+		background-image: url(/carousel_btns.gif);
+		background-image /**/: url(/carousel_btns.png);
+		background-position: 0px 0px;
+		margin: -185px 0 0 0;
+		text-align: left;
+		overflow: hidden;
+		cursor: pointer;
+		z-index: 999;
+	}
+	#btn_carousel_next{
+		margin: -185px 0 0 723px;
+		background-position: 0px -39px;
+	}
+	.carousel_deck #btn_carousel_next{
+		margin: -185px 0 0 903px;
+		background-position: 0px -39px;
+	}
+	#btn_carousel_prev:hover{
+		background-position: 0px -78px;
+	}
+	#btn_carousel_next:hover{
+		background-position: 0px -117px;
+	}
+	#btn_carousel_next.disabled, #btn_carousel_prev.disabled{
+		opacity: .5;
+	}
+	#deck .scrollable a span.overlay{
+		width: 178px;
+		position: relative;
+		z-index: 6;
+	}
+	#deck .scrollable a span.title{
+		text-align: center;
+		font-size: 10px;
+		color: #666;
+		line-height: 15px;
+		width: 158px;
+		z-index: 8;
+		position: relative;
+		margin: 0 auto;
+		padding: 10px 0 0 0;
+		display: block;
+		line-height: 16px;
+	}
+	#deck .scrollable a:hover span.title, #deck .scrollable a.active span.title{
+		width: 178px;
+	}
+	#deck .scrollable a span.title strong{
+		font-size: 14px;
+		font-weight: bold;
+		color: #224071;
+		display: block
+	}		

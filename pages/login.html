@@ -1,0 +1,55 @@
+{% extends 'template.html' %}
+{% block head %}
+    {% parent %}
+    {% block title %}Debellum - Login page{% endblock %}
+    <script src="login"></script>
+{% endblock %}
+{% block content%}
+    <div class="hero-unit" style="margin-top:70px;">
+        <div id="betaModal">
+            <div class="modal-header">
+                    <h3>{{__("Give me your credentials")}}</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="span5">
+                            <div class="logowrapper">
+                                <img src='/main' border='0'>
+                            </div>
+                        </div>
+                        <div class="span7">
+                            {% if error.length > 0 %}
+                                <div class="alert alert-error" style="margin:10px 0;">
+                                    <a class="close" data-dismiss="alert" href="#">×</a>{{error}}
+                                </div>
+                            {% endif %}
+                            {% if info.length > 0 %}
+                                <div class="alert alert-info" style="margin:10px 0;">
+                                    <a class="close" data-dismiss="alert" href="#">×</a>{{info}}
+                                </div>
+                            {% endif %}
+                            <form method="POST" action="/loginAuth" class="form-horizontal">
+                                <input type="hidden" name="_csrf" value="{{token}}">
+                                <p class="help-block">Email</p>
+                                <div class="input-prepend">
+                                    <span class="add-on">@</span><input autofocus class="prependedInput" name="email" placeholder="email@email.com" size="20" type="email" required>
+                                </div>
+                                <p class="help-block">Password</p>
+                                <div class="input-prepend">
+                                    <span class="add-on">*</span><input class="prependedInput" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
+                                </div>
+                                  <hr>
+                                <div class="well-small">
+                                    <button type="submit" class="btn btn-large btn-info">{{__("Log me in... NOW!")}}</button>&nbsp;
+                                    <a href="/" class="btn btn-large btn-inverse">{{__("Cancel")}}</a>
+                                    <p style="margin-top: 9px;margin-bottom: 0px;">{{__("Not yet registered?")}} <a href='/register'>{{__("Sign in")}}</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
