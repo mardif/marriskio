@@ -6,9 +6,7 @@ var passport = require('passport');
 var start = require('./login');
 var common = require(rootPath+"/games/risiko/common");
 var db = require(rootPath+'/db/accessDB').getDBInstance;
-var sessionStore = require(rootPath+'/db/accessDB').getSessionStore;
 var sessionManager = require(rootPath+"/games/risiko/sessionManager");
-var util = require("util");
 var gamesEvents = require('../games/risiko/gamesEvents');
 
 function ensureAuthenticated(req, res, next) {
