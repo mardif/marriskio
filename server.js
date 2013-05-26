@@ -13,10 +13,8 @@ var express = require('express')
   , swig = require('swig')
   , flash = require("connect-flash")
   , io = require("socket.io")
-  //, ioSession = require('socket.io-session')
-  , i18n = require("i18n")
-  , sessionStore = require('./db/accessDB').getSessionStore
-  , passportSocket = require("passport.socketio");
+  , ioSession = require('socket.io-session')
+  , i18n = require("i18n");
 
 
 var app = module.exports = express();
@@ -32,7 +30,8 @@ i18n.configure({
     register: global,
     defaultLocale: 'en',
     cookie: 'langrisk',
-    directory: __dirname+'/locales'
+    directory: __dirname+'/locales',
+    updateFiles: false
 });
 
 swig.init({
@@ -90,31 +89,15 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-var connect = require('connect');
-var cookie = require('express/node_modules/cookie');
-var Session = require('connect').middleware.session.Session;
-
 var sio = io.listen(server);
-//sio.set('authorization', ioSession(express.cookieParser('riskio'), accessDB.getSessionStore, "r1s1k0.sid"));
-
-sio.set('authorization', passportSocket.authorize({
-    key:    'r1s1k0.sid',       //the cookie where express (or connect) stores its session id.
-    secret: 'riskio', //the session secret to parse the cookie
-    store:   sessionStore,     //the session store that express uses
-    fail: function(data, accept) {     // *optional* callbacks on success or fail
-      accept(null, false);             // second param takes boolean on whether or not to allow handshake
-    },
-    success: function(data, accept) {
-      accept(null, true);
-    }
-}));
-
+sio.set('authorization', ioSession(express.cookieParser('riskio'), accessDB.getSessionStore, "r1s1k0.sid"));
 sio.set("log level", 1);
 
 // Routes
 require('./routes/routes')(app, sio);
 
-server.listen(process.env.PORT, process.env.IP);
+//server.listen(process.env.PORT, process.env.IP);
+server.listen(8000, process.env.IP);
 //app.listen(process.env.PORT, process.env.IP);
 
 console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);

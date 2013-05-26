@@ -9,21 +9,22 @@ module.exports = function(sio, socket){
 
     //var sessionManager = new session.SessionManager();
     socket.on("firstConnect", function(data){
+        
+        var sess = socket.handshake.session;
       
-      util.log("session: "+util.inspect(socket.handshake, true));
-      var user = socket.handshake.user;
+      var user = sess.passport.user;
       util.log("first connect called");
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
       }
-        sessionManager.setSessionStatus(socket.handshake.sessionID, true);
-        var session = sessionManager.getSession(socket.handshake.sessionID);
+        sessionManager.setSessionStatus(user._id, true);
+        var session = sessionManager.getSession(user._id);
         if ( session ){
           var match = getMatch(session.matchId);
           if ( !match ){ return; }
           var engine = match.getEngine();
-          util.log("         "+session.nick+" first connect sessionId: "+socket.handshake.sessionID+" - matchId: "+session.matchId);
+          util.log("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
           socket.set('matchId', engine.getMatchId(), function() { console.log(session.nick+' join on match ' + engine.getMatchId()); } );
           socket.set('active', true);
           socket.join(socket.store.data.matchId);
@@ -51,13 +52,13 @@ module.exports = function(sio, socket){
             util.log("passport? "+socket.handshake.session.passport);
         }
         //sessionManager.removeSession(socket.handshake.sessionID);
-        sessionManager.setSessionStatus(socket.handshake.sessionID, false);
-        var sessionId = socket.handshake.sessionID;
+        var sessionId = socket.handshake.session.passport.user._id;
+        sessionManager.setSessionStatus(sessionId, false);
         var match = getMatch(socket.store.data.matchId);
         if ( !match ){ return; }
         var engine = match.getEngine();
         // se dopo 15 secondi il socket non è tornato su, provvedo a rimuovere la sessione definitivamente
-        /*
+        
         setTimeout(function(){
             var mysession = sessionManager.getSession(sessionId);
             if ( mysession !== null && mysession.disconnected === true ){
@@ -69,8 +70,8 @@ module.exports = function(sio, socket){
             else{
                 util.log("utente "+mysession.nick+" riconnesso!");
             }
-        }, 600000);  //10 minuti per tornare in partita!
-        */
+        }, 10000);  //10 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
+        
         sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players });
     });
 
@@ -734,15 +735,16 @@ module.exports = function(sio, socket){
             return false;
         }
         if ( engine.isEngineLoaded() ){
+            var session = socket.handshake.session.passport;
             if ( noTurnControl === true ){
                 return true;
             }
-            else if ( sessionId != socket.handshake.sessionID ){
-                util.log("Sessione non corrispondente: sessionId client ["+sessionId+"] <-> sessionId socket ["+socket.handshake.sessionID+"]");
+            else if ( sessionId != session.user._id ){
+                util.log("Sessione non corrispondente: sessionId client ["+sessionId+"] <-> sessionId socket ["+session.user._id+"]");
                 return false;
             }
-            else if ( engine.getSessioneDiTurno() != socket.handshake.sessionID ){
-                util.log("Il giocatore "+engine.getSession(socket.handshake.sessionID).nick+" sta effettuando un'operazione che non può seguire in quanto non è il suo turno!");
+            else if ( engine.getSessioneDiTurno() != session.user._id ){
+                util.log("Il giocatore "+session.user.nick+" sta effettuando un'operazione che non può seguire in quanto non è il suo turno!");
                 return false;
             }
             else{

@@ -699,7 +699,11 @@ function fillJoinUsers(data){
             if ( user.master === true ){
               masterSession = user;
             }
-            $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;'>"+user.nick+"</li>").appendTo($("#elenco"));;
+            var opacity = "filter: Alpha(Opacity=100);opacity:1;";
+            if ( user.statusActive === false ){
+                var opacity = "filter: Alpha(Opacity=30);opacity:0.3;";
+            }
+            $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;"+opacity+"'>"+user.nick+"</li>").appendTo($("#elenco"));;
         }
         
       if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
@@ -749,10 +753,10 @@ function show_infoWindow(offenderId, defenderId){
 		<div style='text-align:center;'>\
 			<img src='/conquered_small' border='0'>\
 		</div>\
-		<div style='font-size:11px;position:absolute;bottom:18px;'>\
+		<p class='label-info'>\
 			Per spostare pi&ugrave; truppe clicca <img src='/plus1' border='0' class='plus1' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");'><br/>\
 			Quando hai terminato, clicca <input type='button' value='chiudi' onClick='infowindow.close();'>\
-		</div>\
+		</p>\
 	</div>";
 	//toggleMovement(content);
 	if ( !infowindow ){
@@ -1174,7 +1178,7 @@ function retrievePolygons(){
                 google.maps.event.addListener(theMarker, 'click', function(event){
                 	/*DEBUG*/
                 	//showArrow(projection.fromLatLngToDivPixel(this.position));
-					//show_infoWindow(this.id, this.id);
+					show_infoWindow(this.id, this.id);
 					/* FINE DEBUG*/
 
                 	/*

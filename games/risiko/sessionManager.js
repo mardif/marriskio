@@ -87,7 +87,7 @@ var SessionManager = function(){
 			var ss = match.getEngine().getSession(sessionId);
 			if ( ss ){
 				ss.disconnected = !enabled;
-				ss.activeStatus = enabled;
+				ss.statusActive = enabled;
 				break;
 			}
 		}
@@ -207,11 +207,11 @@ var SessionManager = function(){
 		var activeSessions = [];
 		var sessions = getInternalSessions();
 		for(var i in sessions){
-			if ( sessions[i].statusActive == true ){
+			if ( sessions[i].disconnected == false ){
 				activeSessions.push(sessions[i]);
 			}
 		}
-		util.log("sessioni totali attive: "+activeSessions.length);
+		util.log("sessioni totali attive non disconnesse: "+activeSessions.length);
 		return activeSessions;
 	};
 
