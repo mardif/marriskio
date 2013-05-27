@@ -699,11 +699,12 @@ function fillJoinUsers(data){
             if ( user.master === true ){
               masterSession = user;
             }
-            var opacity = "filter: Alpha(Opacity=100);opacity:1;";
             if ( user.statusActive === false ){
-                var opacity = "filter: Alpha(Opacity=30);opacity:0.3;";
+                $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;filter: Alpha(Opacity=30);opacity:0.3;'><span>"+user.nick+"</span><span style='float:right;'><img title='Connesso' src='/loading-small' style='height:20px;'></span></li>").appendTo($("#elenco"));;
             }
-            $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;"+opacity+"'>"+user.nick+"</li>").appendTo($("#elenco"));;
+            else{
+                $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;filter: Alpha(Opacity=100);opacity:1;'><span>"+user.nick+"</span><span style='float:right;'><img title='Connessione persa, riconnessione in corso...' src='/connected' style='height:20px;'></span></li>").appendTo($("#elenco"));;
+            }
         }
         
       if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
@@ -712,7 +713,7 @@ function fillJoinUsers(data){
       }
       else{
         if ( data.users.length == data.num_players ){
-          $("#stepStatus").html("Tutti i giocatori sono online! Resta in attesa che il giocatore master avvii la partita");
+          $("#stepStatus").html("Tutti i giocatori sono online! Resta in attesa ...");
         }
         $("#makeWorld").css("display", "none");
       }
@@ -1178,7 +1179,7 @@ function retrievePolygons(){
                 google.maps.event.addListener(theMarker, 'click', function(event){
                 	/*DEBUG*/
                 	//showArrow(projection.fromLatLngToDivPixel(this.position));
-					show_infoWindow(this.id, this.id);
+					//show_infoWindow(this.id, this.id);
 					/* FINE DEBUG*/
 
                 	/*

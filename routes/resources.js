@@ -101,6 +101,8 @@ module.exports = function(app) {
     app.get("/seatFree", common.staticHandler("./images/seatFree.png"));
     app.get("/seatBusy", common.staticHandler("./images/seatBusy.png"));
     app.get("/play", common.staticHandler("./images/play.png"));
+    app.get("/loading-small", common.staticHandler("./images/loading-small.gif"));
+    app.get("/connected", common.staticHandler("./images/connected.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
