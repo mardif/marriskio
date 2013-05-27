@@ -499,6 +499,38 @@ socket.on("impostaCentroMappa", function(data){
     gmap.setCenter(new google.maps.LatLng(data.center.lat, data.center.lng));
 });
 
+socket.on('reconnecting', function () {
+    show_note("warn", "Attempting to reconnect with the server", 1000);
+});
+
+socket.on('reconnect', function () {
+    show_note("warn", "Successfully reconnected to the server", 1000);
+});
+
+socket.on('reconnect_failed', function () {
+    show_note("warn", "Reconnection failed! Please, check your internet connection!", 3000);
+});
+
+socket.on('error', function () {
+    show_note("error", "An unbelievable error occurs! Please, close this page and return to your account page!", 10000);
+});
+
+socket.on('connect', function () {
+    show_note("info", "Connected successfully to server... Enjoy!");
+});
+
+socket.on('connecting', function () {
+    show_note("info", "Connecting to server... wait please!");
+});
+
+socket.on('disconnect', function () {
+    show_note("warn", "Disconnected from server... please check your internet connection!", 3000);
+});
+
+socket.on('connect_failed', function () {
+    show_note("error", "Connection to server failed... please check your internet connection!", 3000);
+});
+
 /* SOCKET EVENTS END */
 
 function showArrow(screenPosition){

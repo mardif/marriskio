@@ -674,7 +674,7 @@ module.exports = function(sio, socket){
             num_players: match.getBean().num_players
         });
     });
-
+    
     //Eventi della mappa
     socket.on("zoom_changed", function(zoomLevel){
         sio.sockets.in(socket.store.data.matchId).emit("setZoom", {zoomLevel: zoomLevel});
