@@ -86,7 +86,7 @@ var AccessDB = function(){
   },
 
   this.getAllMatchesOpen = function(userId, callback){
-      Match.find({running: false, "players.player": {$nin: [userId]}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
+      Match.find({running: false, "players.player": {$nin: [userId]}, free: {$gt: 0}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
       //PlayerMatch.find({running: false, $not: {player: userId}}).populate("player").populate("match").exec(function(err, results){
           if ( err ){
               throw err;

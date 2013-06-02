@@ -39,7 +39,8 @@ module.exports = function(sio, socket){
           util.log("notifying... "+sio.sockets.in(socket.store.data.matchId));
           sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
             users: engine.getSessions(), 
-            num_players: match.getBean().num_players 
+            num_players: match.getBean().num_players,
+            engineLoaded: engine.isEngineLoaded()
           });
           socket.emit("getSessionId", {sessionId: session.id, matchId: socket.store.data.matchId});
         }
@@ -65,14 +66,14 @@ module.exports = function(sio, socket){
                 util.log("rimozione della sessione "+sessionId);
                 sessionManager.removeSession(sessionId); //devo togliere anche il giocatore dal motore
                 engine.removeSessionFromEngine(sessionId);
-                sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions() });
+                sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
             }
             else{
                 util.log("utente "+mysession.nick+" riconnesso!");
             }
         }, 10000);  //10 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
         
-        sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players });
+        sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
     });
 
     socket.on("chatMessage", function(data){
@@ -330,7 +331,7 @@ module.exports = function(sio, socket){
         var engine = match.getEngine();        
         var statesMap = engine.getContinents();
         sio.sockets.in(socket.store.data.matchId).emit("returnStatesMap", statesMap);
-        sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players });
+        sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
     });
 
     socket.on("getMyBonusCard", function(data){

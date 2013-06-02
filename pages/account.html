@@ -314,7 +314,7 @@
                                         <a href='javascript:confirmJoinMatch("{{m._id}}");'><img src='seatFree' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Seat Free! Join us!")}}'></a>
                                     {% endfor %}
                                 </td>
-                                <td>{% if m.running == false %}
+                                <td>{% if m.running == false && m.free > 0 %}
                                         waiting for players <a mid='{{m._id}}' href='javascript:confirmJoinMatch("{{m._id}}");' class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}'>{{__("Join in")}}</a>
                                     {% else if m.pause %}
                                         pause

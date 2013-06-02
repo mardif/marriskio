@@ -72,13 +72,6 @@ socket.on('connect', function () {
 
 socket.emit("firstConnect", {matchId: matchId});
 
-socket.on("reconnect", function(){
-	//alert("reconnect");
-	socket.emit("reconnect", {sessionId:sessionId, matchId: matchId});
-});
-
-/*fine eventi di base*/
-
 socket.on("errorOnAction", function(data){
 	show_note("error", data.message);
 	if ( data.action ){
@@ -501,34 +494,42 @@ socket.on("impostaCentroMappa", function(data){
 
 socket.on('reconnecting', function () {
     show_note("warn", "Attempting to reconnect with the server", 1000);
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('reconnect', function () {
     show_note("warn", "Successfully reconnected to the server", 1000);
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-inactive").addClass("user-active");
 });
 
 socket.on('reconnect_failed', function () {
     show_note("warn", "Reconnection failed! Please, check your internet connection!", 3000);
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('error', function () {
     show_note("error", "An unbelievable error occurs! Please, close this page and return to your account page!", 10000);
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('connect', function () {
     show_note("info", "Connected successfully to server... Enjoy!");
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-inactive").addClass("user-active");
 });
 
 socket.on('connecting', function () {
     show_note("info", "Connecting to server... wait please!");
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('disconnect', function () {
     show_note("warn", "Disconnected from server... please check your internet connection!", 3000);
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('connect_failed', function () {
     show_note("error", "Connection to server failed... please check your internet connection!", 3000);
+    $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 /* SOCKET EVENTS END */
@@ -732,25 +733,25 @@ function fillJoinUsers(data){
               masterSession = user;
             }
             if ( user.statusActive === false ){
-                $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;filter: Alpha(Opacity=30);opacity:0.3;'><span>"+user.nick+"</span><span style='float:right;'><img title='Connesso' src='/loading-small' style='height:20px;'></span></li>").appendTo($("#elenco"));;
+                $("<li id='"+user.id+"' class='user-inactive' style='background-color:"+user.color+"'><span>"+user.nick+"</span><span style='float:right;'><img title='Connesso' src='/loading-small' style='height:20px;'></span></li>").appendTo($("#elenco"));;
             }
             else{
-                $("<li id='"+user.id+"' style='background-color:"+user.color+";font-size:14px;filter: Alpha(Opacity=100);opacity:1;'><span>"+user.nick+"</span><span style='float:right;'><img title='Connessione persa, riconnessione in corso...' src='/connected' style='height:20px;'></span></li>").appendTo($("#elenco"));;
+                $("<li id='"+user.id+"' class='user-active' style='background-color:"+user.color+"'><span>"+user.nick+"</span><span style='float:right;'><img title='Connesso! Pronto per giocare!' src='/connected' style='height:20px;'></span></li>").appendTo($("#elenco"));;
             }
         }
-        
-      if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
-        $("#makeWorld").css("display", "inline-block");
-        $("#stepStatus").html("Siete tutti online! Ora puoi cliccare sul pulsante \"Crea Mondo\"");
-      }
-      else{
-        if ( data.users.length == data.num_players ){
-          $("#stepStatus").html("Tutti i giocatori sono online! Resta in attesa ...");
+    
+        if ( data.engineLoaded === false ){
+          if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
+            $("#makeWorld").css("display", "inline-block");
+            $("#stepStatus").html("Siete tutti online! Ora puoi cliccare sul pulsante \"Crea Mondo\"");
+          }
+          else{
+            if ( data.users.length == data.num_players ){
+              $("#stepStatus").html("Tutti i giocatori sono online! Resta in attesa ...");
+            }
+            $("#makeWorld").css("display", "none");
+          }
         }
-        $("#makeWorld").css("display", "none");
-      }
-
-			
     }
 }
 

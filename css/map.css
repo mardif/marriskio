@@ -356,3 +356,19 @@
 	padding-right: 2;
 	cursor: pointer;
 }
+
+#stepStatus{
+    color: #875030;
+}
+
+.user-inactive{
+    font-size:14px;
+    filter: Alpha(Opacity=30);
+    opacity:0.3;
+}
+
+.user-active{
+    font-size:14px;
+    filter: Alpha(Opacity=100);
+    opacity:1;
+}
