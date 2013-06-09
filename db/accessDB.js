@@ -2,6 +2,9 @@
 var mongoStore = require('connect-mongodb');
 var mongoose = require('mongoose');
 var	Schema = mongoose.Schema;
+var cryo = require("cryo");
+var zlib = require('zlib');
+var util = require("util");
 
 // dependencies for authentication
 var passport = require('passport')
@@ -86,7 +89,7 @@ var AccessDB = function(){
   },
 
   this.getAllMatchesOpen = function(userId, callback){
-      Match.find({running: false, "players.player": {$nin: [userId]}, free: {$gt: 0}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
+      Match.find({running: false, "players.player": {$nin: [userId]}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
       //PlayerMatch.find({running: false, $not: {player: userId}}).populate("player").populate("match").exec(function(err, results){
           if ( err ){
               throw err;
@@ -156,6 +159,31 @@ var AccessDB = function(){
       callback(err, players);
     });
   };
+  
+  this.saveMatchStatus = function(engine, matchBean, callback){
+        
+    //Trovato il match, provvedo a salvare lo stato serializzato
+    var serialized = cryo.stringify(engine);
+    util.log("match serialized size: "+serialized.length);
+    zlib.deflate(serialized, function(error, buffer){
+        util.log("match serialized compressed size: "+buffer.length);
+        matchBean.frozen.created_at = new Date();
+        //matchBean.frozen.engine = buffer;
+        matchBean.frozen.engine = serialized;
+        matchBean.save(function(err){
+          if ( err ) return errorHelper(err, callback);
+          callback(null, matchBean);
+        });
+    });
+  };
+  
+    this.setStatusMatch = function(isRunning, matchBean, callback){
+        matchBean.running = isRunning;
+        matchBean.save(function(err){
+            if ( err ){ return errorHelper(err, callback); }
+            callback(null, matchBean);
+        });
+    };
 
 }
 
@@ -190,7 +218,7 @@ function errorHelper(err, cb) {
     });
 
     return cb(errors);
-  }
+}
 
 var accessDB = new AccessDB();
 exports.getDBInstance = accessDB;

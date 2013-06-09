@@ -110,8 +110,16 @@ module.exports = {
                 });
             },
             allMatches: function(callback){
-                db.getAllMatchesOpen(req.user._id, function(err, result){
-                    callback(err, result);
+                db.getAllMatchesOpen(req.user.id, function(err, result){
+                    var r = [];
+                    for(var i=0;i<result.length;i++){
+                        var match = result[i];
+                        if ( match.free > 0 ){  
+                            r.push(match);
+                        }
+                    }
+                    //tornano solo i match che hanno degli slot liberi e di cui non faccio già parte
+                    callback(err, r);
                 });
             },
             allUsers: function(callback){

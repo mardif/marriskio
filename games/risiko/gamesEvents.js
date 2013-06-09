@@ -1,7 +1,8 @@
 var util = require("util"),
     sessionManager = require("./sessionManager"),
     cards = require("./cards"),
-    parseCookie = require('connect').utils.parseCookie
+    parseCookie = require('connect').utils.parseCookie,
+    db = require(rootPath+'/db/accessDB').getDBInstance;
 
 module.exports = function(sio, socket){
   
@@ -174,6 +175,25 @@ module.exports = function(sio, socket){
         
         var engine = match.getEngine();
         
+        db.setStatusMatch(true, match.getBean(), function(err, match){
+            
+            if ( err ){
+                util.log("impostazione dello stato del match "+data.matchId+" non riuscito!");
+                return;
+            }
+            
+            db.saveMatchStatus(engine, match, function(err, match){
+                if ( err ){
+                    util.log("Error saving match "+match.id);
+                    return;
+                }
+                util.log("Match "+match.id+" was saved correctly");
+                
+            });
+            
+        });
+
+        
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati: engine.caricaStati(),
             engineLoaded: engine.isEngineLoaded(),
@@ -196,7 +216,17 @@ module.exports = function(sio, socket){
         var engine = match.getEngine();
 
         if ( data && data.nextStep ){
-            engine.nextStep();
+            var changePlayer = engine.nextStep();
+            if ( changePlayer === true ){
+                db.saveMatchStatus(engine, match.getBean(), function(err, match){
+                    if ( err ){
+                        util.log("Error saving match "+match.id);
+                        return;
+                    }
+                    util.log("Match "+match.id+" was saved correctly");
+                    
+                });
+            }
         }
         else if ( data && data.prevStep ){
             var canBack = engine.prevStep();
@@ -562,7 +592,7 @@ module.exports = function(sio, socket){
         if ( !match ){
           return;
         }
-        var engine = match.getBean();
+        var engine = match.getEngine();
         var me = engine.getSession(data.sessionId);
         var player = engine.getSession(data.playerId);
 

@@ -27,7 +27,11 @@ var MatchSchema = new Schema({
     masterPlayer: {type: Schema.ObjectId, ref: 'User'},
     num_players: { type: Number, required: true },
     pause: {type: Boolean, default: false},
-    isPublic: {type: Boolean, default: true}
+    isPublic: {type: Boolean, default: true},
+    frozen: { 
+        created_at: { type: Date, required: false },
+        engine: {type: String, required: false}
+    }
 }, schemaOptions);
 
 /*
@@ -42,6 +46,8 @@ MatchSchema.virtual("playersList").get(function(){
 MatchSchema
 .virtual('free')
 .get(function () {
+    util.log("num_players: "+this.num_players);
+    util.log("players joined: "+this.players.length);
   return this.num_players - this.players.length;
 })
 .set(function (free) {});

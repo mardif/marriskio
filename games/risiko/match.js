@@ -8,6 +8,10 @@ var Match = function(bean){
 	this.getEngine = function(){
 		return motore;
 	};
+    
+    this.setEngine = function(engine){
+        motore = engine;
+    };
 
 	this.getId = function(){
 		return id;

@@ -56,12 +56,16 @@
                 $("#text-invitation").tokenInput("clear");//$("ul.token-input-list-facebook li.token-input-token-facebook").remove();
             });
 
-            $("IMG.playerImage, IMG.playMatchIcon").tooltip();
+            $("IMG.playerImage, IMG.playMatchIcon, IMG.restoreMatchIcon").tooltip();
 
         });
 
         $(document).on("click", "IMG.playMatchIcon", function(){
           actionMatch("startJoinMatch", $(this).attr("mid"), true);
+        });
+        
+        $(document).on("click", "IMG.restoreMatchIcon", function(){
+            actionMatch("restoreJoinMatch", $(this).attr("mid"), true);
         });
 
         //--------------------------------------------

@@ -96,6 +96,41 @@ module.exports = function(app, sio) {
         res.render("../games/risiko/map.html", { matchId: req.body.matchId, sessionId: req.user._id });
       }
     });
+    
+    app.post("/restoreJoinMatch", ensureAuthenticated, function(req, res){
+        
+        if ( !sessionManager.getMatchList().getMatch(req.body.matchId)  ){
+        /*Provvedo a caricare i dati dal db, carico i dati del motore di gioco e poi redirigo alla pagina di gioco*/
+        db.getMatchById(req.body.matchId, null, function(err, match){
+          if (err) throw err;
+          
+          var m = sessionManager.getMatchList().getMatch(req.body.matchId);
+          if ( !m ){
+              m = sessionManager.getMatchList().createMatch(match);
+          }
+          
+          //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
+          var frozen = cryo.parse(m.getBean().frozen.engine);
+          zlib.inflate(serialized, function(error, serializedMatchEngine){
+              
+            if ( error ){
+                res.send(404);
+            }
+            
+            //m.setEngine(serializedMatchEngine);
+            m.setEngine(frozen);
+              
+            res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id });
+          });
+          
+        });
+
+      }
+      else{
+        res.render("../games/risiko/map.html", { matchId: req.body.matchId, sessionId: req.user._id });
+      }
+        
+    });
 
     require("./resources")(app);
 

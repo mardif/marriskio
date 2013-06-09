@@ -5,7 +5,7 @@ var cards = require("./cards");
 var Engine = function(matchId){
 	this.states = {};
 	this.worldSize = 42;
-	var engineIsLoaded = false;
+	this.engineIsLoaded = false;
 	this.turni = [];
 	this.turnoAttuale = 0;
 	this.stepTurno = -1;
@@ -15,8 +15,8 @@ var Engine = function(matchId){
 	this.attackTo = -1;
 	this.moveFrom = -1;
 	this.moveTo = -1;
-	var sessions = [];
-	var matchId = matchId;
+	this.sessions = [];
+	this.matchId = matchId;
 	this.world = new World();
 	this.deck = new cards.CardBonusDeck();
 	this.statesConquered = 0;
@@ -24,20 +24,20 @@ var Engine = function(matchId){
 
 	this.getSession = function(id){
 		//return sessions[id];
-		for(var i in sessions){
-			if ( sessions[i].id === id ){
-				return sessions[i];
+		for(var i in this.sessions){
+			if ( this.sessions[i].id === id ){
+				return this.sessions[i];
 				break;
 			}
 		}
 	};
 
 	this.getSessions = function(){
-		return sessions;
+		return this.sessions;
 	};
 
 	this.getMatchId = function(){
-		return matchId;
+		return this.matchId;
 	};
 
 	this.getWorld = function(){
@@ -45,7 +45,7 @@ var Engine = function(matchId){
 	};
 
 	this.addSessionToEngine = function(session){
-		sessions.push(session);
+		this.sessions.push(session);
 	};
 
 	this.applyEpidemia = function(enemyId){
@@ -66,18 +66,18 @@ var Engine = function(matchId){
 	};
 
 	this.removeSessionFromEngine = function(sessionId){
-		for(var i in sessions){
-			var s = sessions[i];
+		for(var i in this.sessions){
+			var s = this.sessions[i];
 			if ( s.id == sessionId ){
-				sessions.splice(i,1);
+				this.sessions.splice(i,1);
 				break;
 			}
 		}
 	};
 
 	this.getMainUser = function(){
-		for(var i in sessions){
-			var s = sessions[i];
+		for(var i in this.sessions){
+			var s = this.sessions[i];
 			if ( s.isMaster() ){
 				return s.nick;
 			}
@@ -180,7 +180,9 @@ var Engine = function(matchId){
 			}
 
 			this.nextTurn();
+            return true;
 		}
+        return false;
 	};
 	this.getStepTurno = function(){
 		return this.stepTurno;
@@ -358,8 +360,8 @@ var Engine = function(matchId){
 	};
 
 	this.checkInitialTroupesHasFinished = function(){
-		for(var i in sessions){
-			var s = sessions[i];
+		for(var i in this.sessions){
+			var s = this.sessions[i];
 			if ( s.initialTroupes > 0 ){
 				return false;
 			}
@@ -387,7 +389,7 @@ var Engine = function(matchId){
 		//----- fine debug
 		var session = this.getSession(this.turni[this.turnoAttuale]);
 		if ( session ){
-			if ( this.stepTurno == 0 && this.contatoreTurni > sessions.length ){//session.troupesToAdd == 0 ){
+			if ( this.stepTurno == 0 && this.contatoreTurni > this.sessions.length ){//session.troupesToAdd == 0 ){
 				var states = this.getStatesByMember(session.id);
 				var troupesToPlace = Math.floor(states.length/3);
 				/* Controllo se in questo turno il giocatore ha uno o pi� continenti */
@@ -402,7 +404,7 @@ var Engine = function(matchId){
 
 				session.troupesToAdd = troupesToPlace;
 			}
-			else if ( this.stepTurno == 0 && (this.contatoreTurni >= 1 && this.contatoreTurni <= sessions.length ) ){
+			else if ( this.stepTurno == 0 && (this.contatoreTurni >= 1 && this.contatoreTurni <= this.sessions.length ) ){
 				/*
 				Se mi trovo nello step iniziale di rafforzamento, non devo dare le truppe
 				*/
@@ -422,16 +424,16 @@ var Engine = function(matchId){
 	}
 
 	this.isEngineLoaded = function(){
-		return engineIsLoaded;
+		return this.engineIsLoaded;
 	};
 
 	this.setEngineLoaded = function(booleanValue){
-		engineIsLoaded = booleanValue;
+		this.engineIsLoaded = booleanValue;
 	};
 
 	this.inizializzaTurni = function(){
 
-		var players = sessions;
+		var players = this.sessions;
 
 		for(var i=0; i < players.length; i++){
 
@@ -470,7 +472,7 @@ var Engine = function(matchId){
 
 	this.caricaStati = function(){
 
-		var players = sessions;
+		var players = this.sessions;
 
 		if ( players.length == 0 ){
 			return;
@@ -513,7 +515,7 @@ var Engine = function(matchId){
 
 	this.getActualWorld = function(){
 		//da capire come cambiarlo
-		var players = sessions;
+		var players = this.sessions;
 		var statiAssociati = {};
 
 		for(var i=0;i<players.length;i++){
