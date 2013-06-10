@@ -14,10 +14,12 @@ var SessionManager = function(){
 	};
 
 	//this.addSession = function(session, response, matchId){
-  this.addSession = function(session, matchId){
+  this.addSession = function(user, matchId){
 
-		var mySession = new Session(session);
+		var mySession = new Session(user);
+        util.log("addSession mySession object: "+util.inspect(mySession, true));
 		var match = matchList.getMatch(matchId);
+        util.log("match rilevato ("+matchId+"): "+util.inspect(match, true));
 
 		if ( match === undefined ){
 			return false;
@@ -49,7 +51,7 @@ var SessionManager = function(){
         break;
       }
     }
-  }
+  };
 
 	this.removeSession = function(matchId, sessionId){
 		"use strict";

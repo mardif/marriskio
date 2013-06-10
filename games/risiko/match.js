@@ -1,4 +1,5 @@
 var engine = require("./engine");
+var util = require("util");
 
 var Match = function(bean){
   var bean = bean
@@ -9,10 +10,6 @@ var Match = function(bean){
 		return motore;
 	};
     
-    this.setEngine = function(engine){
-        motore = engine;
-    };
-
 	this.getId = function(){
 		return id;
 	};
@@ -23,6 +20,16 @@ var Match = function(bean){
 
   this.getBean = function(){
     return bean;
+  };
+  
+  this.setEngineData = function(engineData){
+    for (var name in engineData) {
+        if (engineData.hasOwnProperty(name)) {
+            util.log("restore engine data "+name+" with value "+engineData[name]);
+            motore[name] = engineData[name];
+        }
+    }
+
   };
 
 };

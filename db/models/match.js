@@ -46,8 +46,6 @@ MatchSchema.virtual("playersList").get(function(){
 MatchSchema
 .virtual('free')
 .get(function () {
-    util.log("num_players: "+this.num_players);
-    util.log("players joined: "+this.players.length);
   return this.num_players - this.players.length;
 })
 .set(function (free) {});

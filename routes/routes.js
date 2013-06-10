@@ -8,6 +8,8 @@ var common = require(rootPath+"/games/risiko/common");
 var db = require(rootPath+'/db/accessDB').getDBInstance;
 var sessionManager = require(rootPath+"/games/risiko/sessionManager");
 var gamesEvents = require('../games/risiko/gamesEvents');
+var zlib = require("zlib");
+var cryo = require("cryo");
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -108,17 +110,18 @@ module.exports = function(app, sio) {
           if ( !m ){
               m = sessionManager.getMatchList().createMatch(match);
           }
+          require("util").log("engine data from db: "+match.frozen.engine);
           
           //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
-          var frozen = cryo.parse(m.getBean().frozen.engine);
-          zlib.inflate(serialized, function(error, serializedMatchEngine){
+          var frozen = cryo.parse(match.frozen.engine);
+          zlib.inflate(frozen, function(error, serializedMatchEngine){
               
             if ( error ){
-                res.send(404);
+                //res.send("Error on "+error, 404);
             }
             
             //m.setEngine(serializedMatchEngine);
-            m.setEngine(frozen);
+            m.setEngineData(frozen);
               
             res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id });
           });

@@ -5,6 +5,7 @@ var	Schema = mongoose.Schema;
 var cryo = require("cryo");
 var zlib = require('zlib');
 var util = require("util");
+var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 
 // dependencies for authentication
 var passport = require('passport')
@@ -163,13 +164,13 @@ var AccessDB = function(){
   this.saveMatchStatus = function(engine, matchBean, callback){
         
     //Trovato il match, provvedo a salvare lo stato serializzato
-    var serialized = cryo.stringify(engine);
-    util.log("match serialized size: "+serialized.length);
-    zlib.deflate(serialized, function(error, buffer){
-        util.log("match serialized compressed size: "+buffer.length);
+    var serializedEngineData = saveEngineData(engine);
+    util.log("match serializedEngineData size: "+serializedEngineData.length);
+    zlib.deflate(serializedEngineData, function(error, buffer){
+        util.log("match serializedEngineData compressed size: "+buffer.length);
         matchBean.frozen.created_at = new Date();
         //matchBean.frozen.engine = buffer;
-        matchBean.frozen.engine = serialized;
+        matchBean.frozen.engine = serializedEngineData;
         matchBean.save(function(err){
           if ( err ) return errorHelper(err, callback);
           callback(null, matchBean);
@@ -186,6 +187,19 @@ var AccessDB = function(){
     };
 
 }
+
+var saveEngineData = function(engine){
+    var ed = new EngineData();
+    for (var name in ed) {
+      if (ed.hasOwnProperty(name)) {
+        util.log("saving "+name+" data: "+engine[name]);
+        ed[name] = engine[name];
+      }
+    }
+    
+    return cryo.stringify(ed);
+    
+};
 
 function errorHelper(err, cb) {
     //If it isn't a mongoose-validation error, just throw it.

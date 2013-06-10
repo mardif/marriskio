@@ -5,6 +5,9 @@ require('nodefly').profile(
     'risiko'
 );
 */
+
+global.rootPath = __dirname;
+
 var express = require('express')
   , http = require("http")
   , accessDB = require('./db/accessDB')
@@ -23,7 +26,7 @@ global.app = app;
 var server = http.createServer(app);
 
 var db = accessDB.getDBInstance;
-global.rootPath = __dirname;
+
 
 i18n.configure({
     locales:['it', 'en'],
@@ -96,8 +99,8 @@ sio.set("log level", 1);
 // Routes
 require('./routes/routes')(app, sio);
 
-//server.listen(process.env.PORT, process.env.IP);
-server.listen(8000, process.env.IP);
+server.listen(process.env.PORT, process.env.IP);
+//server.listen(8000, process.env.IP);
 //app.listen(process.env.PORT, process.env.IP);
 
 console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);

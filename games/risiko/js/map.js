@@ -787,7 +787,7 @@ function show_infoWindow(offenderId, defenderId){
 		<div style='text-align:center;'>\
 			<img src='/conquered_small' border='0'>\
 		</div>\
-		<p class='label-info'>\
+		<p>\
 			Per spostare pi&ugrave; truppe clicca <img src='/plus1' border='0' class='plus1' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");'><br/>\
 			Quando hai terminato, clicca <input type='button' value='chiudi' onClick='infowindow.close();'>\
 		</p>\
