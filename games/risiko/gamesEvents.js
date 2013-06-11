@@ -18,19 +18,6 @@ module.exports = function(sio, socket){
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
-        //ripristino delle proprietà delle sessioni
-        var ss = sessionManager.getSession(user._id);
-        var match = getMatch(data.matchId);
-        if ( match && match.getRestoredSessionsMap() !== undefined ){
-            var map = match.getRestoredSessionsMap();
-            var e = match.getEngine();
-            if ( map[user._id] !== undefined ){
-                var m = JSON.parse(map[user._id]);
-                for(name in m){
-                    e[name] = m[name];
-                }
-            }
-        }
       }
         sessionManager.setSessionStatus(user._id, true);
         var session = sessionManager.getSession(user._id);
@@ -39,7 +26,8 @@ module.exports = function(sio, socket){
           if ( !match ){ return; }
           var engine = match.getEngine();
           util.log("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
-          socket.set('matchId', engine.getMatchId(), function() { console.log(session.nick+' join on match ' + engine.getMatchId()); } );
+          socket.set('matchId', engine.getMatchId(), function() { util.log(session.nick+' join on match ' + engine.getMatchId()); } );
+          socket.set("sessionId", session.id, function(){ util.log("sessionId ["+session.id+"] legato al socket!"); });
           socket.set('active', true);
           socket.join(socket.store.data.matchId);
           
@@ -63,15 +51,43 @@ module.exports = function(sio, socket){
     socket.on("disconnect", function(){
         util.log("disconnect");
         if ( socket.handshake.session ){
-            util.log("utente "+socket.handshake.session.passport.user.nick+" disconnesso!");
+            util.log("socket dell'utente "+socket.handshake.session.passport.user.nick+" disconnesso!");
             util.log("passport? "+socket.handshake.session.passport);
         }
+        
+        /*
+            ci possono essere dei refresh forzati, per cui la stessa sessione può essere associata a più socket-session.
+            quando avviene ciò, conviene fare una scansione dei socket-session ancora attivi e verificare se c'è
+            una socket-session attiva con la stesse sessionId, per evitare di buttare fuori un giocatore che ha fatto
+            semplicemente un reload
+        */        
+        var socketClients = sio.sockets.in(socket.store.data.matchId).clients();
+        var maintainSession = false;
+        for(var idx in socketClients){
+            var s = socketClients[idx];
+            if ( socket.store.id != s.store.id ){
+                if ( socket.store.data.sessionId == s.store.data.sessionId ){
+                    maintainSession = true;
+                    break;
+                }
+            }
+        }
+        //util.log("socketclient: "+util.inspect(socketClients[0]));
+        if ( maintainSession === true ){
+            util.log("rimozione del socket, ma non della sessione dell'utente "+(socket.handshake.session ? socket.handshake.session.passport.user.nick : "")+"!")
+            return;
+        }
+        //------------------------------------------------------------------------------------------------------------------
+        
         //sessionManager.removeSession(socket.handshake.sessionID);
         var sessionId = socket.handshake.session.passport.user._id;
         sessionManager.setSessionStatus(sessionId, false);
         var match = getMatch(socket.store.data.matchId);
         if ( !match ){ return; }
         var engine = match.getEngine();
+        
+        //util.log("socket in disconnessione: "+util.inspect(socket, true));
+        
         // se dopo 15 secondi il socket non è tornato su, provvedo a rimuovere la sessione definitivamente
         
         setTimeout(function(){
@@ -83,7 +99,7 @@ module.exports = function(sio, socket){
                 sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
             }
             else{
-                util.log("utente "+mysession.nick+" riconnesso!");
+                util.log("utente "+(mysession !== undefined && mysession !== null ? mysession.nick : "non riconosciuto") +" riconnesso!");
             }
         }, 10000);  //10 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
         

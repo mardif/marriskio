@@ -5,6 +5,19 @@ var common = require("./common"),
 	Session = require("./session").Session;
 
 var SessionManager = function(){
+    
+    var propertiesToRetrieve = [
+        "initialTroupes",
+        "troupesToAdd",
+        "cards",
+        "applyingTurnCards",
+        "applyingVolatileCard",
+        "sabotaged",
+        "alliances",
+        "states",
+        "haveDefensiveCard",
+        "turno"
+    ];
 
   var matchList = new MatchList();
   var self = this;
@@ -17,20 +30,13 @@ var SessionManager = function(){
   this.addSession = function(user, matchId){
 
 		var mySession = new Session(user);
-        util.log("addSession mySession object: "+util.inspect(mySession, true));
 		var match = matchList.getMatch(matchId);
-        util.log("match rilevato ("+matchId+"): "+util.inspect(match, true));
 
 		if ( match === undefined ){
 			return false;
 		}
 		mySession.setMatchId(match.getId());
-    /*
-		if ( match.getEngine().getSessions().length === 0 ){
-			mySession.setMaster(true);
-		}
-    */
-    setSessionPropsFromDb(mySession, match);
+        setSessionPropsFromDb(mySession, match);
 		match.getEngine().addSessionToEngine(mySession);
 
 		return true;
@@ -51,6 +57,28 @@ var SessionManager = function(){
         break;
       }
     }
+    /*
+    Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)
+    */
+    util.log("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
+    if ( match && match.getRestoredSessionsMap() !== undefined ){
+        var map = match.getRestoredSessionsMap();
+        if ( map[mySession.id] !== undefined ){
+            var m = JSON.parse(map[mySession.id]);
+            util.log("");
+            util.log(" -------------------------------- ");
+            for(var idx in propertiesToRetrieve){
+                var prop = propertiesToRetrieve[idx];
+                util.log("chiave "+prop);
+                util.log("valore in sessione: "+mySession[prop]);
+                util.log("valore da db: "+m[prop]);
+                util.log("");
+                mySession[prop] = m[prop];
+            }
+            util.log(" -------------------------------- ");
+        }
+    }    
+    
   };
 
 	this.removeSession = function(matchId, sessionId){

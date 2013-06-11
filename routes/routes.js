@@ -110,8 +110,6 @@ module.exports = function(app, sio) {
           if ( !m ){
               m = sessionManager.getMatchList().createMatch(match);
           }
-          require("util").log("engine data from db: "+match.frozen.engine);
-          
           //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
           var frozen = cryo.parse(match.frozen.engine);
           zlib.inflate(frozen, function(error, serializedMatchEngine){
