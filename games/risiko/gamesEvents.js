@@ -18,6 +18,19 @@ module.exports = function(sio, socket){
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
+        //ripristino delle proprietà delle sessioni
+        var ss = sessionManager.getSession(user._id);
+        var match = getMatch(data.matchId);
+        if ( match && match.getRestoredSessionsMap() !== undefined ){
+            var map = match.getRestoredSessionsMap();
+            var e = match.getEngine();
+            if ( map[user._id] !== undefined ){
+                var m = JSON.parse(map[user._id]);
+                for(name in m){
+                    e[name] = m[name];
+                }
+            }
+        }
       }
         sessionManager.setSessionStatus(user._id, true);
         var session = sessionManager.getSession(user._id);
@@ -29,7 +42,7 @@ module.exports = function(sio, socket){
           socket.set('matchId', engine.getMatchId(), function() { console.log(session.nick+' join on match ' + engine.getMatchId()); } );
           socket.set('active', true);
           socket.join(socket.store.data.matchId);
-
+          
           util.log("          total rooms: "+util.inspect(sio.sockets.manager.rooms));
           util.log("          specific clients on room "+engine.getMatchId()+": ");
           var clients = sio.sockets.clients(engine.getMatchId());

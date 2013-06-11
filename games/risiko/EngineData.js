@@ -18,6 +18,9 @@ var EngineData = function(){
 	//this.deck= undefined;
 	this.statesConquered= undefined;
 	this.spostamentoFinalEffettuato= undefined;
+    
+    this.sessionsMap = {};
+    
 };
 
 exports.EngineData = EngineData;

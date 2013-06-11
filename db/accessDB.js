@@ -192,8 +192,16 @@ var saveEngineData = function(engine){
     var ed = new EngineData();
     for (var name in ed) {
       if (ed.hasOwnProperty(name)) {
-        util.log("saving "+name+" data: "+engine[name]);
-        ed[name] = engine[name];
+        if ( name !== "sessionsMap" ){
+            util.log("saving "+name+" data: "+engine[name]);
+            ed[name] = engine[name];
+        }
+        else if( name === "sessionsMap" ){
+            for(var i=0;i<engine.getSessions().length;i++){
+                var s = engine.getSessions()[i];
+                ed.sessionsMap[s.id] = JSON.stringify(s);
+            }
+        }
       }
     }
     
