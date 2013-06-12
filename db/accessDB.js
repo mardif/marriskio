@@ -167,10 +167,15 @@ var AccessDB = function(){
     var serializedEngineData = saveEngineData(engine);
     util.log("match serializedEngineData size: "+serializedEngineData.length);
     zlib.deflate(serializedEngineData, function(error, buffer){
+        
+        if ( error ){
+            return errorHelper(error, callback);
+        }
+        
         util.log("match serializedEngineData compressed size: "+buffer.length);
         matchBean.frozen.created_at = new Date();
-        //matchBean.frozen.engine = buffer;
-        matchBean.frozen.engine = serializedEngineData;
+        //matchBean.frozen.engine = buffer;  //partita salvata zippata
+        matchBean.frozen.engine = serializedEngineData; //partita salvata non zippata
         matchBean.save(function(err){
           if ( err ) return errorHelper(err, callback);
           callback(null, matchBean);

@@ -111,15 +111,17 @@ module.exports = function(app, sio) {
               m = sessionManager.getMatchList().createMatch(match);
           }
           //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
-          var frozen = cryo.parse(match.frozen.engine);
+          var frozen = match.frozen.engine;
+          require("util").log("frozen: "+frozen);
           zlib.inflate(frozen, function(error, serializedMatchEngine){
               
             if ( error ){
                 //res.send("Error on "+error, 404);
+                //return;
             }
             
-            //m.setEngine(serializedMatchEngine);
-            m.setEngineData(frozen);
+            //m.setEngine(cryo.parse(serializedMatchEngine)); //partita salvata zippata
+            m.setEngineData(cryo.parse(frozen));  //partita salvata non zippata
               
             res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id });
           });

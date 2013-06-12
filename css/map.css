@@ -372,3 +372,8 @@
     filter: Alpha(Opacity=100);
     opacity:1;
 }
+
+.infoConquered p{
+    color: red;
+    font-size:0.8em;
+}

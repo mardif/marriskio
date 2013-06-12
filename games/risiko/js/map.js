@@ -778,6 +778,16 @@ function isStatoConfinante(statoId){
 	}
 	return false;
 }
+/*
+<div class="infoConquered">     	<h4> 			<center>Territorio nemico<br>Conquistato!</center>		</h4>		<div style="text-align:center;">			<img src="/conquered_small" border="0">		</div>		<p class="text-info" style="
+    text-align: center;
+">
+<a href="javascript:void(0);" class="btn btn-mini" onclick="moveTroupToStateConquered(20, 20);" style="
+    margin-bottom: 4px;
+">Sposta <img src="/plus1" border="0" width="16"> truppa</a>
+<a href="javascript:void(0);" class="btn btn-mini" onclick="infowindow.close();">Termina spostamento</a>
+</p>	</div>
+*/
 
 function show_infoWindow(offenderId, defenderId){
 	var content = "<div class='infoConquered'> \
@@ -787,9 +797,10 @@ function show_infoWindow(offenderId, defenderId){
 		<div style='text-align:center;'>\
 			<img src='/conquered_small' border='0'>\
 		</div>\
-		<p>\
-			Per spostare pi&ugrave; truppe clicca <img src='/plus1' border='0' class='plus1' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");'><br/>\
-			Quando hai terminato, clicca <input type='button' value='chiudi' onClick='infowindow.close();'>\
+		<p class='text-info' style='text-align:center;'>\
+            <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"moveTroupToStateConquered("+offenderId+", "+defenderId+");\" style=\"margin-bottom: 4px;\" title='Ogni click porti una truppa nel territorio conquistato!\
+            Attenzione: non puoi portare truppe indietro!'>Sposta <img src=\"/plus1\" border=\"0\" width=\"16\"> truppa</a> \
+            <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"infowindow.close();\" title='Chiudendo questa info, non potrai più spostare ulteriori truppe!'>Termina spostamento</a> \
 		</p>\
 	</div>";
 	//toggleMovement(content);
@@ -1212,7 +1223,7 @@ function retrievePolygons(){
                 google.maps.event.addListener(theMarker, 'click', function(event){
                 	/*DEBUG*/
                 	//showArrow(projection.fromLatLngToDivPixel(this.position));
-					//show_infoWindow(this.id, this.id);
+					show_infoWindow(this.id, this.id);
 					/* FINE DEBUG*/
 
                 	/*
