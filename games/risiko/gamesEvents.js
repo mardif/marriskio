@@ -735,6 +735,18 @@ module.exports = function(sio, socket){
         });
     });
     
+    socket.on("abandonMatch", function(data){
+        util.log("abandonMatch: "+util.inspect(data));
+        if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
+            return;
+        }
+        var match = getMatch(data.matchId);
+        if ( !match ){
+          return;
+        }
+        var engine = match.getEngine();
+    });
+    
     //Eventi della mappa
     socket.on("zoom_changed", function(zoomLevel){
         sio.sockets.in(socket.store.data.matchId).emit("setZoom", {zoomLevel: zoomLevel});

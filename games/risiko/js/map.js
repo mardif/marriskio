@@ -778,16 +778,6 @@ function isStatoConfinante(statoId){
 	}
 	return false;
 }
-/*
-<div class="infoConquered">     	<h4> 			<center>Territorio nemico<br>Conquistato!</center>		</h4>		<div style="text-align:center;">			<img src="/conquered_small" border="0">		</div>		<p class="text-info" style="
-    text-align: center;
-">
-<a href="javascript:void(0);" class="btn btn-mini" onclick="moveTroupToStateConquered(20, 20);" style="
-    margin-bottom: 4px;
-">Sposta <img src="/plus1" border="0" width="16"> truppa</a>
-<a href="javascript:void(0);" class="btn btn-mini" onclick="infowindow.close();">Termina spostamento</a>
-</p>	</div>
-*/
 
 function show_infoWindow(offenderId, defenderId){
 	var content = "<div class='infoConquered'> \
@@ -799,7 +789,7 @@ function show_infoWindow(offenderId, defenderId){
 		</div>\
 		<p class='text-info' style='text-align:center;'>\
             <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"moveTroupToStateConquered("+offenderId+", "+defenderId+");\" style=\"margin-bottom: 4px;\" title='Ogni click porti una truppa nel territorio conquistato!\
-            Attenzione: non puoi portare truppe indietro!'>Sposta <img src=\"/plus1\" border=\"0\" width=\"16\"> truppa</a> \
+            Attenzione: non puoi portare truppe indietro!'>Sposta <img src=\"/user_add\" border=\"0\" width=\"16\"> truppa</a> \
             <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"infowindow.close();\" title='Chiudendo questa info, non potrai più spostare ulteriori truppe!'>Termina spostamento</a> \
 		</p>\
 	</div>";
@@ -853,6 +843,16 @@ $(document).on("click", "#cards", function(){
 		sessionId: sessionId,
 		matchId: matchId
 	});
+});
+
+$(document).on("click", "#abbandonaMatch", function(){
+    var response = confirm("Sicuro di voler abbandonare la partita? Non potrai più rientrare ed il tuo posto verrà preso dal computer!");
+    if ( response === true ){
+        socket.emit("abandonMatch", {
+            sessionId: sessionId,
+            matchId: matchId
+        });
+    }
 });
 
 $(document).on("click", "#prevStep", function(){

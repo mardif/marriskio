@@ -29,6 +29,8 @@ var Session = function(user){
 	this.interactiveCard = undefined;  //quando ricevo l'interazione, provvedo a resettarla ad undefined
 	this.sabotaged = false;
 	this.alliances = [];
+    
+    this.playerLeaveMatch = false;
 
 	/* METODO PUBBLICO DA CHIAMARE QUANDO VENGONO APPLICATE LE CARTE BONUS */
 	this.applyCard = function(card){

@@ -76,7 +76,8 @@ module.exports = function(app) {
     app.get("/arrow2",  common.staticHandler("./images/arrow_rev.gif"));
     app.get("/arrow3",  common.staticHandler("./images/arrow_rev_up.gif"));
     app.get("/arrow4",  common.staticHandler("./images/arrow_up.gif"));
-    app.get("/cards", common.staticHandler("./images/cards.png"));
+    //app.get("/cards", common.staticHandler("./images/cards.png"));
+    app.get("/cards", common.staticHandler("./images/glyphicons_319_sort.png"));
     app.get("/carousel_btns.png", common.staticHandler("./images/carousel_btns.png"));
     app.get("/shadow.png", common.staticHandler("./images/shadow.png"));
     app.get("/arrows.png", common.staticHandler("./images/arrows.png"));
@@ -103,6 +104,8 @@ module.exports = function(app) {
     app.get("/play", common.staticHandler("./images/play.png"));
     app.get("/loading-small", common.staticHandler("./images/loading-small.gif"));
     app.get("/connected", common.staticHandler("./images/connected.png"));
+    app.get("/user_add", common.staticHandler("./images/glyphicons_006_user_add.png"));
+    app.get("/leave_match", common.staticHandler("./images/glyphicons_063_power.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
