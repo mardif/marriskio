@@ -737,7 +737,7 @@ module.exports = function(sio, socket){
     
     socket.on("abandonMatch", function(data){
         util.log("abandonMatch: "+util.inspect(data));
-        if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
+        if ( checkSessionTurn(data.matchId, data.sessionId, socket, true) === false ){
             return;
         }
         var match = getMatch(data.matchId);
@@ -745,6 +745,20 @@ module.exports = function(sio, socket){
           return;
         }
         var engine = match.getEngine();
+        
+        var session = engine.getSession(data.sessionId);
+        session.AIActivated = true;
+        sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
+            users: engine.getSessions(), 
+            num_players: match.getBean().num_players,
+            engineLoaded: engine.isEngineLoaded()
+        });
+        sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", {
+            message: "Il generale "+session.nick+" ha deciso di abbandonare la partita: il controllo delle sue truppe verrà preso dal sistema, che potrà solo difendere i suoi territori!",
+            level: "info",
+            delay: 10000
+        });
+        
     });
     
     //Eventi della mappa

@@ -30,7 +30,7 @@ var Session = function(user){
 	this.sabotaged = false;
 	this.alliances = [];
     
-    this.playerLeaveMatch = false;
+    this.AIActivated = false;
 
 	/* METODO PUBBLICO DA CHIAMARE QUANDO VENGONO APPLICATE LE CARTE BONUS */
 	this.applyCard = function(card){

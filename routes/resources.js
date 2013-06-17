@@ -94,7 +94,8 @@ module.exports = function(app) {
     app.get("/attaccoCard", common.staticHandler("./images/attaccoCard.png"));
     app.get("/epidemia", common.staticHandler("./images/epidemia.jpg"));
     app.get("/close.png", common.staticHandler("./images/close.png"));
-    app.get("/scudo", common.staticHandler("./images/scudo.png"));
+    //app.get("/scudo", common.staticHandler("./images/scudo.png"));
+    app.get("/scudo", common.staticHandler("./images/glyphicons_270_shield.png"));
     app.get("/conquered_small", common.staticHandler("./images/conquered_small.png"));
     app.get("/plus1", common.staticHandler("./images/piu1.png"));
     app.get("/main", common.staticHandler("./images/main.jpg"));
@@ -106,6 +107,8 @@ module.exports = function(app) {
     app.get("/connected", common.staticHandler("./images/connected.png"));
     app.get("/user_add", common.staticHandler("./images/glyphicons_006_user_add.png"));
     app.get("/leave_match", common.staticHandler("./images/glyphicons_063_power.png"));
+    app.get("/user", common.staticHandler("./images/glyphicons_003_user.png"));
+    app.get("/bug", common.staticHandler("./images/glyphicons_360_bug.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));

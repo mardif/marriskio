@@ -73,7 +73,7 @@ socket.on('connect', function () {
 socket.emit("firstConnect", {matchId: matchId});
 
 socket.on("errorOnAction", function(data){
-	show_note("error", data.message);
+	show_note(data.level ? data.level : "error", data.message, data.delay);
 	if ( data.action ){
 		try{
 			eval(data.action);
@@ -732,12 +732,9 @@ function fillJoinUsers(data){
             if ( user.master === true ){
               masterSession = user;
             }
-            if ( user.statusActive === false ){
-                $("<li id='"+user.id+"' class='user-inactive' style='background-color:"+user.color+"'><span>"+user.nick+"</span><span style='float:right;'><img title='Connesso' src='/loading-small' style='height:20px;'></span></li>").appendTo($("#elenco"));;
-            }
-            else{
-                $("<li id='"+user.id+"' class='user-active' style='background-color:"+user.color+"'><span>"+user.nick+"</span><span style='float:right;'><img title='Connesso! Pronto per giocare!' src='/connected' style='height:20px;'></span></li>").appendTo($("#elenco"));;
-            }
+            
+            $("<li id='"+user.id+"' class='user-"+(user.statusActive ? "active" : "inactive")+"' style='background-color:"+user.color+"'><img src='/"+(user.AIActivated ? "bug" : "user")+"' title='"+(user.AIActivated ? "Il generale "+user.nick+" ha abbandonato la partita! Il sistema gestirà le sue truppe solo per la difesa!" : "Generale "+user.nick+" online e pronto a combattere!")+"' border='0'><span>"+user.nick+"</span><span style='float:right;'><img title='"+(user.statusActive ? "Connesso! Pronto per giocare!" : "In connessione...")+"' src='/"+(user.statusActive ? "connected" : "loading-small")+"' style='height:23px;'></span></li>").appendTo($("#elenco"));;
+            
         }
     
         if ( data.engineLoaded === false ){
