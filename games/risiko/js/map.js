@@ -213,7 +213,7 @@ socket.on("buildEntireMap", function(data){
 		var players = data.stati;
 		var turno = data.turno;
 		var amIMaster = false;
-    
+        
     for(var prp in players){
       var color = players[prp].color;
       var states = players[prp].states;
@@ -264,6 +264,12 @@ socket.on("buildEntireMap", function(data){
         $("#makeWorld").css("display", "none");
       }
     }
+    
+        if ( data.gameEnd === true ){
+            $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
+            $("#buttonbar").hide();
+            return;
+        }
 
 		if ( !turno.session ){
 			var msg = "Attendi gli altri giocatori";
@@ -276,8 +282,15 @@ socket.on("buildEntireMap", function(data){
 			$("#stepStatus").html(msg);
 			return;
 		}
+        
+        if ( $("#elenco li").size() != data.num_players ){
+            //in attesa che tutti i giocatori siano online!
+            $("#stepStatus").html("Attendi gli altri giocatori");
+            return;
+        }
 
 		checkTurn(turno);
+        
     }
 });
 
@@ -428,10 +441,6 @@ socket.on("attackResults", function(data){
 			});
 		}
 
-		if ( data.haveWeAWinner == true ){
-			socket.emit("weHaveAWinner", {sessionId: data.sessionId, matchId: matchId});
-		}
-
 		//$("#actionStatus").html("");
 	}
 });
@@ -444,6 +453,13 @@ socket.on("broadcastChat", function(data){
 			sm.play("bell");
 		});
 	}
+});
+
+socket.on("WeHaveAWinner", function(data){
+    if ( data && data.winner ){
+        show_note("info", "VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!", 10000);
+        $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
+    }
 });
 
 socket.on("resultMoveTroupesTo", function(data){
@@ -543,7 +559,7 @@ function showDices(content){
 	if ( $("#dices").is(":visible") == false ){
 		$("#dices").show().animate({
 			top: '+=192'
-		}, 500, function(content){
+		}, 1000, function(content){
 			$("#dices").append(content);
 		}(content));
 	}
@@ -736,7 +752,7 @@ function fillJoinUsers(data){
             $("<li id='"+user.id+"' class='user-"+(user.statusActive ? "active" : "inactive")+"' style='background-color:"+user.color+"'><img src='/"+(user.AIActivated ? "bug" : "user")+"' title='"+(user.AIActivated ? "Il generale "+user.nick+" ha abbandonato la partita! Il sistema gestirà le sue truppe solo per la difesa!" : "Generale "+user.nick+" online e pronto a combattere!")+"' border='0'><span>"+user.nick+"</span><span style='float:right;'><img title='"+(user.statusActive ? "Connesso! Pronto per giocare!" : "In connessione...")+"' src='/"+(user.statusActive ? "connected" : "loading-small")+"' style='height:23px;'></span></li>").appendTo($("#elenco"));;
             
         }
-    
+        
         if ( data.engineLoaded === false ){
           if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
             $("#makeWorld").css("display", "inline-block");
@@ -749,6 +765,15 @@ function fillJoinUsers(data){
             $("#makeWorld").css("display", "none");
           }
         }
+        
+        /*
+        if ( data.gameEnd === true ){
+            $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
+            $("#buttonbar").hide();
+            return;
+        }
+        */
+        
     }
 }
 
@@ -1220,8 +1245,12 @@ function retrievePolygons(){
                 google.maps.event.addListener(theMarker, 'click', function(event){
                 	/*DEBUG*/
                 	//showArrow(projection.fromLatLngToDivPixel(this.position));
-					show_infoWindow(this.id, this.id);
+					//show_infoWindow(this.id, this.id);
 					/* FINE DEBUG*/
+                    
+                    if ( data.gameEnd === true ){
+                        return;
+                    }
 
                 	/*
                 	 * Gestione delle azioni carte bonus

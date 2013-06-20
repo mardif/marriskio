@@ -184,11 +184,22 @@ module.exports = function(sio, socket){
         var result = engine.attack(data.stateToAttack);
         result.defenderName = data.defenderName;
 
-        result.haveWeAWinner = engine.haveWeAWinner(data);
+        //result.haveWeAWinner = engine.haveWeAWinner(data);
 
         setTimeout(function(){
             sio.sockets.in(socket.store.data.matchId).emit("attackResults", result);
         },1000);
+        
+        if ( engine.haveWeAWinner(data) ){
+            var match = getMatch(socket.store.data.matchId);
+            match.getBean().winner = data.sessionId;
+            saveMatch(match);
+            engine.gameEnd = true;
+            engine.winner = data.sessionId;
+            sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", {
+                winner: engine.winner
+            });
+        }
 
     });
 
@@ -211,24 +222,19 @@ module.exports = function(sio, socket){
                 return;
             }
             
-            db.saveMatchStatus(engine, match, function(err, match){
-                if ( err ){
-                    util.log("Error saving match "+match.id);
-                    return;
-                }
-                util.log("Match "+match.id+" was saved correctly");
-                
-            });
+            saveMatch(match);
             
         });
 
-        
+        sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati: engine.caricaStati(),
             engineLoaded: engine.isEngineLoaded(),
             turno: engine.getTurnoAttuale(),
             num_players: match.getBean().num_players
         });
+        */
     });
 
     socket.on("getActualWorld", function(data){
@@ -247,26 +253,22 @@ module.exports = function(sio, socket){
         if ( data && data.nextStep ){
             var changePlayer = engine.nextStep();
             if ( changePlayer === true ){
-                db.saveMatchStatus(engine, match.getBean(), function(err, match){
-                    if ( err ){
-                        util.log("Error saving match "+match.id);
-                        return;
-                    }
-                    util.log("Match "+match.id+" was saved correctly");
-                    
-                });
+                saveMatch(match);
             }
         }
         else if ( data && data.prevStep ){
             var canBack = engine.prevStep();
             util.log("clicco sul prevStep: result: "+canBack);
         }
+        sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: engine.getTurnoAttuale(),
             num_players: match.getBean().num_players
         });
+        */
     });
 
     socket.on("addInitialTroups", function(data){
@@ -313,12 +315,15 @@ module.exports = function(sio, socket){
             });
         }
         else{
+            sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
+            /*
             sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
                 stati:  engine.getActualWorld(),
                 engineLoaded: engine.isEngineLoaded(),
                 turno: engine.getTurnoAttuale(),
                 num_players: match.getBean().num_players
             });
+            */
         }
     });
 
@@ -409,11 +414,6 @@ module.exports = function(sio, socket){
         socket.emit("receiveMyBonyusCard", { cards: player.getCards() });
     });
 
-    socket.on("weHaveAWinner", function(data){
-        // cosa facciamo??? fuochi d'artificio?
-    });
-
-
     socket.on("useCardBonus", function(data){
         util.log("useCardBonus: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
@@ -454,12 +454,15 @@ module.exports = function(sio, socket){
 
         player.addCard(player.interactiveCard);
         player.invalidateInteractCard();
+        sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: engine.getTurnoAttuale(),
             num_players: match.getBean().num_players
         });
+        */
 
     });
 
@@ -494,12 +497,15 @@ module.exports = function(sio, socket){
 
         var turno = engine.getTurnoAttuale();
         turno.cardMessage = "I territori di "+enemy.nick+" sono invasi dal colera!<br/>Secondo i servizi segreti, la responsabilit&agrave; sarebbe di "+player.nick;
+        sendBuildEntireMap(sio, socket, match, turno);
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players
         });
+        */
 
 
     });
@@ -569,12 +575,15 @@ module.exports = function(sio, socket){
         turno.cardMessage = cardMessage;
         turno.sound = sound;
         turno.cardStatoId = data.statoId;
+        sendBuildEntireMap(sio, socket, match, turno);
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players
         });
+        */
 
     });
 
@@ -603,12 +612,15 @@ module.exports = function(sio, socket){
         var turno = engine.getTurnoAttuale();
         turno.cardMessage = cardMessage;
         turno.cardStatoId = data.statoId;
+        sendBuildEntireMap(sio, socket, match, turno);
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players
         });
+        */
     });
 
     socket.on("Alliance", function(data){
@@ -630,13 +642,15 @@ module.exports = function(sio, socket){
 
         var turno = engine.getTurnoAttuale();
         turno.cardMessage = "Il generale "+me.nick+" ha stretto un'alleanza con il generale "+player.nick;
-
+        sendBuildEntireMap(sio, socket, match, turno);
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players
         });
+        */
 
     });
 
@@ -669,12 +683,15 @@ module.exports = function(sio, socket){
 
         var turno = engine.getTurnoAttuale();
         turno.cardMessage = "Il generale "+me.nick+" ha sabotato il generale "+player.nick;
+        sendBuildEntireMap(sio, socket, match, turno);
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players
         });
+        */
 
     });
 
@@ -727,12 +744,15 @@ module.exports = function(sio, socket){
         var turno = engine.getTurnoAttuale();
         turno.cardMessage = "Il generale "+player.nick+" ha rubato una carta bonus al generale "+enemy.nick;
         turno.sound = sound;
+        sendBuildEntireMap(sio, socket, match, turno);
+        /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  engine.getActualWorld(),
             engineLoaded: engine.isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players
         });
+        */
     });
     
     socket.on("abandonMatch", function(data){
@@ -758,6 +778,34 @@ module.exports = function(sio, socket){
             level: "info",
             delay: 10000
         });
+        
+        if ( engine.getSessioneDiTurno() === session.id ){
+            //ho abbandonato, per cui passo il turno al prossimo!
+            engine.usersAbandoned += 1;
+            engine.nextTurn();
+            sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
+            saveMatch(match);
+            /*
+            sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
+                stati:  engine.getActualWorld(),
+                engineLoaded: engine.isEngineLoaded(),
+                turno: engine.getTurnoAttuale(),
+                num_players: match.getBean().num_players
+            });
+            */
+        }
+        
+        var humans = engine.getHumanUsers();
+        if ( humans.length === 1 ){
+            engine.gameEnd = true;
+            engine.winner = humans[0];
+            match.getBean().winner = engine.winner.id;
+            saveMatch(match);
+            //abbiamo un vincitore per abbandono degli altri giocatori!!! (KO tecnico)
+            setTimeout(function(){
+                sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", { winner: humans[0] } );
+            },1000);
+        }
         
     });
     
@@ -839,6 +887,31 @@ module.exports = function(sio, socket){
         }
 
         return true;
+    };
+    
+    var sendBuildEntireMap = function(sio, socket, match, turno){
+        util.log("users abandoned: "+match.getEngine().usersAbandoned);
+        util.log("users needed online: "+ (match.getBean().num_players - match.getEngine().usersAbandoned) );
+        util.log("user winner: "+util.inspect(match.getBean().winner, true));
+        sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
+            stati:  match.getEngine().getActualWorld(),
+            engineLoaded: match.getEngine().isEngineLoaded(),
+            turno: turno,
+            num_players: match.getBean().num_players - match.getEngine().usersAbandoned,
+            gameEnd: match.getEngine().gameEnd,
+            winner: match.getBean().winner
+        });
+    };
+    
+    var saveMatch = function(match){
+        db.saveMatchStatus(match.getEngine(), match.getBean(), function(err, match){
+            if ( err ){
+                util.log("Error saving match "+match.id);
+                return;
+            }
+            util.log("Match "+match.id+" was saved correctly");
+            
+        });
     };
     
     /*

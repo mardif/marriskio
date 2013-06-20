@@ -18,6 +18,8 @@ var EngineData = function(){
 	//this.deck= undefined;
 	this.statesConquered= undefined;
 	this.spostamentoFinalEffettuato= undefined;
+    this.gameEnd = undefined;
+    this.usersAbandoned = 0;
     
     this.sessionsMap = {};
     

@@ -21,6 +21,9 @@ var Engine = function(matchId){
 	this.deck = new cards.CardBonusDeck();
 	this.statesConquered = 0;
 	this.spostamentoFinalEffettuato = false;
+    this.gameEnd = false;
+    this.winner = undefined;
+    this.usersAbandoned = 0;
 
 	this.getSession = function(id){
 		//return sessions[id];
@@ -187,6 +190,7 @@ var Engine = function(matchId){
 	this.getStepTurno = function(){
 		return this.stepTurno;
 	};
+    
 	this.nextTurn = function(){
 		this.turnoAttuale += 1;
 
@@ -195,7 +199,7 @@ var Engine = function(matchId){
 		}
 
 		var session = this.getSession(this.turni[this.turnoAttuale]);
-		while ( session.isAlive() == false ){
+		while ( session.isAlive() === false || session.AIActivated === true ){
 			this.turnAttuale += 1;
 		}
 
@@ -644,6 +648,18 @@ var Engine = function(matchId){
 		return troupes;
 
 	};
+    
+    this.getHumanUsers = function(){
+        var list = [];
+        for(var idx in this.sessions){
+            var s = this.sessions[idx];
+            if ( s.AIActivated === false ){
+                list.push(s);
+            }
+        }
+        
+        return list;
+    };
 
 };
 

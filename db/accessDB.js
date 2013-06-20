@@ -150,7 +150,8 @@ var AccessDB = function(){
   },
 
   this.getMatchById = function(matchId, fields, callback){
-      Match.findById(matchId, fields, function(err, match){
+      
+      Match.findById(matchId, fields).populate('winner').exec(function(err, match){
           callback(err, match);
       });
   },
