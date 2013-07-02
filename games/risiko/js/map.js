@@ -283,7 +283,7 @@ socket.on("buildEntireMap", function(data){
 			return;
 		}
         
-        if ( $("#elenco li").size() != data.num_players ){
+        if ( $("#elenco li").size() < data.num_players ){
             //in attesa che tutti i giocatori siano online!
             $("#stepStatus").html("Attendi gli altri giocatori");
             return;

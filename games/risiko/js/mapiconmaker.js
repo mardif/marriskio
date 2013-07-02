@@ -202,7 +202,7 @@ MapIconMaker.createLabeledMarkerIcon = function (opts) {
   var icon = new google.maps.MarkerImage();
   icon.url = baseUrl + iconUrl;
   icon.size = new google.maps.Size(width, height);
-  icon.scaledSize = new google.maps.Size(width, height);
+  icon.scaledSize = new google.maps.Size(22, 22);  //sembra non funzionare con Firefox
   return icon;
 
 };

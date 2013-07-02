@@ -12,20 +12,31 @@ module.exports = function(sio, socket){
     socket.on("firstConnect", function(data){
         
         var sess = socket.handshake.session;
+        var user = sess.passport.user;
+        var session = sessionManager.getSession(user._id);
+        
+        if ( session.AIActivated === true ){
+            sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
+                users: engine.getSessions(), 
+                num_players: match.getBean().num_players,
+                engineLoaded: engine.isEngineLoaded()
+            });
+            return;
+        }
       
-      var user = sess.passport.user;
       util.log("first connect called");
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
       }
         sessionManager.setSessionStatus(user._id, true);
-        var session = sessionManager.getSession(user._id);
+        
         if ( session ){
           var match = getMatch(session.matchId);
           if ( !match ){ return; }
           var engine = match.getEngine();
           util.log("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
+          util.log("         match winner "+util.inspect(match.getBean().winner, true));
           socket.set('matchId', engine.getMatchId(), function() { util.log(session.nick+' join on match ' + engine.getMatchId()); } );
           socket.set("sessionId", session.id, function(){ util.log("sessionId ["+session.id+"] legato al socket!"); });
           socket.set('active', true);
@@ -215,7 +226,7 @@ module.exports = function(sio, socket){
         
         var engine = match.getEngine();
         
-        db.setStatusMatch(true, match.getBean(), function(err, match){
+        db.setStatusMatch(true, match.getBean(), function(err, dbMatch){
             
             if ( err ){
                 util.log("impostazione dello stato del match "+data.matchId+" non riuscito!");
@@ -226,6 +237,7 @@ module.exports = function(sio, socket){
             
         });
 
+        engine.caricaStati();
         sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
         /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
@@ -779,12 +791,13 @@ module.exports = function(sio, socket){
             delay: 10000
         });
         
+        engine.usersAbandoned += 1;
+        var populateWinner = false;
         if ( engine.getSessioneDiTurno() === session.id ){
             //ho abbandonato, per cui passo il turno al prossimo!
-            engine.usersAbandoned += 1;
             engine.nextTurn();
             sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
-            saveMatch(match);
+            
             /*
             sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
                 stati:  engine.getActualWorld(),
@@ -800,12 +813,15 @@ module.exports = function(sio, socket){
             engine.gameEnd = true;
             engine.winner = humans[0];
             match.getBean().winner = engine.winner.id;
-            saveMatch(match);
+            populateWinner = true;
+            
             //abbiamo un vincitore per abbandono degli altri giocatori!!! (KO tecnico)
             setTimeout(function(){
                 sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", { winner: humans[0] } );
             },1000);
         }
+        
+        saveMatch(match, populateWinner);  //salvo comunque...
         
     });
     
@@ -903,13 +919,21 @@ module.exports = function(sio, socket){
         });
     };
     
-    var saveMatch = function(match){
-        db.saveMatchStatus(match.getEngine(), match.getBean(), function(err, match){
+    var saveMatch = function(match, populateWinner){
+        db.saveMatchStatus(match.getEngine(), match.getBean(), function(err, dbMatch){
             if ( err ){
                 util.log("Error saving match "+match.id);
                 return;
             }
-            util.log("Match "+match.id+" was saved correctly");
+            util.log("Match "+match.getId()+" was saved correctly");
+            if ( populateWinner === true ){
+                db.getMatchById(match.getId(), null, function(err, remoteDbMatch){
+                    if ( err ){ 
+                        util.log("error on sync db: "+err); return; 
+                    }
+                    match.setBean(remoteDbMatch);
+                });
+            }
             
         });
     };

@@ -213,7 +213,7 @@
         <ul class="nav nav-tabs" id="matches" style="margin:0px;margin-left:30px;">
             <li class="active"><a href="#myMatches" data-toggle="tab">{{__("Match you are playing")}}</a></li>
             <li><a href="#availableMatches" data-toggle="tab">{{__("Matches availables")}}</a></li>
-            <li><a href="#viewmatches" data-toggle="tab">{{__("Viewable matches running")}}</a></li>
+            <li><a href="#matchesCompleted" data-toggle="tab">{{__("Your matches completed")}}</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active matches" id="myMatches">
@@ -231,50 +231,52 @@
                     </thead>
                     <tbody class='match'>
                         {% for m in myMatchList %}
-                            <tr>
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
-                                            {{__("Actions")}}
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul id="menu1" class="dropdown-menu" role="menu" mid='{{m._id}}'>
-                                          <li role="presentation"><a role="menuitem" class="matchInvitation" tabindex="-1" href="javascript:void(0);">{{__("Send invitation")}}</a></li>
-                                          <li role="presentation" class="divider"></li>
-                                            {% if m.masterPlayer._id == user.id %}  <!-- se sono il masterPlayer, posso cancellare il match -->
-                                                <li role="presentation"><a role="menuitem" tabindex="-1" class="deleteMatch" href="#">{{__("Remove match")}}</a></li>
-                                            {% endif %}
-                                            {% if m.masterPlayer._id != user.id && m.running == false%} <!-- posso uscire da un match solo se non ne sono proprietario -->
-                                                <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick='confirmLeaveMatch("{{m._id}}");'>{{__("Get out from match")}}</a></li>
-                                            {% endif %}
-                                          <li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li>
-                                        </ul>
-                                      </div>
-                                </td>
-                                <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                <td>{{m.started_at|date('j F Y H:i:s', 1)}}</td>
-                                <td>{{m.masterPlayer.nick}}</td>
-                                <td>
-                                    {% for p in m.players %}
-                                        <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
-                                    {% endfor %}
-                                    {% for idx in m.free|buildArray %}
-                                        <img src='seatFree' border='0'>
-                                    {% endfor %}
-                                </td>
-                                <td>{% if m.running == false && m.free > 0 %}
-                                        {{__("waiting for players")}}
-                                    {% else if m.running == false && m.free == 0 %}
-                                        {{__("Ready to play")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}'>
-                                    {% else if m.running == true && m.pause == false %}
-                                        {{__("Ready to play")}} <img mid='{{m._id}}' class='restoreMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Restore match!")}}'>
-                                    {% else if m.pause %}
-                                        {{__("pause")}}
-                                    {% else %}
-                                        {{__("playing")}}
-                                    {% endif %}
-                                </td>
-                            </tr>
+                            {% if !m.winner %}
+                                <tr>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
+                                                {{__("Actions")}}
+                                                <span class="caret"></span>
+                                            </a>
+                                            <ul id="menu1" class="dropdown-menu" role="menu" mid='{{m._id}}'>
+                                              <li role="presentation"><a role="menuitem" class="matchInvitation" tabindex="-1" href="javascript:void(0);">{{__("Send invitation")}}</a></li>
+                                              <li role="presentation" class="divider"></li>
+                                                {% if m.masterPlayer._id == user.id %}  <!-- se sono il masterPlayer, posso cancellare il match -->
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" class="deleteMatch" href="#">{{__("Remove match")}}</a></li>
+                                                {% endif %}
+                                                {% if m.masterPlayer._id != user.id && m.running == false%} <!-- posso uscire da un match solo se non ne sono proprietario -->
+                                                    <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick='confirmLeaveMatch("{{m._id}}");'>{{__("Get out from match")}}</a></li>
+                                                {% endif %}
+                                              <li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li>
+                                            </ul>
+                                          </div>
+                                    </td>
+                                    <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
+                                    <td>{{m.started_at|date('j F Y H:i:s', 1)}}</td>
+                                    <td>{{m.masterPlayer.nick}}</td>
+                                    <td>
+                                        {% for p in m.players %}
+                                            <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                        {% endfor %}
+                                        {% for idx in m.free|buildArray %}
+                                            <img src='seatFree' border='0'>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{% if m.running == false && m.free > 0 %}
+                                            {{__("waiting for players")}}
+                                        {% else if m.running == false && m.free == 0 %}
+                                            {{__("Ready to play")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}'>
+                                        {% else if m.running == true && m.pause == false %}
+                                            {{__("Ready to play")}} <img mid='{{m._id}}' class='restoreMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Restore match!")}}'>
+                                        {% else if m.pause %}
+                                            {{__("pause")}}
+                                        {% else %}
+                                            {{__("playing")}}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -332,8 +334,45 @@
                 </table>
                 <p style='height:25px;'></p>
             </div>
-            <div class="tab-pane" id="viewmatches">
-                <h3>{{__("Coming soon")}}</h3>
+            <div class="tab-pane" id="matchesCompleted">
+                <h3>{{__("Your matches completed")}}</h3>
+                <table class="table table-striped table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{__("Created at")}}</th>
+                            <th>{{__("Owner")}}</th>
+                            <th>{{__("Players")}}</th>
+                            <th>{{__("Winner")}}</th>
+                            <th>{{__("Match")}}</th>
+                        </tr>
+                    </thead>
+                    <tbody class='match'>
+                        {% for m in myMatchList %}
+                            {% if m.winner %}
+                                <tr>
+                                    <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
+                                    <td>{{m.started_at|date('j F Y H:i:s', 1)}}</td>
+                                    <td>{{m.masterPlayer.nick}}</td>
+                                    <td>
+                                        {% for p in m.players %}
+                                            <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                        {% endfor %}
+                                        {% for idx in m.free|buildArray %}
+                                            <img src='seatFree' border='0'>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {{m.winner.nick}}
+                                    </td>
+                                    <td>
+                                        {{__("View match")}} <img mid='{{m._id}}' class='restoreMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("View this match final status!")}}'>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
                 <p style='height:25px;'></p>
             </div>
         </div>
