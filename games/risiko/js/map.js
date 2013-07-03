@@ -35,6 +35,7 @@ var images = ["/left","/right","/up","/down","/users","/notes","/dices","/dice1"
 $(images).preload();
 var lastCenter = center;
 var nick = undefined;
+var AIActivated = false;
 
 MyOverlay.prototype = new google.maps.OverlayView();
 MyOverlay.prototype.onAdd = function() { }
@@ -236,6 +237,7 @@ socket.on("buildEntireMap", function(data){
         amIMaster = players[prp].master;
         nick = players[prp].nick;
         interactCardSet = players[prp].interactiveCard;
+        AIActivated = players[prp].AIActivated;
       }
       for(var i in states){
         var stato = states[i];
@@ -263,6 +265,10 @@ socket.on("buildEntireMap", function(data){
       else if ( engineLoaded && prp == sessionId ){
         $("#makeWorld").css("display", "none");
       }
+    }
+    
+    if ( AIActivated === true ){
+        $("#buttonbar").hide();
     }
     
         if ( data.gameEnd === true ){
@@ -1248,7 +1254,7 @@ function retrievePolygons(){
 					//show_infoWindow(this.id, this.id);
 					/* FINE DEBUG*/
                     
-                    if ( data.gameEnd === true ){
+                    if ( data.gameEnd === true || AIActivated === true ){
                         return;
                     }
 

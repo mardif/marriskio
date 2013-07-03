@@ -88,7 +88,7 @@ var SessionManager = function(){
         //Già che ci sono, aggiunto in lista le sessioni abbandonate
         for(var prp in map){
             var sess = JSON.parse(map[prp]);
-            if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) ){
+            if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) && sess.id != mySession.id ){
                 var mySession = new Session({_id: sess.id, nick: sess.nick, color: sess.color});
                 mySession.setMatchId(match.getId());
                 for(var idx in propertiesToRetrieve){
