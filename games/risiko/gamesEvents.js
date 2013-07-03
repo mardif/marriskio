@@ -108,7 +108,7 @@ module.exports = function(sio, socket){
             if ( mysession !== null && mysession.disconnected === true ){
                 util.log("rimozione della sessione "+sessionId);
                 sessionManager.removeSession(sessionId); //devo togliere anche il giocatore dal motore
-                engine.removeSessionFromEngine(sessionId);
+                //engine.removeSessionFromEngine(sessionId);
                 sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
             }
             else{

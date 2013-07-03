@@ -265,10 +265,8 @@
                                     </td>
                                     <td>{% if m.running == false && m.free > 0 %}
                                             {{__("waiting for players")}}
-                                        {% else if m.running == false && m.free == 0 %}
+                                        {% else if m.free == 0 %}
                                             {{__("Ready to play")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}'>
-                                        {% else if m.running == true && m.pause == false %}
-                                            {{__("Ready to play")}} <img mid='{{m._id}}' class='restoreMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Restore match!")}}'>
                                         {% else if m.pause %}
                                             {{__("pause")}}
                                         {% else %}

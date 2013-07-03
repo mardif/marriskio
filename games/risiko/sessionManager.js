@@ -51,7 +51,6 @@ var SessionManager = function(){
     util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
     mySession.setMaster( masterPlayer.toString() == mySession.id ? true : false  );
     
-    /*
     for(var i=0; i< match.getBean().players.length; i++){
       var player = match.getBean().players[i];
       util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
@@ -61,8 +60,6 @@ var SessionManager = function(){
         break;
       }
     }
-    */
-    
     
     /*
     Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)

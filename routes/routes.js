@@ -90,6 +90,13 @@ module.exports = function(app, sio) {
         db.getMatchById(req.body.matchId, null, function(err, match){
           if (err) throw err;
           sessionManager.getMatchList().createMatch(match);
+          
+          //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
+          var frozen = match.frozen.engine;
+          if ( frozen ){
+                //m.setEngine(cryo.parse(serializedMatchEngine)); //partita salvata zippata
+                m.setEngineData(cryo.parse(frozen));  //partita salvata non zippata
+          }
           res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id });
         });
 
