@@ -200,10 +200,10 @@ var Engine = function(matchId){
 
 		var session = this.getSession(this.turni[this.turnoAttuale]);
 		while ( session.isAlive() === false || session.AIActivated === true ){
-			this.turnAttuale += 1;
+			this.turnoAttuale += 1;
+    		session = this.getSession(this.turni[this.turnoAttuale]);
 		}
 
-		session = this.getSession(this.turni[this.turnoAttuale]);
 
 		session.applyingTurnCards = [];
 		this.attackFrom = -1;

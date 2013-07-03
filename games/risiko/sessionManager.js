@@ -16,7 +16,11 @@ var SessionManager = function(){
         "alliances",
         "states",
         "haveDefensiveCard",
-        "turno"
+        "turno",
+        "AIActivated",
+        "nick",
+        "color",
+        "_id"
     ];
 
   var matchList = new MatchList();
@@ -36,18 +40,18 @@ var SessionManager = function(){
 			return false;
 		}
 		mySession.setMatchId(match.getId());
-        setSessionPropsFromDb(mySession, match);
+        this.setSessionPropsFromDb(mySession, match);
 		match.getEngine().addSessionToEngine(mySession);
 
 		return true;
 	};
 
-  var setSessionPropsFromDb = function(mySession, match){
+  this.setSessionPropsFromDb = function(mySession, match){
     var masterPlayer = match.getBean().masterPlayer;
     util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
     mySession.setMaster( masterPlayer.toString() == mySession.id ? true : false  );
     
-    
+    /*
     for(var i=0; i< match.getBean().players.length; i++){
       var player = match.getBean().players[i];
       util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
@@ -57,6 +61,9 @@ var SessionManager = function(){
         break;
       }
     }
+    */
+    
+    
     /*
     Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)
     */
@@ -76,6 +83,20 @@ var SessionManager = function(){
                 mySession[prop] = m[prop];
             }
             util.log(" -------------------------------- ");
+        }
+        
+        //Già che ci sono, aggiunto in lista le sessioni abbandonate
+        for(var prp in map){
+            var sess = JSON.parse(map[prp]);
+            if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) ){
+                var mySession = new Session({_id: sess.id, nick: sess.nick, color: sess.color});
+                mySession.setMatchId(match.getId());
+                for(var idx in propertiesToRetrieve){
+                    var prop = propertiesToRetrieve[idx];
+                    mySession[prop] = sess[prop];
+                }                
+                match.getEngine().addSessionToEngine(mySession);
+            }
         }
     }    
     

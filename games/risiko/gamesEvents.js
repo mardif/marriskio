@@ -13,28 +13,30 @@ module.exports = function(sio, socket){
         
         var sess = socket.handshake.session;
         var user = sess.passport.user;
-        var session = sessionManager.getSession(user._id);
         
-        if ( session.AIActivated === true ){
-            sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
-                users: engine.getSessions(), 
-                num_players: match.getBean().num_players,
-                engineLoaded: engine.isEngineLoaded()
-            });
-            return;
-        }
-      
       util.log("first connect called");
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
       }
         sessionManager.setSessionStatus(user._id, true);
+        var session = sessionManager.getSession(user._id);
         
         if ( session ){
           var match = getMatch(session.matchId);
           if ( !match ){ return; }
           var engine = match.getEngine();
+          
+            if ( session.AIActivated === true ){
+                sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
+                    users: engine.getSessions(), 
+                    num_players: match.getBean().num_players,
+                    engineLoaded: engine.isEngineLoaded()
+                });
+                return;
+            }
+          
+          
           util.log("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
           util.log("         match winner "+util.inspect(match.getBean().winner, true));
           socket.set('matchId', engine.getMatchId(), function() { util.log(session.nick+' join on match ' + engine.getMatchId()); } );
