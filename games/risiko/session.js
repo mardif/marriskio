@@ -53,7 +53,7 @@ var Session = function(user){
 	this.haveDefensiveCardActive = function(){
 		for(var idx in this.applyingTurnCards){
 			var card = this.applyingTurnCards[idx];
-			if ( card instanceof c.DefensiveCard ){
+			if ( card.type === c.DEFENSIVE_CARD ){
 				return true;
 			}
 		}

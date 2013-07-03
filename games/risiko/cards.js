@@ -1,3 +1,17 @@
+var EPIDEMIA = "EPIDEMIA";
+var ATOMIC_BOMB_CARD = "ATOMIC_BOMB_CARD";
+var DEFENSIVE_CARD = "DEFENSIVE_CARD";
+var OFFENSIVE_CARD = "OFFENSIVE_CARD";
+var ALLIANCE_CARD = "ALLIANCE_CARD";
+var AIR_ATTACK = "AIR_ATTACK";
+var GROUND_ATTACK = "GROUND_ATTACK";
+var DISTANCE_ATTACK = "DISTANCE_ATTACK";
+var SINGLE_REINFORCEMENT = "SINGLE_REINFORCEMENT";
+var DOUBLE_REINFORCEMENT = "DOUBLE_REINFORCEMENT";
+var TRIPLE_REINFORCEMENT = "TRIPLE_REINFORCEMENT";
+var SABOTAGE_CARD = "SABOTAGE_CARD";
+var SPY_CARD = "SPY_CARD";
+
 var CardBonusDeck = function(){
 	var cards = [];
 	var index = 0;
@@ -156,6 +170,7 @@ var Card = Class.extend({
 	applyOnAllRound: false,
 	action: undefined,
 	classCard: undefined,
+    type: undefined,
 
 	init: function(title, description){
 		this.title = title;
@@ -220,6 +235,7 @@ var AtomicBombCard = TroupesCard.extend({
 	this.interactMessage = "Clicca sul territorio nemico dove vuoi sganciare la bomba!";
 	this.applyOnAllRound = false;
 	this.classCard = "ca-item-image-atomic";
+    this.type = ATOMIC_BOMB_CARD;
 	this.action = "socket.emit('sendAttack', { \
 			sessionId: sessionId, \
 			matchId: matchId, \
@@ -271,6 +287,7 @@ var DefensiveCard = DicesCard.extend({
 	init: function(){
 		this._super("Strategia Difensiva", "In fase difensiva, aggiungo un dado di risposta per tutto il round!", 0, 1);
 		this.applyOnAllRound = true;
+        this.type = DEFENSIVE_CARD;
 		this.classCard = "ca-item-image-difesaCard";
 		this.template = "<div class='ca-item'> \
 			<div class='ca-item-back-color ca-item-back-green'> \
@@ -316,6 +333,7 @@ var OffensiveCard = DicesCard.extend({
 		this._super("Strategia Offensiva", "Quando attacco, dispongo di un dado aggiuntivo!", 1, 0);
 		this.applyOnAllRound = false;
 		this.classCard = "ca-item-image-attaccoCard";
+        this.type = OFFENSIVE_CARD;
 		this.template = "<div class='ca-item'> \
 			<div class='ca-item-back-color ca-item-back-red'> \
 			</div> \
@@ -360,6 +378,7 @@ var AllianceCard = PlayersCard.extend({
 		this._super("Alleanza", "Alleati con un tuo nemico: nel suo turno non potr&agrave; attaccarti!");
 		this.interactMessage = "Seleziona il nemico con cui vuoi stringere alleanza";
 		this.applyOnAllRound = true;
+        this.type = ALLIANCE_CARD;
 		this.canInteract = true;
 		this.classCard = "ca-item-image-alleanza";
 		this.action = "socket.emit('Alliance', { \
@@ -411,6 +430,7 @@ var AirAttack = TroupesCard.extend({
 		this._super("Attacco aereo", "Attacca un tuo nemico confinante e distruggi 3 armate!", 0, -3);
 		this.interactMessage = "Clicca sul territorio nemico a te confinante per portare a termine l'attacco!";
 		this.applyOnAllRound = false;
+        this.type = AIR_ATTACK;
 		this.classCard = "ca-item-image-attaccoAereo";
 		this.action = "socket.emit('sendAttack', { \
 			sessionId: sessionId, \
@@ -462,6 +482,7 @@ var GroundAttack = TroupesCard.extend({
 		this._super("Attacco con truppe", "Attacca un tuo nemico confinante e distruggi 2 armate!", 0, -2);
 		this.interactMessage = "Clicca sul territorio nemico a te confinante per portare a termine l'attacco!";
 		this.applyOnAllRound = false;
+        this.type = GROUND_ATTACK;
 		this.classCard = "ca-item-image-attaccoTerra";
 		this.action = "socket.emit('sendAttack', { \
 			sessionId: sessionId, \
@@ -513,6 +534,7 @@ var DistanceAttack = TroupesCard.extend({
 		this._super("Cecchino", "Attacca un tuo nemico confinante dagli avamposti e distruggi 1 armata!", 0, -1);
 		this.interactMessage= "Clicca sul territorio nemico a te confinante per portare a termine l'attacco!";
 		this.applyOnAllRound = false;
+        this.type = DISTANCE_ATTACK;
 		this.classCard = "ca-item-image-cecchino";
 		this.action = "socket.emit('sendAttack', { \
 			sessionId: sessionId, \
@@ -565,6 +587,7 @@ var SingleReinforcement = TroupesCard.extend({
 		this._super("Rinforzo", "Ottieni 1 rinforzo da posizionare in uno dei miei stati!", 1, 0);
 		this.interactMessage= "Clicca su un tuo territorio per effettuare il rifornimento di truppe!";
 		this.applyOnAllRound = false;
+        this.type = SINGLE_REINFORCEMENT;
 		this.action = "socket.emit('getReinforcements', { \
 			sessionId: sessionId, \
 			matchId: matchId, \
@@ -614,6 +637,7 @@ var DoubleReinforcement = TroupesCard.extend({
 		this._super("Doppio Rinforzo", "Ottieni 2 rinforzi da posizionare in uno dei miei stati!", 2, 0);
 		this.interactMessage= "Clicca su un tuo territorio per effettuare il rifornimento di truppe!";
 		this.applyOnAllRound = false;
+        this.type = DOUBLE_REINFORCEMENT;
 		this.action = "socket.emit('getReinforcements', { \
 			sessionId: sessionId, \
 			matchId: matchId, \
@@ -663,6 +687,7 @@ var TripleReinforcement = TroupesCard.extend({
 		this._super("Triplo Rinforzo", "Ottieni 3 rinforzi da posizionare in uno dei miei stati!", 3, 0);
 		this.interactMessage= "Clicca su un tuo territorio per effettuare il rifornimento di truppe!";
 		this.applyOnAllRound = false;
+        this.type = TRIPLE_REINFORCEMENT;
 		this.action = "socket.emit('getReinforcements', { \
 			sessionId: sessionId, \
 			matchId: matchId, \
@@ -713,6 +738,7 @@ var SabotageCard = PlayersCard.extend({
 		this.interactMessage= "Seleziona l'utente che vuoi sabotare...";
 		this.applyOnAllRound = false;
 		this.canInteract = true;
+        this.type = SABOTAGE_CARD;
 		this.classCard = "ca-item-image-sabotaggio";
 		this.action = "socket.emit('sabotage', { \
 			sessionId: sessionId, \
@@ -763,6 +789,7 @@ var SpyCard = PlayersCard.extend({
 		this._super("Spia", "Ruba una carta bonus ad un tuo avversario!");
 		this.interactMessage= "Seleziona l'utente a cui vuoi rubare una carta bonus...";
 		this.applyOnAllRound = false;
+        this.type = SPY_CARD;
 		this.canInteract = true;
 		this.classCard = "ca-item-image-spy";
 		this.action = "socket.emit('spy', { \
@@ -815,6 +842,7 @@ var Epidemia = PlayersCard.extend({
 		this._super("Epidemia", "Provoca un'epidemia di colera alle truppe di un tuo avversario: ogni suo territorio perder&agrave; il 30% delle truppe!", 1, -1);
 		this.interactMessage= "Seleziona l'utente a cui applicare la carta Epidemia";
 		this.applyOnAllRound = false;
+        this.type = EPIDEMIA;
 		this.classCard = "ca-item-image-epidemia";
 		this.action = "socket.emit('epidemia', { \
 			sessionId: sessionId, \
@@ -876,3 +904,17 @@ exports.DicesCard = DicesCard;
 exports.TroupesCard = TroupesCard;
 exports.PlayersCard = PlayersCard;
 exports.Epidemia = Epidemia;
+
+exports.EPIDEMIA = EPIDEMIA;
+exports.ATOMIC_BOMB_CARD = ATOMIC_BOMB_CARD;
+exports.DEFENSIVE_CARD = DEFENSIVE_CARD;
+exports.OFFENSIVE_CARD = OFFENSIVE_CARD;
+exports.ALLIANCE_CARD = ALLIANCE_CARD;
+exports.AIR_ATTACK = AIR_ATTACK;
+exports.GROUND_ATTACK = GROUND_ATTACK;
+exports.DISTANCE_ATTACK = DISTANCE_ATTACK;
+exports.SINGLE_REIFORCEMENT = SINGLE_REINFORCEMENT;
+exports.DOUBLE_REIFORCEMENT = DOUBLE_REINFORCEMENT;
+exports.TRIPLE_REIFORCEMENT = TRIPLE_REINFORCEMENT;
+exports.SABOTAGE_CARD = SABOTAGE_CARD;
+exports.SPY_CARD = SPY_CARD;

@@ -205,7 +205,7 @@ var saveEngineData = function(engine){
         else if( name === "sessionsMap" ){
             for(var i=0;i<engine.getSessions().length;i++){
                 var s = engine.getSessions()[i];
-                ed.sessionsMap[s.id] = JSON.stringify(s);
+                ed.sessionsMap[s.id] = cryo.stringify(s);//JSON.stringify(s);
             }
         }
       }

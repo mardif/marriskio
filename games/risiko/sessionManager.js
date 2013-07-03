@@ -2,7 +2,8 @@ var common = require("./common"),
     engine = require("./engine"),
 	util = require("util"),
 	MatchList = require("./MatchList").MatchList,
-	Session = require("./session").Session;
+	Session = require("./session").Session,
+    cryo = require("cryo");
 
 var SessionManager = function(){
     
@@ -68,7 +69,7 @@ var SessionManager = function(){
     if ( match && match.getRestoredSessionsMap() !== undefined ){
         var map = match.getRestoredSessionsMap();
         if ( map[mySession.id] !== undefined ){
-            var m = JSON.parse(map[mySession.id]);
+            var m = cryo.parse(map[mySession.id]);//JSON.parse(map[mySession.id]);
             util.log("");
             util.log(" -------------------------------- ");
             for(var idx in propertiesToRetrieve){
@@ -84,7 +85,7 @@ var SessionManager = function(){
         
         //Già che ci sono, aggiunto in lista le sessioni abbandonate
         for(var prp in map){
-            var sess = JSON.parse(map[prp]);
+            var sess = cryo.parse(map[prp]); //JSON.parse(map[prp]);
             if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) && sess.id != mySession.id ){
                 var mySession = new Session({_id: sess.id, nick: sess.nick, color: sess.color});
                 mySession.setMatchId(match.getId());

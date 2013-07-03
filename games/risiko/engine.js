@@ -255,7 +255,7 @@ var Engine = function(matchId){
 			var cardList = session.getVolatileCardsApplied();
 			for (i in cardList){
 				var card = cardList[i];
-				if ( card instanceof cards.OffensiveCard ){
+				if ( card.type === cards.OFFENSIVE_CARD ){
 					/*
 					esiste una sola carta offensiva che si usa al volo ed influisce sui dadi, ed � questa: usarne pi� di una per turno non comporta alcun beneficio
 					*/
@@ -268,7 +268,7 @@ var Engine = function(matchId){
 			/*------------------------------------------------------*/
 			for (i in cardList){
 				var card = cardList[i];
-				if ( card instanceof cards.DefensiveCard ){
+				if ( card.type === cards.DEFENSIVE_CARD ){
 					/*
 					esiste una sola carta difensiva che si usa per tutto il turno ed influisce sui dati, ed � questa: usarne pi� di una per turno non comporta alcun beneficio
 					*/

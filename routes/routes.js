@@ -89,7 +89,8 @@ module.exports = function(app, sio) {
         /*Provvedo a caricare i dati dal db, poi redirigo alla pagina di gioco*/
         db.getMatchById(req.body.matchId, null, function(err, match){
           if (err) throw err;
-          sessionManager.getMatchList().createMatch(match);
+          
+          var m = sessionManager.getMatchList().createMatch(match);
           
           //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
           var frozen = match.frozen.engine;
