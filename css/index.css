@@ -96,3 +96,7 @@ DIV.popover-content{
 A.user-inactive, .user-inactive:hover, .user-inactive:active{
     color: #9e9e9e;
 }
+
+.small{
+    font-size: 10px !important;
+}

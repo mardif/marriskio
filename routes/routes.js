@@ -76,6 +76,8 @@ module.exports = function(app, sio) {
     app.post("/joinMatch", ensureAuthenticated, start.joinMatch);
 
     app.post("/leaveMatch", ensureAuthenticated, start.leaveMatch);
+    
+    app.post("/getMatchUpdates", ensureAuthenticated, start.getMatchUpdates);
 
     app.get("/allColours", function(req, res){
       common.simpleJSON(res, 200, common.colours);

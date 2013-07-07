@@ -100,8 +100,8 @@ var AccessDB = function(){
 
   },
 
-  this.getMatchesAssociated = function(user, callback){
-      Match.find({"players.player": {$in: [user._id]}  }).populate('masterPlayer').populate("players.player").populate("winner").exec(function (err, results) {
+  this.getMatchesAssociated = function(userid, callback){
+      Match.find({"players.player": {$in: [userid]}  }).populate('masterPlayer').populate("players.player").populate("winner").exec(function (err, results) {
       //PlayerMatch.find({player: user._id}).populate("player").populate("match").exec(function(err, results){
         if (err) throw err;
         callback(null, results);

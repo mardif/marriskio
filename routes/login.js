@@ -13,6 +13,9 @@ var PUBLIC_KEY = "6LdE-N0SAAAAAIj6cS-w4LJkZZo9Ayr_bOryJu5c";
 var PRIVATE_KEY = "6LdE-N0SAAAAAPNqraS57dFkQqaKeiRwgTUC98Vx";
 var recaptcha = new Recaptcha(PUBLIC_KEY, PRIVATE_KEY, {}, SSL);
 
+var myMatches = undefined;
+var availableMatches = undefined;
+
 module.exports = {
 
   // app.get('/'...)
@@ -105,7 +108,7 @@ module.exports = {
     async.parallel(
         {
             myMatchList: function(callback){
-                db.getMatchesAssociated(req.user, function(err, result){
+                db.getMatchesAssociated(req.user._id, function(err, result){
                     callback(err, result);
                 });
             },
@@ -138,6 +141,28 @@ module.exports = {
         }
     );
 
+  },
+  
+  getMatchUpdates: function(req, res){
+      if ( req.body.matchType === "myMatches" ){
+        db.getMatchesAssociated(req.user._id, function(err, result){
+            if ( err ) throw err;
+            res.send(result);
+        });
+      }
+      else if ( req.body.matchType === "availableMatches" ){
+        db.getAllMatchesOpen(req.user._id, function(err, result){
+            if ( err ) throw err;
+            var r = [];
+            for(var i=0;i<result.length;i++){
+                var match = result[i];
+                if ( match.free > 0 ){  
+                    r.push(match);
+                }
+            }
+            res.send(r);
+        });
+      }
   },
 
   createNewMatch: function(req, res){

@@ -54,25 +54,31 @@ MatchSchema.virtual("infos")
 .get(function(){
     var info;
     if ( this.winner ){
-        info = "<b>Created at</b> "+this.started_at+"<br/>"+
-        "<b>status</b>: Completed<br/>"+
-        "<b>winner</b>: "+this.winner.nick+"<br/>"+
-        "<b>players</b>: <br/>";
+        info = "<div>"+
+        "<p class='small'><b>Created at</b> "+this.started_at+"</p>"+
+        "<p class='small'><b>status</b>: Completed</p>"+
+        "<p class='small'><b>winner</b>: "+this.winner.nick+"</p>"+
+        "<p class='small'><b>players</b>:"+
+        "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];
-              info += "- "+p.player.nick+"<br/>";
+              info += "<li>"+p.player.nick+"</li>";
           }
+         info += "</ul></p></div>";
     }
     else{
-        info = "<b>Created at</b> "+this.started_at+"<br/>"+
-             "<b>created by</b> "+this.masterPlayer.nick+"<br/>"+
-             "<b>"+( this.isPublic === true ? "Public" : "Private" )+"</b><br/>"+
-             "<b>status</b> "+( this.running === false ? "waiting for players" : ( this.pause === true ? "pause" : "running" ) )+"<br/>"+
-             "<b>players already joined:</b> <br/>";
+        info = "<div>"+
+             "<p class='small'><b>Created at</b> "+this.started_at+"</p>"+
+             "<p class='small'><b>created by</b> "+this.masterPlayer.nick+"</p>"+
+             "<p class='small'><b>"+( this.isPublic === true ? "Public" : "Private" )+"</b></p>"+
+             "<p class='small'><b>status</b> "+( this.running === false ? "waiting for players" : ( this.pause === true ? "pause" : "running" ) )+"</p>"+
+             "<p class='small'><b>players already joined:</b>"+
+             "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];
-              info += "- "+p.player.nick+"<br/>";
+              info += "<li id='"+p.id+"'>"+p.player.nick+"</li>";
           }
+          info += "</ul></p></div>";
     }
     return info;
 })
