@@ -137,6 +137,9 @@ module.exports = {
             }
             results.user= req.user;
             results.token= req.session._csrf;
+            results.msg_level = req.flash("msg_level");
+            results.msg_title = req.flash("msg_title");
+            results.msg_body = req.flash("msg_body");
             res.render('account.html', results);
         }
     );
@@ -144,25 +147,36 @@ module.exports = {
   },
   
   getMatchUpdates: function(req, res){
-      if ( req.body.matchType === "myMatches" ){
-        db.getMatchesAssociated(req.user._id, function(err, result){
-            if ( err ) throw err;
-            res.send(result);
-        });
-      }
-      else if ( req.body.matchType === "availableMatches" ){
-        db.getAllMatchesOpen(req.user._id, function(err, result){
-            if ( err ) throw err;
-            var r = [];
-            for(var i=0;i<result.length;i++){
-                var match = result[i];
-                if ( match.free > 0 ){  
-                    r.push(match);
+      
+      async.parallel({
+          myMatches: function(callback){
+            db.getMatchesAssociated(req.user._id, function(err, result){
+                if ( err ) throw err;
+                callback(err, result);
+            });
+          },
+          availableMatches: function(callback){
+            db.getAllMatchesOpen(req.user._id, function(err, result){
+                if ( err ) throw err;
+                var r = [];
+                for(var i=0;i<result.length;i++){
+                    var match = result[i];
+                    if ( match.free > 0 ){ 
+                        r.push({match: match, "free": match.free, "infos": match.infos});
+                    }
                 }
+                callback(err, r);
+            });
+          }
+        }, 
+        function(err,results) {
+            if ( err ){
+                throw err;
             }
-            res.send(r);
-        });
-      }
+            res.send(results);
+        }
+      ); 
+      
   },
 
   createNewMatch: function(req, res){
@@ -267,6 +281,25 @@ module.exports = {
         });
 
         res.redirect("/account");
+    },
+    
+    deleteMatch: function(req, res){
+        var matchId = req.body.matchId;
+        db.deleteMatch(matchId, function(err, match){
+            var result = {};
+            if (err) {
+                req.flash("msg_level", "error");
+                req.flash("msg_title", "What the hell!!");
+                req.flash("msg_body", "Oooops... your match was not deleted, shit!!");
+
+            }
+            else{
+                req.flash("msg_level", "info");
+                req.flash("msg_title", "Confirmed!!");
+                req.flash("msg_body", "Ok, your match was deleted!");
+            }
+            res.redirect("/account");
+        });
     },
 
     leaveMatch: function(req, res){

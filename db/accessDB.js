@@ -132,6 +132,12 @@ var AccessDB = function(){
       callback(null, playerMatch);
     });
   },
+  
+  this.deleteMatch = function(matchId, callback){
+      Match.findOneAndRemove({_id: matchId}, null, function(err, match){
+          callback(null, match);
+      });
+  },
 
   // disconnect from database
   this.closeDB = function() {

@@ -77,6 +77,8 @@ module.exports = function(app, sio) {
 
     app.post("/leaveMatch", ensureAuthenticated, start.leaveMatch);
     
+    app.post("/deleteMatch", ensureAuthenticated, start.deleteMatch);
+    
     app.post("/getMatchUpdates", ensureAuthenticated, start.getMatchUpdates);
 
     app.get("/allColours", function(req, res){

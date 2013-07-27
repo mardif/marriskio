@@ -2,6 +2,7 @@
 {% block head %}
     {% parent %}
     <script type="text/javascript" src="/tokeninput.js"></script>
+    <script type="text/javascript" src="/date.js"></script>
     <link rel="stylesheet" href="/token-input.css" type="text/css" />
     <link rel="stylesheet" href="/token-input-fb.css" type="text/css" />
     <style>
@@ -71,12 +72,13 @@
             */
             
             mymatchInterval = setInterval(function(){
-                getMatchUpdates("myMatches");
+                getMatchUpdates();
             }, 10000);
+            
             /*
             availableInterval = setInterval(function(){
                 getMatchUpdates("availableMatches");
-            }, 10000);
+            }, 20000);
             */
             
 
@@ -99,10 +101,9 @@
         };
         */
         
-        var getMatchUpdates = function(matchType){
+        var getMatchUpdates = function(){
             makeAjaxCall("/getMatchUpdates", "POST",
                 {
-                    matchType: matchType,
                     _csrf: '{{token}}'
                 },
                 function(data){ //success
@@ -122,6 +123,91 @@
         };
         
         var updateMyMatches = function(data){
+            
+            //aggiornamento tab myMatches
+            updateMyMatchesData(data.mymatches);
+            updateAvailableMatchesData(data.availableMatches);
+            
+            $("IMG.playerImage, IMG.playMatchIcon, IMG.restoreMatchIcon").tooltip("destroy").tooltip();
+        };
+        
+        var updateAvailableMatchesData = function(data){
+            var elements = [];
+            var newEls = [];
+            for(var idx in data){
+                var mm = data[idx].match;
+                mm.free = data[idx].free;
+                mm.infos = data[idx].infos;
+                
+                elements.push(mm._id);
+                var trmatch = $("#availableMatches tr#"+mm._id);
+                
+                if ( trmatch.length == 0 ){
+                    //non è tra i match elencati... quindi lo aggiungo in coda
+                    newEls.push(mm);
+                    continue;
+                }
+                
+                var tdinfo = trmatch.find("td.infos > a");
+                var content = $(tdinfo.attr("data-content"));
+                var elenco = content.find("ul");
+                if ( elenco ){
+                    elenco.children().remove();
+                }
+                
+                var seats = trmatch.find("td.seats");
+                seats.children().each(function(idx){
+                    
+                    if ( idx < mm.players.length ){
+                        var p = mm.players[idx];
+                        $("<li>"+p.player.nick+"</li>").appendTo(elenco);
+                        $(this).attr("href", "javascript:void(0);").find(" > img")
+                        .attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick);
+                    }
+                    else{
+                        $(this).attr("href", "javascript:confirmJoinMatch('"+mm._id+"');").find(" > img")
+                        .attr("src", "seatFree").removeClass("playerImage").attr("data-original-title", '{{__("Seat Free! Join us!")}}');
+                    }
+                    
+                });
+                
+                $(tdinfo).data('popover').options.content = content.html();
+
+                if ( mm.running === false && (mm.num_players - mm.players.length) > 0 ){
+                    trmatch.find("td.status").html('{{__("waiting for players")}} <a mid="'+mm._id+'" href=\"javascript:confirmJoinMatch(\''+mm._id+'\');\" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title=\'{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}\'>{{__("Join in")}}</a>');
+                }
+                
+                
+            }
+            $("#availableMatches tbody tr").each(function(){
+                if ( $.inArray($(this).attr("id"), elements) == -1 ){
+                    $(this).remove();
+                }
+            });
+            
+            var tbody = $("#availableMatches table tbody");
+            $.each(newEls, function(){
+                var m = $(this)[0];
+                var tr = $("<tr id='"+m._id+"'></tr>");
+                tr.append($('<td class="infos"><a href="#" id="'+m._id+'" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="'+m.infos+'" data-original-title="Match Infos">'+m.name+'</a></td>'));
+                tr.append('<td class="date">'+new Date(m.started_at).toString("d MMMM yyyy HH:mm:ss")+'</td>');
+                tr.append('<td class="master">'+m.masterPlayer.nick+'</td>');
+                var td = $('<td class="seats"></td>');
+                for(var idx in m.players){
+                    var p = m.players[idx];
+                    td.append('<a href="javascript:void(0);"><img src="seatBusy" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+p.player.nick+'"></a>');
+                }
+                for(var idx=0; idx < m.free;idx++){
+                    td.append('<a href="javascript:confirmJoinMatch(\''+m._id+'\');"><img src="seatFree" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="Seat Free! Join us!"></a>');
+                }
+                tr.append(td);
+                tr.append('<td class="status">waiting for players <a mid='+m._id+' href="javascript:confirmJoinMatch(\''+m._id+'\');" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="You can get into the match and wait for the owner orders the start of hostilities!">Join in</a></td>');
+                tr.appendTo(tbody);
+            });
+            rebuildPopovers();
+        }        
+        
+        var updateMyMatchesData = function(data){
             var elements = [];
             for(var idx in data){
                 var mm = data[idx];
@@ -136,15 +222,18 @@
                 }
                 
                 var seats = trmatch.find("td.seats");
-                seats.children().remove();
-                for(var idx2 in mm.players){
-                    var p = mm.players[idx2];
-                    $("<img src='seatBusy' class='playerImage' border='0' data-toggle='tooltip' data-placement='top' title='' data-original-title='"+p.player.nick+"'>&nbsp;").appendTo(seats);
-                    $("<li>"+p.player.nick+"</li>").appendTo(elenco)
-                }
-                for(var idx3=0; idx3 < (mm.num_players - mm.players.length); idx3++){
-                    $("<img src='seatFree' border='0'>").appendTo(seats);
-                }
+                seats.children().each(function(idx){
+                    
+                    if ( idx < mm.players.length ){
+                        var p = mm.players[idx];
+                        $("<li>"+p.player.nick+"</li>").appendTo(elenco);
+                        $(this).attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick);
+                    }
+                    else{
+                        $(this).attr("src", "seatFree").removeClass("playerImage").removeAttr("data-toggle").removeAttr("data-placement").removeAttr("title").removeAttr("data-original-title");
+                    }
+                    
+                });
                 
                 $(tdinfo).data('popover').options.content = content.html();
 
@@ -160,15 +249,13 @@
                 
             }
             if ( elements.length > 0 ){
-                $("#myMatches tr).each(function(){
+                $("#myMatches tr").each(function(){
                     if ( $.inArray($(this).attr("id"), elements) == -1 ){
                         $(this).remove();
                     }
                 });
             }
-            
-            $("IMG.playerImage, IMG.playMatchIcon, IMG.restoreMatchIcon").tooltip();
-        };
+        }
 
         function actionMatch(actionUrl, matchId, newPage, player_color){
             var form = $("<form method='POST' action='/"+actionUrl+"' id='joinMatchForm' "+(newPage ? " target='_blank_"+matchId+"' " : "")+">\
@@ -202,6 +289,12 @@
         function confirmLeaveMatch(matchId){
             showConfirmBox('{{__("Sure")}}'+'???', '{{__("Really want to quit the match?")}}', function(){
                 actionMatch("leaveMatch", matchId);
+            });
+        }
+        
+        function confirmDeleteMatch(matchId){
+            showConfirmBox('{{__("Sure")}}'+'???', '{{__("Really want to delete your match?")}}', function(){
+                actionMatch("deleteMatch", matchId);
             });
         }
 
@@ -336,10 +429,10 @@
                                               <li role="presentation"><a role="menuitem" class="matchInvitation" tabindex="-1" href="javascript:void(0);">{{__("Send invitation")}}</a></li>
                                               <li role="presentation" class="divider"></li>
                                                 {% if m.masterPlayer._id == user.id %}  <!-- se sono il masterPlayer, posso cancellare il match -->
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" class="deleteMatch" href="#">{{__("Remove match")}}</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" class="deleteMatch" href="javascript:void(0);" onClick="confirmDeleteMatch('{{m._id}}');">{{__("Remove match")}}</a></li>
                                                 {% endif %}
                                                 {% if m.masterPlayer._id != user.id && m.running == false%} <!-- posso uscire da un match solo se non ne sono proprietario -->
-                                                    <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick='confirmLeaveMatch("{{m._id}}");'>{{__("Get out from match")}}</a></li>
+                                                    <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick="confirmLeaveMatch('{{m._id}}');">{{__("Get out from match")}}</a></li>
                                                 {% endif %}
                                               <li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li>
                                             </ul>
@@ -375,7 +468,7 @@
                 <table class="table table-striped table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>&nbsp;</th>
+                            <!--<th>&nbsp;</th>-->
                             <th>#</th>
                             <th>{{__("Created at")}}</th>
                             <th>{{__("Owner")}}</th>
@@ -385,31 +478,21 @@
                     </thead>
                     <tbody class='match'>
                         {% for m in allMatches %}
-                            <tr>
-                                <td>
-                                    <div class="btn-group">
-                                        <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
-                                            {{__("Actions")}}
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul id="menu1" class="dropdown-menu" role="menu" mid='{{m._id}}'>
-                                          <li role="presentation"><a role="menuitem" class="joinMatch" tabindex="-1" href="javascript:void(0);">{{__("Join this match")}}</a></li>
-                                        </ul>
-                                      </div>
-                                </td>
-                                <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                <td>{{m.started_at|date('j F Y H:i:s', 1)}}</td>
-                                <td>{{m.masterPlayer.nick}}</td>
-                                <td>
+                            <tr id="{{m._id}}">
+                                <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
+                                <td class="date">{{m.started_at|date('j F Y H:i:s', 1)}}</td>
+                                <td class="master">{{m.masterPlayer.nick}}</td>
+                                <td class="seats">
                                     {% for p in m.players %}
-                                        <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                        <a href='javascript:void(0);'><img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}"></a>
                                     {% endfor %}
                                     {% for idx in m.free|buildArray %}
-                                        <a href='javascript:confirmJoinMatch("{{m._id}}");'><img src='seatFree' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Seat Free! Join us!")}}'></a>
+                                        <a href="javascript:confirmJoinMatch('{{m._id}}');"><img src='seatFree' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Seat Free! Join us!")}}'></a>
                                     {% endfor %}
                                 </td>
-                                <td>{% if m.running == false && m.free > 0 %}
-                                        waiting for players <a mid='{{m._id}}' href='javascript:confirmJoinMatch("{{m._id}}");' class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}'>{{__("Join in")}}</a>
+                                <td class="status">
+                                    {% if m.running == false && m.free > 0 %}
+                                        waiting for players <a mid='{{m._id}}' href="javascript:confirmJoinMatch('{{m._id}}');" class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("You can get into the match and wait for the owner orders the start of hostilities!")}}'>{{__("Join in")}}</a>
                                     {% else if m.pause %}
                                         pause
                                     {% else %}

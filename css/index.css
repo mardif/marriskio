@@ -100,3 +100,7 @@ A.user-inactive, .user-inactive:hover, .user-inactive:active{
 .small{
     font-size: 10px !important;
 }
+td.seats a{
+    margin-right: 3px;
+    padding: 0px;
+}
