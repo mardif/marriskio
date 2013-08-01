@@ -43,7 +43,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -90,7 +91,7 @@ var AccessDB = function(){
   },
 
   this.getAllMatchesOpen = function(userId, callback){
-      Match.find({running: false, "players.player": {$nin: [userId]}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
+      Match.find({running: false, "players.player": {$nin: [userId]}}, null, {sort: {started_at: -1}}).populate('masterPlayer').populate("players.player").exec(function(err, results){
       //PlayerMatch.find({running: false, $not: {player: userId}}).populate("player").populate("match").exec(function(err, results){
           if ( err ){
               throw err;
@@ -101,7 +102,7 @@ var AccessDB = function(){
   },
 
   this.getMatchesAssociated = function(userid, callback){
-      Match.find({"players.player": {$in: [userid]}  }).populate('masterPlayer').populate("players.player").populate("winner").exec(function (err, results) {
+      Match.find({"players.player": {$in: [userid]}  }, null, {sort: {started_at: -1}}).populate('masterPlayer').populate("players.player").populate("winner").exec(function (err, results) {
       //PlayerMatch.find({player: user._id}).populate("player").populate("match").exec(function(err, results){
         if (err) throw err;
         callback(null, results);

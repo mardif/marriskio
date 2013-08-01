@@ -81,6 +81,10 @@
             }, 20000);
             */
             
+            if ( $("#message").is(":visible") ){
+                $("#message").fadeOut(5000);
+            }
+            
 
         });
 
@@ -181,7 +185,9 @@
             }
             $("#availableMatches tbody tr").each(function(){
                 if ( $.inArray($(this).attr("id"), elements) == -1 ){
-                    $(this).remove();
+                    $(this).fadeOut(1000, function(){
+                        $(this).remove();
+                    });
                 }
             });
             
@@ -202,7 +208,8 @@
                 }
                 tr.append(td);
                 tr.append('<td class="status">waiting for players <a mid='+m._id+' href="javascript:confirmJoinMatch(\''+m._id+'\');" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="You can get into the match and wait for the owner orders the start of hostilities!">Join in</a></td>');
-                tr.appendTo(tbody);
+                //tr.prependTo(tbody);
+                tbody.prepend(tr);
             });
             rebuildPopovers();
         }        
@@ -251,7 +258,9 @@
             if ( elements.length > 0 ){
                 $("#myMatches tr").each(function(){
                     if ( $.inArray($(this).attr("id"), elements) == -1 ){
-                        $(this).remove();
+                        $(this).fadeOut(1000, function(){
+                            $(this).remove();
+                        });
                     }
                 });
             }
@@ -390,7 +399,7 @@
     </div>
     <div class="row-fluid">
         {% if msg_title %}
-            <div class="alert alert-block alert-{{msg_level}}">
+            <div id="message" class="alert alert-block alert-{{msg_level}}">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
               <h4>{{msg_title}}</h4>
               {{msg_body}}
@@ -439,7 +448,7 @@
                                           </div>
                                     </td>
                                     <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                    <td class="date">{{m.started_at|date('j F Y H:i:s', 1)}}</td>
+                                    <td class="date">{{m.started_at|date('j F Y H:i:s')}}</td>
                                     <td class="master">{{m.masterPlayer.nick}}</td>
                                     <td class="seats">
                                         {% for p in m.players %}
@@ -480,7 +489,7 @@
                         {% for m in allMatches %}
                             <tr id="{{m._id}}">
                                 <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                <td class="date">{{m.started_at|date('j F Y H:i:s', 1)}}</td>
+                                <td class="date">{{m.started_at|date('j F Y H:i:s')}}</td>
                                 <td class="master">{{m.masterPlayer.nick}}</td>
                                 <td class="seats">
                                     {% for p in m.players %}
@@ -523,7 +532,7 @@
                             {% if m.winner %}
                                 <tr>
                                     <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                    <td>{{m.started_at|date('j F Y H:i:s', 1)}}</td>
+                                    <td>{{m.started_at|date('j F Y H:i:s')}}</td>
                                     <td>{{m.masterPlayer.nick}}</td>
                                     <td>
                                         {% for p in m.players %}
