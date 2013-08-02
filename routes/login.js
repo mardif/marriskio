@@ -36,7 +36,7 @@ module.exports = {
   },
 
   // app.post('/register'...)
-  postRegister: function(req, res, callback) {
+  postRegister: function(req, res) {
 
     var data = {
         remoteip:  req.connection.remoteAddress,
@@ -56,7 +56,7 @@ module.exports = {
 
     recaptcha.verify(function(success, error_code) {
         util.log("error_code: "+error_code);
-        success = true;    //@TODO: da togliere, bypassa il controllo del captcha!!!!
+        //success = true;    //@TODO: da togliere, bypassa il controllo del captcha!!!!
         if (success) {
             db.saveUser(newUser, function(err,docs) {
                 if ( err ){
@@ -76,18 +76,19 @@ module.exports = {
                     res.render("newUser.html", {
                         recaptcha_form: recaptcha.toHTML(),
                         token: req.session._csrf,
-                        error: message, newuser: newUser,
+                        error: message, 
+                        newuser: newUser,
                         action: action
                     });
-                    callback(null);
+                    //callback(newUser);
                 }
                 res.render("login.html", {token: req.session._csrf, info: "Welcome "+docs.cognome+" "+docs.nome +", please insert email and password used in register form"});
-                callback(docs);
+                //callback(docs);
             });
         }
         else {
             res.render("newUser.html", { recaptcha_form: recaptcha.toHTML(), token: req.session._csrf, error: "Captcha code non valido!", newuser:newUser});
-            callback(null);
+            //callback(null);
         }
     });
 

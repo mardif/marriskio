@@ -45,13 +45,7 @@ module.exports = function(app, sio) {
 
 
   app.get('/register', start.getRegister);
-  app.post('/register', function(req, res){
-      start.postRegister(req, res, function(newUser){
-        if ( newUser ){
-            sio.sockets.emit("newUser", {user: newUser});
-        }
-      });
-  });
+  app.post('/register', start.postRegister);
 
   app.get('/loginAuth', start.login);
 

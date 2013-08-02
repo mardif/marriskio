@@ -75,7 +75,7 @@ var AccessDB = function(){
     });
 
     newUser.save(function(err) {
-      if (err) return errorHelper(err, callback);
+      if (err) return callback(err, userInfo);//return errorHelper(err, callback);
 
       User.findById(newUser, function (err, doc) {
 
