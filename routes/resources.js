@@ -17,7 +17,7 @@ module.exports = function(app) {
     app.get("/pnotify.js", common.staticHandler("./games/risiko/js/jquery.pnotify.js"));
     app.get("/bootstrap-acknowledgeinput", common.staticHandler("./games/risiko/js/bootstrap-acknowledgeinput.min.js"));
     app.get("/tokeninput.js", common.staticHandler("./games/risiko/js/jquery.tokeninput.js"));
-    app.get("/date.js", common.staticHandler("./games/risiko/js/date.js"));
+    app.get("/date.js", common.staticHandler("./games/risiko/js/date-it-IT.js"));
     //app.get("/socket.io", common.staticHandler("/socket.io/socket.io.js"));
 
 

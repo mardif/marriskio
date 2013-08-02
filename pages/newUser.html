@@ -1,11 +1,11 @@
 {% extends 'template.html' %}
 {% block head %}
     {% parent %}
-    {% block title %}Debellum - {{__("new user")}}{% endblock %}
+    {% block title %}Debellum - {{__("Nuovo utente")}}{% endblock %}
     <script>
         function validatePass(p1, p2) {
             if (p1.value != p2.value || p1.value == '' || p2.value == '') {
-                p2.setCustomValidity('{{__("Password incorrect")}}');
+                p2.setCustomValidity('{{__("Password errata")}}');
             } else {
                 p2.setCustomValidity('');
             }
@@ -13,15 +13,15 @@
         var RecaptchaOptions = {
             theme : 'white',
             custom_translations : {
-                        instructions_visual : '{{__("Write 2 words:")}}',
-                        instructions_audio : '{{__("Type what you hear:")}}',
-                        play_again : '{{__("Listen again track audio")}}',
-                        cant_hear_this : '{{__("Download the track in MP3 format")',
-                        visual_challenge : '{{__("Visual mode")}}',
-                        audio_challenge : '{{__("Audio mode")}}',
-                        refresh_btn : '{{__("ask two new words")}}',
-                        help_btn : '{{__("help")}}',
-                        incorrect_try_again : '{{__("Invalid. Retry")}}',
+                        instructions_visual : '{{__("Scrivi le 2 parole:")}}',
+                        instructions_audio : '{{__("Scrivi ciò che senti:")}}',
+                        play_again : '{{__("Ascolta ancora")}}',
+                        cant_hear_this : '{{__("Scarica la traccia in formato mp3")',
+                        visual_challenge : '{{__("Modalità visuale")}}',
+                        audio_challenge : '{{__("Modalità audio")}}',
+                        refresh_btn : '{{__("Chiedi 2 nuove parole")}}',
+                        help_btn : '{{__("Aiuto")}}',
+                        incorrect_try_again : '{{__("Sbagliato. Riprova")}}',
             }
         };
 
@@ -49,30 +49,30 @@
                             <form class="form-horizontal" action='/register' method="POST">
                               <fieldset>
                                 <div id="legend">
-                                  <legend class="">{{__("Register")}}</legend> <small><strong>{{__("All fields are required")}}</strong></small>
+                                  <legend class="">{{__("Registrati")}}</legend> <small><strong>{{__("Tutti i campi sono obbligatori")}}</strong></small>
                                 </div>
                                 <div class="control-group">
                                   <!-- Username -->
-                                  <label class="control-label"  for="cognome">{{__("Surname")}}</label>
+                                  <label class="control-label"  for="cognome">{{__("Cognome")}}</label>
                                   <div class="controls">
-                                    <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("Your surname")}}' value="{{newuser.cognome}}" class="input-xlarge" required>
-                                    <p class="help-block">{{__("Your Surname")}} <span class='verysmall'>{{__("min 2, max 15 chars")}}</span></p>
+                                    <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("Il tuo cognome")}}' value="{{newuser.cognome}}" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Il tuo cognome")}} <span class='verysmall'>{{__("min 2, max 15 caratteri")}}</span></p>
                                   </div>
                                 </div>
                                 <div class="control-group">
                                   <!-- Username -->
-                                  <label class="control-label"  for="username">{{__("Name")}}</label>
+                                  <label class="control-label"  for="nome">{{__("Nome")}}</label>
                                   <div class="controls">
-                                    <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("Your name")}}' value="{{newuser.nome}}" class="input-xlarge" required>
-                                    <p class="help-block">{{__("Your Name")}} <span class='verysmall'>{{__("min 2, max 15 chars")}}</span></p>
+                                    <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("Il tuo nome")}}' value="{{newuser.nome}}" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Il tuo nome")}} <span class='verysmall'>{{__("min 2, max 15 caratteri")}}</span></p>
                                   </div>
                                 </div>
                                 <div class="control-group">
                                   <!-- Username -->
                                   <label class="control-label"  for="nick">{{__("Nick")}}</label>
                                   <div class="controls">
-                                    <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Your nickname")}}' value="{{newuser.nick}}" class="input-xlarge" required>
-                                    <p class="help-block">{{__("Nickname used in matches identification")}} <span class='verysmall'>{{__("min 4, max 10 chars")}}</span></p>
+                                    <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Il tuo nickname")}}' value="{{newuser.nick}}" class="input-xlarge" required>
+                                    <p class="help-block">{{__("Il nickname verrà usato nel gioco per identificarti")}} <span class='verysmall'>{{__("min 4, max 10 caratteri")}}</span></p>
                                   </div>
                                 </div>
 
@@ -80,8 +80,8 @@
                                   <!-- E-mail -->
                                   <label class="control-label" for="email">{{__("E-mail")}}</label>
                                   <div class="controls">
-                                    <input type="email" id="email" name="email" placeholder='{{__("Your email")}}' value="{{newuser.email}}" required class="input-xlarge">
-                                    <p class="help-block">{{__("Please provide your E-mail")}}</p>
+                                    <input type="email" id="email" name="email" placeholder='{{__("La tua email")}}' value="{{newuser.email}}" required class="input-xlarge">
+                                    <p class="help-block">{{__("Fornisci un indirizzio email valido")}}</p>
                                   </div>
                                 </div>
 
@@ -90,16 +90,16 @@
                                   <label class="control-label" for="password">{{__("Password")}}</label>
                                   <div class="controls">
                                     <input pattern=".{4,}" type="password" id="pass" name="pass" placeholder="password" class="input-xlarge" required>
-                                    <p class="help-block">{{__("Password should be at least 4 characters")}}</p>
+                                    <p class="help-block">{{__("La password deve essere almeno di 4 caratteri")}}</p>
                                   </div>
                                 </div>
 
                                 <div class="control-group">
                                   <!-- Password -->
-                                  <label class="control-label"  for="password_confirm">Password ({{__("Confirm")}})</label>
+                                  <label class="control-label"  for="password_confirm">Password ({{__("Conferma")}})</label>
                                   <div class="controls">
                                     <input pattern=".{4,}" type="password" id="password_confirm" name="password_confirm" placeholder="confirm password" class="input-xlarge" required onfocus="validatePass(document.getElementById('pass'), this);" oninput="validatePass(document.getElementById('pass'), this);">
-                                    <p class="help-block">{{__("Please confirm password")}}</p>
+                                    <p class="help-block">{{__("Digita di nuovo la password")}}</p>
                                   </div>
                                 </div>
 
@@ -115,8 +115,8 @@
                                 <div class="control-group">
                                   <!-- Button -->
                                   <div class="controls">
-                                    <button class="btn btn-success">{{__("Register")}}</button>
-                                    <a href="javascript:history.go(-1);" class="btn btn-inverse">{{__("Back")}}</a>
+                                    <button class="btn btn-success">{{__("Registrati")}}</button>
+                                    <a href="javascript:history.go(-1);" class="btn btn-inverse">{{__("Indietro")}}</a>
                                   </div>
                                 </div>
                               </fieldset>

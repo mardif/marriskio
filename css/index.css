@@ -104,3 +104,8 @@ td.seats a{
     margin-right: 3px;
     padding: 0px;
 }
+
+img.loading{
+    border:0px;
+    display:none;
+}

@@ -222,7 +222,7 @@ module.exports = {
         var body = " <html>\
             Hi, your friend "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+" \
             has invite you to join to Debellum Match! <br/> \
-            Come on, what are you waiting? <a href='http://risiko.mardif.c9.io/account#"+matchId+"' target='_joinDebellumMatch'>Click here and start to play!</a> <br/> \
+            Come on, what are you waiting? <a href='http://localhost:8000/account#"+matchId+"' target='_joinDebellumMatch'>Click here and start to play!</a> <br/> \
             <br/> \
             If you are not a registered user, please consider to <a href='http://risiko.mardif.c9.io/register' target='_newUser'>sign in</a> for play with your friends! <br/>\
             <br/>Debellum staff\
