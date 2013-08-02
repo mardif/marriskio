@@ -1061,9 +1061,10 @@ $(document).on("click", ".bandellaButtonV", function(){
 
 	var closed = $(this).attr("closed");
 	var thisis = $(this);
+    var panel = $(this).parent().parent();
 	if ( closed && closed == "true" ){
-		$(this).parent().parent().animate({
-				top: '+=70'
+		panel.animate({
+				top: '+='+panel.height()
 			}, 400, function(){
 				thisis.find("img").attr("src", "up");
 				thisis.animate({top: '0px'}, 200);
@@ -1072,15 +1073,17 @@ $(document).on("click", ".bandellaButtonV", function(){
 		);
 	}
 	else{
-		$(this).parent().parent().animate({
-				top: '-=70px'
+		panel.animate({
+				top: '-='+panel.height()
 			}, 400, function(){
 				var icon = "down";
-				var action = {top: '65px'};
+				var action = {top: '+='+panel.height()};
+                /*
 				if ( $(this).attr("id") == "actions" ){
 					icon = "down";
 					action = { top: '65px' };
 				}
+                */
 
 				thisis.find("img").attr("src", icon);
 				thisis.animate(action, 200);

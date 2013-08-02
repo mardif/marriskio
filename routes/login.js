@@ -5,9 +5,10 @@
 var common = require("../games/risiko/common"),
     Recaptcha = require('recaptcha').Recaptcha,
     db = require('../db/accessDB').getDBInstance,
-    async = require("async");
+    async = require("async")
+    util = require("util");
 
-var SSL = true;  //da impostare se l'url sarà HTTPS o no
+var SSL = false;  //da impostare se l'url sarà HTTPS o no
 
 var PUBLIC_KEY = "6LdE-N0SAAAAAIj6cS-w4LJkZZo9Ayr_bOryJu5c";
 var PRIVATE_KEY = "6LdE-N0SAAAAAPNqraS57dFkQqaKeiRwgTUC98Vx";
@@ -44,7 +45,7 @@ module.exports = {
         response:  req.body.recaptcha_response_field
     };
 
-    var recaptcha = new Recaptcha(PUBLIC_KEY, PRIVATE_KEY, data, true);  //ultimo parametro è SSL
+    var recaptcha = new Recaptcha(PUBLIC_KEY, PRIVATE_KEY, data, SSL);  //ultimo parametro è SSL
     var newUser = {
               nome : req.param('nome')
             , cognome : req.param('cognome')
@@ -54,7 +55,8 @@ module.exports = {
     };
 
     recaptcha.verify(function(success, error_code) {
-        //success = true;    //@TODO: da togliere, bypassa il controllo del captcha!!!!
+        util.log("error_code: "+error_code);
+        success = true;    //@TODO: da togliere, bypassa il controllo del captcha!!!!
         if (success) {
             db.saveUser(newUser, function(err,docs) {
                 if ( err ){
@@ -152,7 +154,12 @@ module.exports = {
           myMatches: function(callback){
             db.getMatchesAssociated(req.user._id, function(err, result){
                 if ( err ) throw err;
-                callback(err, result);
+                var r = [];
+                for(var i=0;i<result.length;i++){
+                    var match = result[i];
+                    r.push({match:match, "free": match.free, "infos":match.infos});
+                }
+                callback(err, r);
             });
           },
           availableMatches: function(callback){

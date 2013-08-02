@@ -55,10 +55,10 @@ MatchSchema.virtual("infos")
     var info;
     if ( this.winner ){
         info = "<div>"+
-        "<p class='small'><b>Created at</b> "+this.started_at+"</p>"+
-        "<p class='small'><b>status</b>: Completed</p>"+
-        "<p class='small'><b>winner</b>: "+this.winner.nick+"</p>"+
-        "<p class='small'><b>players</b>:"+
+        "<p class='small'><b>Creata il</b> "+this.started_at+"</p>"+
+        "<p class='small'><b>Stato</b>: Terminata</p>"+
+        "<p class='small'><b>Vincitore</b>: "+this.winner.nick+"</p>"+
+        "<p class='small'><b>Giocatori</b>:"+
         "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];
@@ -68,11 +68,11 @@ MatchSchema.virtual("infos")
     }
     else{
         info = "<div>"+
-             "<p class='small'><b>Created at</b> "+this.started_at+"</p>"+
-             "<p class='small'><b>created by</b> "+this.masterPlayer.nick+"</p>"+
-             "<p class='small'><b>"+( this.isPublic === true ? "Public" : "Private" )+"</b></p>"+
-             "<p class='small'><b>status</b> "+( this.running === false ? "waiting for players" : ( this.pause === true ? "pause" : "running" ) )+"</p>"+
-             "<p class='small'><b>players already joined:</b>"+
+             "<p class='small'><b>Creata il</b> "+this.started_at+"</p>"+
+             "<p class='small'><b>Creatore</b>: "+this.masterPlayer.nick+"</p>"+
+             "<p class='small'><b>"+( this.isPublic === true ? "Publica" : "Privata" )+"</b></p>"+
+             "<p class='small'><b>Stato</b> "+( this.running === false ? "in attesa di giocatori" : ( this.pause === true ? "pausa" : "running" ) )+"</p>"+
+             "<p class='small'><b>Giocatori partecipanti:</b>"+
              "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];

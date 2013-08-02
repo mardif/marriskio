@@ -239,11 +239,23 @@
         }        
         
         var updateMyMatchesData = function(data){
+            var storico = [];
             var elements = [];
             for(var idx in data){
-                var mm = data[idx];
-                elements.push(mm._id);
+                var mm = data[idx].match;
+                mm.free = data[idx].free;
+                mm.infos = data[idx].infos;                elements.push(mm._id);
                 var trmatch = $("#myMatches tr#"+mm._id);
+                
+                if ( mm.winner ){
+                    storico.push(mm);
+                }
+                
+                if ( trmatch.length == 0 ){
+                    //non è tra i match elencati... quindi lo aggiungo in coda
+                    //newEls.push(mm);
+                    continue;
+                }
                 
                 var tdinfo = trmatch.find("td.infos > a");
                 var content = $(tdinfo.attr("data-content"));
@@ -274,7 +286,10 @@
                 else if ( (mm.num_players - mm.players.length) === 0 ){
                     var uno = '{{__("Pronto alla battaglia")}}';
                     var due = '{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}';
-                    trmatch.find("td.status").html( uno+" <img mid='"+mm._id+"' class='playMatchIcon' src='/play' border='0' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"+due+"'> ");
+                    var td = trmatch.find("td.status");
+                    if ( $(td).find("img.playMatchIcon").length == 0 ){
+                        trmatch.find("td.status").html( uno+" <img mid='"+mm._id+"' class='playMatchIcon' src='/play' border='0' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"+due+"'> ");
+                    }
                 }
                 
                 
@@ -286,10 +301,32 @@
                     });
                 }
             });
+
+            $.each(storico, function(){
+                if ( $("#storico tbody tr#"+this._id).length == 0 ){
+                    var tbody = $("#storico tbody");
+                    var m = this;
+                    var tr = $("<tr id='"+m._id+"' style='display:none;'></tr>");
+                    tr.append($('<td class="infos"><a href="#" id="'+m._id+'" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="'+m.infos+'" data-original-title="Match Infos">'+m.name+'</a></td>'));
+                    tr.append('<td class="date">'+new Date(m.started_at).toString("d MMMM yyyy HH:mm:ss")+'</td>');
+                    tr.append('<td class="master">'+m.masterPlayer.nick+'</td>');
+                    var td = $('<td class="seats"></td>');
+                    for(var idx in m.players){
+                        var p = m.players[idx];
+                        td.append('<a href="javascript:void(0);"><img src="seatBusy" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+p.player.nick+'"></a>');
+                    }
+                    tr.append(td);
+                    tr.append('<td class="winner">'+m.winner.nick+'</td>');
+                    tr.append( $('<td> {{__("Visualizza Partita")}} <img mid="'+m._id+'" class="playMatchIcon" src="/play" border="0"0 data-toggle="tooltip" data-placement="top" title="" data-original-title=\'{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}\'> </td>') );
+                    tbody.prepend(tr);
+                    tr.fadeIn(1000);
+                    
+                }
+            });
         }
 
         function actionMatch(actionUrl, matchId, newPage, player_color){
-            var form = $("<form method='POST' action='/"+actionUrl+"' id='joinMatchForm' "+(newPage ? " target='_blank_"+matchId+"' " : "")+">\
+            var form = $("<form method='POST' action='/"+actionUrl+"?"+new Date().getTime()+"' id='joinMatchForm' "+(newPage ? " target='_blank_"+matchId+"' " : "")+">\
                                 <input type='hidden' name='matchId' value='"+matchId+"'>\
                                 <input type='hidden' name='_csrf' value='{{token}}'>\
                                 <input type='hidden' name='player_color' value='"+player_color+"'>\
@@ -416,7 +453,7 @@
         <ul class="nav nav-tabs" id="matches" style="margin:0px;margin-left:30px;">
             <li class="active"><a href="#myMatches" data-toggle="tab">{{__("Partite a cui partecipi")}}</a></li>
             <li><a href="#availableMatches" data-toggle="tab">{{__("Partite disponibili")}}</a></li>
-            <li><a href="#matchesCompleted" data-toggle="tab">{{__("Storico")}}</a></li>
+            <li><a href="#storico" data-toggle="tab">{{__("Storico")}}</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active matches" id="myMatches">
@@ -530,7 +567,7 @@
                 </div>
                 <p style='height:50px;'></p>
             </div>
-            <div class="tab-pane" id="matchesCompleted">
+            <div class="tab-pane" id="storico">
                 <h3>{{__("Storico delle tue partite")}} <img src="/loading-small" title="Caricamento dati dal server..." class="loading" border="0"></h3>
                 <table class="table table-striped table-condensed table-hover">
                     <thead>
