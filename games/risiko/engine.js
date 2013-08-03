@@ -396,6 +396,7 @@ var Engine = function(matchId){
 			if ( this.stepTurno == 0 && this.contatoreTurni > this.sessions.length ){//session.troupesToAdd == 0 ){
 				var states = this.getStatesByMember(session.id);
 				var troupesToPlace = Math.floor(states.length/3);
+                troupesToPlace = troupesToPlace < 1 ? 1 : troupesToPlace;
 				/* Controllo se in questo turno il giocatore ha uno o pi� continenti */
 				troupesToPlace += this.getArmsFromContinent(states);
 
