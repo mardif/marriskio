@@ -63,9 +63,14 @@ module.exports = function(sio, socket){
 
     socket.on("disconnect", function(){
         util.log("disconnect");
-        if ( socket.handshake.session ){
+        
+        if ( socket.handshake.session && socket.handshake.session.passport ){
             util.log("socket dell'utente "+socket.handshake.session.passport.user.nick+" disconnesso!");
             util.log("passport? "+socket.handshake.session.passport);
+        }
+        else{
+            //significa che la sessione è ormai compromessa
+            return;
         }
         
         /*

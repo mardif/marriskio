@@ -372,7 +372,7 @@ socket.on("troupAddedOnTurn", function(data){
 socket.on("attackResults", function(data){
 	if ( data ){
 		if ( data.error && data.sessionId == sessionId ){
-			alert(data.error);
+            show_note("error", data.error);
 			return;
 		}
 
@@ -490,7 +490,7 @@ socket.on("resultMoveTroupesTo", function(data){
 		}
 
 		if ( data.error && data.sessionId === sessionId ){
-			alert(data.error);
+            show_note("error", data.error);
 			if ( data.closePopup && movementOpen == true ){
 				infowindow.close();
 			}
@@ -800,7 +800,7 @@ function isStatoConfinante(statoId){
 	}
 	for(var i in nemiciConfinantiAlleati){
 		if ( nemiciConfinantiAlleati[i] == statoId ){
-			alert("Non puoi attaccarlo: hai stretto un'alleanza con questo giocatore!");
+            show_note("error", "Non puoi attaccarlo: hai stretto un'alleanza con questo giocatore!");
 			return false;
 		}
 	}
@@ -1322,7 +1322,7 @@ function retrievePolygons(){
 					else if ( contatoreTurni > 0 && turnEnable && statoTurno == 1 && isMyState(theMarker.id) ){
 						//Ora provvedo a selezionare uno dei miei stati da cui attaccare
 						if ( theMarker.troupes < 2 ){
-							alert("Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title);
+                            show_note("error", "Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title);
 							return;
 						}
 						theMarker.attackFrom = !theMarker.attackFrom;
@@ -1350,7 +1350,7 @@ function retrievePolygons(){
 					}
 					else if ( contatoreTurni > 0 && turnEnable && statoTurno == 2 && isMyState(theMarker.id) ){
 						if ( theMarker.troupes < 2 ){
-							alert("Non puoi spostare nulla da questo stato!");
+                            show_note("error", "Non puoi spostare nulla da questo stato!");
 							return;
 						}
 						moveFrom = theMarker.id;
