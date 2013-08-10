@@ -575,7 +575,7 @@ module.exports = function(sio, socket){
                     return;
                 }
             }
-
+            
             engine.removeTroupToState(data.statoId, player.interactiveCard.gapTroupesDefender);
             cardMessage = "Il generale "+player.nick+" ha attaccato il generale "+enemy.nick+" con la carta "+player.interactiveCard.title;
             sound = player.interactiveCard.sound;
@@ -889,6 +889,13 @@ module.exports = function(sio, socket){
         var engine = getEngine(matchId);
         if ( !engine ){
             util.log("Match "+matchId+" non risconosciuto");
+            socket.emit("errorOnAction", {
+                message: "Si e' verificato un problema nell'identificazione del match! La partita verrà chiusa entro 10 secondi, riaprila dalla tua pagina di account!",
+                sessionId: sessionId,
+                matchId: matchId,
+                action: "setTimeout(function(){ window.close(); }, 10000);",
+                delay: 10000
+            });            
             return false;
         }
         if ( engine.isEngineLoaded() ){

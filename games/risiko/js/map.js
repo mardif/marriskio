@@ -105,7 +105,7 @@ socket.on("playerUsesBonusCard", function(data){
 
 		}
 		else{
-		/*$("#cardStatus").html*/show_note("info", "<strong>Il generale "+data.nick+" ha utilizzato la carta "+data.card.title+"</strong>");
+		    show_note("info", "<strong>Il generale "+data.nick+" ha utilizzato la carta "+data.card.title+"</strong>");
 		}
 
 		try{
@@ -1267,6 +1267,14 @@ function retrievePolygons(){
                 	if ( contatoreTurni > 0 && turnEnable && ( statoTurno == 1 || statoTurno == 0 ) &&
                 		 interactCardSet !== undefined && interactCardSet.canInteract &&
                 		 interactCardSet.interactiveWith == "MARKERS" ){
+                             
+                        if ( (theMarker.troupes + interactCardSet.gapTroupesDefender) < 1 ){
+                            var response = confirm("La tua carta azione non sarà pienamente efficace: utilizzandola in questo territorio, riuscirai ad eliminare solo "+ (theMarker.troupes-1)+ " unità nemiche" );
+                            if ( response !== true ){
+                                return;
+                            }
+                        }
+                             
 						try{
 							eval(interactCardSet.action);
 						}

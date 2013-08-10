@@ -20,7 +20,7 @@ var MatchSchema = new Schema({
         dicesWon: 0,
         dicesLost: 0
       }
-    }], //   [{type: Schema.ObjectId, ref: 'User'}],
+    }],
     started_at: { type: Date, default: Date.now },
     winner: {type: Schema.ObjectId, ref: 'User', default: null},
     running: { type: Boolean, default: false },
@@ -69,8 +69,11 @@ MatchSchema.virtual("infos")
     else{
         info = "<div>"+
              "<p class='small'><b>Creata il</b> "+this.started_at+"</p>"+
-             "<p class='small'><b>Creatore</b>: "+this.masterPlayer.nick+"</p>"+
-             "<p class='small'><b>"+( this.isPublic === true ? "Publica" : "Privata" )+"</b></p>"+
+             "<p class='small'><b>Creatore</b>: "+this.masterPlayer.nick+"</p>";
+        if ( this.frozen.created_at ){
+            info += "<p class='small'><b>Ultimo salvataggio</b>: "+this.frozen.created_at+"</p>";
+        }
+        info += "<p class='small'><b>"+( this.isPublic === true ? "Publica" : "Privata" )+"</b></p>"+
              "<p class='small'><b>Stato</b> "+( this.running === false ? "in attesa di giocatori" : ( this.pause === true ? "pausa" : "running" ) )+"</p>"+
              "<p class='small'><b>Giocatori partecipanti:</b>"+
              "<ul>";
