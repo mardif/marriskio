@@ -231,7 +231,7 @@ var AtomicBombCard = TroupesCard.extend({
 	template: undefined,
 
   init: function(){
-    this._super( "Bomba Atomica", "Lancia una bomba atomica ad un tuo avversario ovunque!", 0, -5 );
+    this._super( "Bomba Atomica", "Lancia una bomba atomica su un territorio avversario eliminando 5 armate !", 0, -5 );
 	this.interactMessage = "Clicca sul territorio nemico dove vuoi sganciare la bomba!";
 	this.applyOnAllRound = false;
 	this.classCard = "ca-item-image-atomic";
