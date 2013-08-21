@@ -20,7 +20,7 @@ var Session = function(user){
 	this.matchId = undefined;
 	this.alive = true;  //significa che il giocatore è in gioco: diventa false quando non ha più territori
     
-	this.cards = [];/* new c.AtomicBombCard(), new c.DefensiveCard(), new c.OffensiveCard(), new c.AllianceCard(),
+	this.cards = []; /* new c.AtomicBombCard(), new c.DefensiveCard(), new c.OffensiveCard(), new c.AllianceCard(),
     new c.AirAttack(), new c.GroundAttack(), new c.DistanceAttack(), new c.SingleReinforcement(),
     new c.DoubleReinforcement(), new c.TripleReinforcement(), new c.SabotageCard(), new c.SpyCard(), new c.Epidemia()
 	];*/

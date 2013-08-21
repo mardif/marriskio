@@ -18,6 +18,8 @@ module.exports = function(app) {
     app.get("/bootstrap-acknowledgeinput", common.staticHandler("./games/risiko/js/bootstrap-acknowledgeinput.min.js"));
     app.get("/tokeninput.js", common.staticHandler("./games/risiko/js/jquery.tokeninput.js"));
     app.get("/date.js", common.staticHandler("./games/risiko/js/date-it-IT.js"));
+    app.get("/cufon", common.staticHandler("./games/risiko/js/cufon-yui.js"));
+    app.get("/easing", common.staticHandler("./games/risiko/js/jquery.easing.1.3.js"));
     //app.get("/socket.io", common.staticHandler("/socket.io/socket.io.js"));
 
 
@@ -45,7 +47,8 @@ module.exports = function(app) {
     app.get("/pnotify.icons.css", common.staticHandler("./css/jquery.pnotify.default.icons.css"));
     app.get("/index.css", common.staticHandler("./css/index.css"));
     app.get("/token-input.css", common.staticHandler("./css/token-input.css"))
-    app.get("/token-input-fb.css", common.staticHandler("./css/token-input-facebook.css"))
+    app.get("/token-input-fb.css", common.staticHandler("./css/token-input-facebook.css"));
+    app.get("/index.css", common.staticHandler("./css/index.css"));
 
 
     app.get("/left", common.staticHandler("./images/leftB.png"));
@@ -110,7 +113,7 @@ module.exports = function(app) {
     app.get("/leave_match", common.staticHandler("./images/glyphicons_063_power.png"));
     app.get("/user", common.staticHandler("./images/glyphicons_003_user.png"));
     app.get("/bug", common.staticHandler("./images/glyphicons_360_bug.png"));
-    app.get("/logo", common.staticHandler("./images/logo.png"));
+    app.get("/logo_small", common.staticHandler("./images/logo_small.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));

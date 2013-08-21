@@ -257,18 +257,14 @@ var AtomicBombCard = TroupesCard.extend({
 						</div> \
 						<div class='ca-content-wrapper'> \
 								<div class='ca-content'> \
-									<h6>Spiegazione della carta</h6> \
+									<h6>Bomba Atomica</h6> \
 									<a href='#' class='ca-close'>close</a> \
 									<div class='ca-content-text'> \
-										<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-										<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-										<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+										<p>Questa carta di attacco può essere utilizzata durante il proprio turno di attacco verso qualunque territorio di un vostro avversario.</p> \
+										<p>Il suo effetto è devastante: polverizza 5 armate nemiche.</p> \
+										<p>Non è necessario essere confinante con lo stato da attaccare: la bomba verrà sganciata da un bombardiere B-52.</p> \
+                                        <p style='color:red;'><strong>Attenzione:</strong>La bomba non può essere utilizzata su un territorio di proprietà di un nemico con cui avete stretto un'alleanza</p> \
 									</div> \
-									<ul> \
-										<li> \
-											<a href='#'>Read more</a> \
-										</li> \
-									</ul> \
 								</div> \
 						</div> \
 					 </div>";
@@ -303,18 +299,13 @@ var DefensiveCard = DicesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Strategia difensiva</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Utilizzando questa carta, per tutto il resto del turno (finchè non toccherà di nuovo a voi) avrete a disposizione un dado aggiuntivo in difesa, aumentando le vostre possibilità di resistere agli attacchi nemici</p> \
+							<p>Quando un giocatore usa questa carta, verrà segnalato nella lista utenti con questo simbolo <img src='/scudo' height='18' class='scudo' border='0'> </p> \
+							<p>Per cui fate attenzione quando attaccate un avversario avente lo scudo: sarà molto più dura riuscire a spuntarla!</p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -348,18 +339,12 @@ var OffensiveCard = DicesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Stretegia Offensiva</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Utilizzando questa carta, durante il vostro turno avrete a disposizione un dado aggiuntivo, aumentando le vostre possibilità di vittoria! </p> \
+							<p>La carta è valida solo per il turno in cui viene utilizzata </p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -400,18 +385,13 @@ var AllianceCard = PlayersCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Alleanza</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Questa carta vi permette di stringere un'alleanza con un vostro avversario a scelta</p> \
+							<p>Durante tutto il turno (finchè non toccherà di nuovo a voi) non potrete essere attaccati in nessun modo dal vostro alleato</p> \
+							<p style='color:red;'>Pss... allearvi con un avversario non significa che non lo possiate attaccare... quindi approfittatene! </p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -452,18 +432,13 @@ var AirAttack = TroupesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Attacco aereo</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Utilizzando questa carta nel vostro turno di attacco potrete eliminare fino a 3 armate nemiche</p> \
+							<p>Tenete conto che uno stato attaccato non potrà mai avere meno di 1 armata. Ad esempio, se attaccate con questa carta uno stato nemico con 3 armate presenti, ne eliminerete solo 2</p> \
+							<p style='color:red;'><strong>Attenzione</strong>: potrete utilizzare questa carta solo per attaccare uno stato nemico <strong>confinante!</strong></p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -504,18 +479,13 @@ var GroundAttack = TroupesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Attacco con truppe</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+    						<p>Utilizzando questa carta nel vostro turno di attacco potrete eliminare fino a 2 armate nemiche</p> \
+							<p>Tenete conto che uno stato attaccato non potrà mai avere meno di 1 armata. Ad esempio, se attaccate con questa carta uno stato nemico con 2 armate presenti, ne eliminerete solo 1</p> \
+							<p style='color:red;'><strong>Attenzione</strong>: potrete utilizzare questa carta solo per attaccare uno stato nemico <strong>confinante!</strong></p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -557,18 +527,13 @@ var DistanceAttack = TroupesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Cecchino</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+    						<p>Utilizzando questa carta nel vostro turno di attacco potrete eliminare 1 armate nemiche</p> \
+							<p>Tenete conto che uno stato attaccato non potrà mai avere meno di 1 armata. Ad esempio, se attaccate con questa carta uno stato nemico con 1 armata presente, non verrà eliminato alcuna armata e la carta verrà ritenuta come <b>utilizzata</b></p> \
+							<p style='color:red;'><strong>Attenzione</strong>: potrete utilizzare questa carta solo per attaccare uno stato nemico <strong>confinante!</strong></p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -607,18 +572,11 @@ var SingleReinforcement = TroupesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Rinforzo 1</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Questa carta permette di rinforzare un qualsiasi vostro territorio con 1 armata</p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -657,18 +615,11 @@ var DoubleReinforcement = TroupesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Rinforzo 2</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+    						<p>Questa carta permette di rinforzare un qualsiasi vostro territorio con 2 armate</p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -707,18 +658,11 @@ var TripleReinforcement = TroupesCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Rinforzo 3</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+    						<p>Questa carta permette di rinforzare un qualsiasi vostro territorio con 3 armate</p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -759,18 +703,12 @@ var SabotageCard = PlayersCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Sabotaggio</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Utilizzando questa carta contro un vostro avversario, gli impedirete di ottenere il 50% delle armate nel proprio successivo turno.</p> \
+							<p>Si tratta di una carta molto utile per limitare i rinforzi degli avversari </p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -812,18 +750,11 @@ var SpyCard = PlayersCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Spionaggio</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Utilizzando questa carta potrete rubare una carta dal mazzo di un vostro avversario</p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";
@@ -863,18 +794,13 @@ var Epidemia = PlayersCard.extend({
 			</div> \
 			<div class='ca-content-wrapper'> \
 					<div class='ca-content'> \
-						<h6>Spiegazione della carta</h6> \
+						<h6>Epidemia</h6> \
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
-							<p>testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo testo </p> \
+							<p>Carta devastante! Utilizzarla con estrema attenzione!</p> \
+							<p>Utilizzando questa carta su un vostro avversario, ad ogni suo territorio verranno eliminate il 30% delle truppe</p> \
+							<p style='color:red;'><b>Attenzione</b>: il 30% si applica per difetto, tenendo presente che gli stati devono avere almeno una truppa, per cui i territori con 1 armata non subiranno alcun effetto.</p> \
 						</div> \
-						<ul> \
-							<li> \
-								<a href='#'>Read more</a> \
-							</li> \
-						</ul> \
 					</div> \
 			</div> \
 		 </div>";

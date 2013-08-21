@@ -332,7 +332,7 @@
         }
 
         function actionMatch(actionUrl, matchId, newPage, player_color){
-            var form = $("<form method='POST' action='/"+actionUrl+"?"+new Date().getTime()+"' id='joinMatchForm' "+(newPage ? " target='_blank_"+matchId+"' " : "")+">\
+            var form = $("<form method='POST' action='/"+actionUrl+"?q="+new Date().getTime()+"' id='joinMatchForm' "+(newPage ? " target='_blank_"+matchId+"' " : "")+">\
                                 <input type='hidden' name='matchId' value='"+matchId+"'>\
                                 <input type='hidden' name='_csrf' value='{{token}}'>\
                                 <input type='hidden' name='player_color' value='"+player_color+"'>\
