@@ -19,7 +19,9 @@ module.exports = function(app) {
     app.get("/tokeninput.js", common.staticHandler("./games/risiko/js/jquery.tokeninput.js"));
     app.get("/date.js", common.staticHandler("./games/risiko/js/date-it-IT.js"));
     app.get("/cufon", common.staticHandler("./games/risiko/js/cufon-yui.js"));
-    app.get("/easing", common.staticHandler("./games/risiko/js/jquery.easing.1.3.js"));
+    //app.get("/easing", common.staticHandler("./games/risiko/js/jquery.easing.1.3.js"));
+    app.get("/intro", common.staticHandler("./games/risiko/js/intro.min.js"));
+    app.get("/account-intro.js", common.staticHandler("./games/risiko/js/account-intro.js"));
     //app.get("/socket.io", common.staticHandler("/socket.io/socket.io.js"));
 
 
@@ -49,6 +51,7 @@ module.exports = function(app) {
     app.get("/token-input.css", common.staticHandler("./css/token-input.css"))
     app.get("/token-input-fb.css", common.staticHandler("./css/token-input-facebook.css"));
     app.get("/index.css", common.staticHandler("./css/index.css"));
+    app.get("/intro.css", common.staticHandler("./css/introjs.min.css"));
 
 
     app.get("/left", common.staticHandler("./images/leftB.png"));
