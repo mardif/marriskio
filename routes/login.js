@@ -6,7 +6,8 @@ var common = require("../games/risiko/common"),
     Recaptcha = require('recaptcha').Recaptcha,
     db = require('../db/accessDB').getDBInstance,
     async = require("async")
-    util = require("util");
+    util = require("util"),
+    gsm = require(rootPath+"/routes/siteEvents").globalSessionManager;
 
 var SSL = false;  //da impostare se l'url sarà HTTPS o no
 
@@ -93,18 +94,6 @@ module.exports = {
     });
 
   },
-
-/*
-  // app.get('/about', ...
-  about: function(req, res) {
-    res.render('about.jade');
-  },
-
-  // app.get('/login', ...
-  login: function(req, res) {
-    res.render('login.jade');
-  },
-*/
 
   // app.get('/account', ensureAuthenticated, ...
   getAccount: function(req, res) {
@@ -202,6 +191,7 @@ module.exports = {
 
   // app.get('/logout'...)
   logout: function(req, res){
+    gsm.removeUser(req.session.passport.user._id);
     req.logout();
     res.redirect('/');
   },

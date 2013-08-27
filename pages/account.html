@@ -1,6 +1,7 @@
 {% extends 'template.html' %}
 {% block head %}
     {% parent %}
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/tokeninput.js"></script>
     <script type="text/javascript" src="/date.js"></script>
     <script type="text/javascript" src="/account-intro.js"></script>
@@ -12,6 +13,38 @@
     
     var mymatchInterval = undefined;
     var availableInterval = undefined;
+    
+    var socket = io.connect(location.protocol+'//'+location.host);
+    
+    socket.on("userOnlineResponse", function(data){
+        if ( data ){
+            var elements = [];
+            $("#users-online li").remove();
+            $("#chat").fadeIn(300);
+            for(var id in data.users){
+                var d = data.users[id];
+                elements.push(id);
+                if ( $("#users-online li#"+id).length == 0 ){
+                    $("#users-online").append( $("<li id='"+id+"' title='"+d.name.first+" "+d.name.last+"'><img src='seatFree' border='0' width='7'> "+d.nick+"</li>") );
+                }
+                
+            }
+            
+            $("#users-online li").each(function(){
+                if ( $.inArray($(this).attr("id"), elements) == -1 ){
+                    $(this).fadeOut(1000, function(){
+                        $(this).remove();
+                    });
+                }
+            });            
+        }
+    });
+    
+    socket.on("account-received-chat-message", function(data){
+        if ( data && data.msg ){
+            $("<li><i>"+data.user+"</i>: "+data.msg+"</li>").prependTo($("#chat-content"));
+        }
+    });
 
     function isValidEmailAddress(emailAddress) {
         var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
@@ -118,6 +151,13 @@
         $(document).on("click", "IMG.restoreMatchIcon", function(){
             actionMatch("restoreJoinMatch", $(this).attr("mid"), true);
         });
+        
+        $(document).on("keyup", "#send-chat", function(event){
+            if(event.keyCode == 13) {
+    	        socket.emit("account-sent-chat", { msg: $(this).val() });
+                $(this).val("");
+	        }
+        });
 
         //--------------------------------------------
 
@@ -139,7 +179,7 @@
                     }
                 },
                 function(err){ //failure
-                    console.log("error: "+err.responseText);
+                    //console.log("error: "+err.responseText);
                 },
                 function (){ //before
                     $("img.loading").show();
@@ -455,174 +495,198 @@
         </div>
     </div>
     <div class="row-fluid">
-        {% if msg_title -%}
-            <div id="message" style='display:none;' class="alert alert-block alert-{{msg_level}}">
-              <button type="button" class="close" data-dismiss="alert">&times;</button>
-              <h4>{{msg_title}}</h4>
-              {{msg_body}}
-            </div>
-        {% endif %}
-        <ul class="nav nav-tabs" id="matches" style="margin:0px;margin-left:30px;">
-            <li id="step3" class="active"><a href="#myMatches" data-toggle="tab">{{__("Partite a cui partecipi")}}</a></li>
-            <li id="step4"><a href="#availableMatches" data-toggle="tab">{{__("Partite disponibili")}}</a></li>
-            <li id="step5"><a href="#storico" data-toggle="tab">{{__("Storico")}}</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active matches" id="myMatches">
-                <h3>{{__("Partite a cui partecipi")}} <img src="/loading-small" title='Caricamento dati dal server...' class="loading" border="0"></h3>
-                <table class="table table-striped table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <th><span id="step3a">Azioni</span></th>
-                            <th>#</th>
-                            <th><span id="step3b">{{__("Creata il")}}</span></th>
-                            <th><span id="step3c">{{__("Creatore")}}</span></th>
-                            <th><span id="step3d">{{__("Giocatori")}}</span></th>
-                            <th><span id="step3e">{{__("Stato")}}</span></th>
-                        </tr>
-                    </thead>
-                    <tbody class='match'>
-                        {% for m in myMatchList %}
-                            {% if !m.winner %}
+        <div class="span8">
+            {% if msg_title -%}
+                <div id="message" style='display:none;' class="alert alert-block alert-{{msg_level}}">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <h4>{{msg_title}}</h4>
+                  {{msg_body}}
+                </div>
+            {% endif %}
+            <ul class="nav nav-tabs" id="matches" style="margin:0px;margin-left:30px;">
+                <li id="step3" class="active"><a href="#myMatches" data-toggle="tab">{{__("Partite a cui partecipi")}}</a></li>
+                <li id="step4"><a href="#availableMatches" data-toggle="tab">{{__("Partite disponibili")}}</a></li>
+                <li id="step5"><a href="#storico" data-toggle="tab">{{__("Storico")}}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active matches" id="myMatches">
+                    <h3>{{__("Partite a cui partecipi")}} <img src="/loading-small" title='Caricamento dati dal server...' class="loading" border="0"></h3>
+                    <table class="table table-striped table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th><span id="step3a">Azioni</span></th>
+                                <th>#</th>
+                                <th><span id="step3b">{{__("Creata il")}}</span></th>
+                                <th><span id="step3c">{{__("Creatore")}}</span></th>
+                                <th><span id="step3d">{{__("Giocatori")}}</span></th>
+                                <th><span id="step3e">{{__("Stato")}}</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class='match'>
+                            {% for m in myMatchList %}
+                                {% if !m.winner %}
+                                    <tr id="{{m._id}}">
+                                        <td class="actions">
+                                            <div class="btn-group">
+                                                <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
+                                                    {{__("Azioni")}}
+                                                    <span class="caret"></span>
+                                                </a>
+                                                <ul id="menu1" class="dropdown-menu" role="menu" mid='{{m._id}}'>
+                                                  <li role="presentation"><a role="menuitem" class="matchInvitation" tabindex="-1" href="javascript:void(0);">{{__("Invia inviti")}}</a></li>
+                                                  <li role="presentation" class="divider"></li>
+                                                    {% if m.masterPlayer._id == user.id %}  <!-- se sono il masterPlayer, posso cancellare il match -->
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" class="deleteMatch" href="javascript:void(0);" onClick="confirmDeleteMatch('{{m._id}}');">{{__("Cancella partita")}}</a></li>
+                                                    {% endif %}
+                                                    {% if m.masterPlayer._id != user.id && m.running == false%} <!-- posso uscire da un match solo se non ne sono proprietario -->
+                                                        <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick="confirmLeaveMatch('{{m._id}}');">{{__("Abbandona partita")}}</a></li>
+                                                    {% endif %}
+                                                  <!--li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li-->
+                                                </ul>
+                                              </div>
+                                        </td>
+                                        <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
+                                        <td class="date">{{m.started_at|date('j F Y H:i:s')}} 
+                                        {% if m.frozen and m.frozen.created_at %}
+                                            <small>salvata il {{m.frozen.created_at}}</small>
+                                        {% endif %}
+                                        </td>
+                                        <td class="master">{{m.masterPlayer.nick}}</td>
+                                        <td class="seats">
+                                            {% for p in m.players %}
+                                                <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                            {% endfor %}
+                                            {% for idx in m.free|buildArray %}
+                                                <img src='seatFree' border='0'>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="status">
+                                            {% if m.running == false && m.free > 0 %}
+                                                {{__("in attesa di giocatori")}}
+                                            {% else if m.free == 0 %}
+                                                {{__("Pronto a giocare")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}'>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div id='nomymatches' style="display:none;">
+                        <a href='#newMatch' class='btn btn-medium btn-primary' data-toggle="modal" role="button">{{__("Non ci sono partite...Vuoi crearne una?")}}</a>
+                    </div>
+                    <p style='height:50px;'></p>
+                </div>
+                <div class="tab-pane matches" id="availableMatches">
+                    <h3>{{__("Partite disponibili")}} <img src="/loading-small" title="Caricamento dati dal server..." class="loading" border="0"></h3>
+                    <table class="table table-striped table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <!--<th>&nbsp;</th>-->
+                                <th>#</th>
+                                <th><span id="step4a">{{__("Creata il")}}</span></th>
+                                <th><span id="step4b">{{__("Creatore")}}</span></th>
+                                <th><span id="step4c">{{__("Giocatori")}}</span></th>
+                                <th><span id="step4d">{{__("Stato")}}</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class='match'>
+                            {% for m in allMatches %}
+                                {% if m|length == 0 %}
                                 <tr id="{{m._id}}">
-                                    <td class="actions">
-                                        <div class="btn-group">
-                                            <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
-                                                {{__("Azioni")}}
-                                                <span class="caret"></span>
-                                            </a>
-                                            <ul id="menu1" class="dropdown-menu" role="menu" mid='{{m._id}}'>
-                                              <li role="presentation"><a role="menuitem" class="matchInvitation" tabindex="-1" href="javascript:void(0);">{{__("Invia inviti")}}</a></li>
-                                              <li role="presentation" class="divider"></li>
-                                                {% if m.masterPlayer._id == user.id %}  <!-- se sono il masterPlayer, posso cancellare il match -->
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" class="deleteMatch" href="javascript:void(0);" onClick="confirmDeleteMatch('{{m._id}}');">{{__("Cancella partita")}}</a></li>
-                                                {% endif %}
-                                                {% if m.masterPlayer._id != user.id && m.running == false%} <!-- posso uscire da un match solo se non ne sono proprietario -->
-                                                    <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick="confirmLeaveMatch('{{m._id}}');">{{__("Abbandona partita")}}</a></li>
-                                                {% endif %}
-                                              <!--li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li-->
-                                            </ul>
-                                          </div>
-                                    </td>
                                     <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                    <td class="date">{{m.started_at|date('j F Y H:i:s')}} 
-                                    {% if m.frozen and m.frozen.created_at %}
-                                        <small>salvata il {{m.frozen.created_at}}</small>
-                                    {% endif %}
-                                    </td>
+                                    <td class="date">new Date('{{m.started_at|date('j F Y H:i:s')}}').toString("d MMMM yyyy HH:mm:ss")</td>
                                     <td class="master">{{m.masterPlayer.nick}}</td>
                                     <td class="seats">
                                         {% for p in m.players %}
-                                            <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                            <a href='javascript:void(0);'><img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}"></a>
                                         {% endfor %}
                                         {% for idx in m.free|buildArray %}
-                                            <img src='seatFree' border='0'>
+                                            <a href="javascript:confirmJoinMatch('{{m._id}}');"><img src='seatFree' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Posto libero! Partecipa!")}}'></a>
                                         {% endfor %}
                                     </td>
                                     <td class="status">
                                         {% if m.running == false && m.free > 0 %}
-                                            {{__("in attesa di giocatori")}}
-                                        {% else if m.free == 0 %}
-                                            {{__("Pronto a giocare")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}'>
+                                            waiting for players <a mid='{{m._id}}' href="javascript:confirmJoinMatch('{{m._id}}');" class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}'>{{__("Partecipa")}}</a>
+                                        {% else if m.pause %}
+                                            pausa
+                                        {% else %}
+                                            in gioco
                                         {% endif %}
                                     </td>
                                 </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div id='nomymatches' style="display:none;">
-                    <a href='#newMatch' class='btn btn-medium btn-primary' data-toggle="modal" role="button">{{__("Non ci sono partite...Vuoi crearne una?")}}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div id='noavailablematches' style="display:none;">
+                        <a href='#newMatch' class='btn btn-medium btn-primary' data-toggle="modal" role="button">{{__("Non ci sono partite...Vuoi crearne una?")}}</a>
+                    </div>
+                    <p style='height:50px;'></p>
                 </div>
-                <p style='height:50px;'></p>
-            </div>
-            <div class="tab-pane matches" id="availableMatches">
-                <h3>{{__("Partite disponibili")}} <img src="/loading-small" title="Caricamento dati dal server..." class="loading" border="0"></h3>
-                <table class="table table-striped table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <!--<th>&nbsp;</th>-->
-                            <th>#</th>
-                            <th><span id="step4a">{{__("Creata il")}}</span></th>
-                            <th><span id="step4b">{{__("Creatore")}}</span></th>
-                            <th><span id="step4c">{{__("Giocatori")}}</span></th>
-                            <th><span id="step4d">{{__("Stato")}}</span></th>
-                        </tr>
-                    </thead>
-                    <tbody class='match'>
-                        {% for m in allMatches %}
-                            {% if m|length == 0 %}
-                            <tr id="{{m._id}}">
-                                <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                <td class="date">new Date('{{m.started_at|date('j F Y H:i:s')}}').toString("d MMMM yyyy HH:mm:ss")</td>
-                                <td class="master">{{m.masterPlayer.nick}}</td>
-                                <td class="seats">
-                                    {% for p in m.players %}
-                                        <a href='javascript:void(0);'><img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}"></a>
-                                    {% endfor %}
-                                    {% for idx in m.free|buildArray %}
-                                        <a href="javascript:confirmJoinMatch('{{m._id}}');"><img src='seatFree' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Posto libero! Partecipa!")}}'></a>
-                                    {% endfor %}
-                                </td>
-                                <td class="status">
-                                    {% if m.running == false && m.free > 0 %}
-                                        waiting for players <a mid='{{m._id}}' href="javascript:confirmJoinMatch('{{m._id}}');" class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}'>{{__("Partecipa")}}</a>
-                                    {% else if m.pause %}
-                                        pausa
-                                    {% else %}
-                                        in gioco
-                                    {% endif %}
-                                </td>
+                <div class="tab-pane" id="storico">
+                    <h3>{{__("Storico delle tue partite")}} <img src="/loading-small" title="Caricamento dati dal server..." class="loading" border="0"></h3>
+                    <table class="table table-striped table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{__("Creata il")}}</th>
+                                <th>{{__("Creatore")}}</th>
+                                <th>{{__("Giocatori")}}</th>
+                                <th>{{__("Vincitore")}}</th>
+                                <th>{{__("Match")}}</th>
                             </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div id='noavailablematches' style="display:none;">
-                    <a href='#newMatch' class='btn btn-medium btn-primary' data-toggle="modal" role="button">{{__("Non ci sono partite...Vuoi crearne una?")}}</a>
+                        </thead>
+                        <tbody class='match'>
+                            {% for m in myMatchList %}
+                                {% if m.winner && m|length == 0 %}
+                                    <tr>
+                                        <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
+                                        <td>{{m.started_at|date('j F Y H:i:s')}}</td>
+                                        <td>{{m.masterPlayer.nick}}</td>
+                                        <td>
+                                            {% for p in m.players %}
+                                                <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                            {% endfor %}
+                                            {% for idx in m.free|buildArray %}
+                                                <img src='seatFree' border='0'>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {{m.winner.nick}}
+                                        </td>
+                                        <td>
+                                            {{__("View match")}} <img mid='{{m._id}}' class='restoreMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Vedi lo stato finale della partita!")}}'>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p style='height:50px;'></p>
                 </div>
-                <p style='height:50px;'></p>
             </div>
-            <div class="tab-pane" id="storico">
-                <h3>{{__("Storico delle tue partite")}} <img src="/loading-small" title="Caricamento dati dal server..." class="loading" border="0"></h3>
-                <table class="table table-striped table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>{{__("Creata il")}}</th>
-                            <th>{{__("Creatore")}}</th>
-                            <th>{{__("Giocatori")}}</th>
-                            <th>{{__("Vincitore")}}</th>
-                            <th>{{__("Match")}}</th>
-                        </tr>
-                    </thead>
-                    <tbody class='match'>
-                        {% for m in myMatchList %}
-                            {% if m.winner && m|length == 0 %}
-                                <tr>
-                                    <td><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
-                                    <td>{{m.started_at|date('j F Y H:i:s')}}</td>
-                                    <td>{{m.masterPlayer.nick}}</td>
-                                    <td>
-                                        {% for p in m.players %}
-                                            <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
-                                        {% endfor %}
-                                        {% for idx in m.free|buildArray %}
-                                            <img src='seatFree' border='0'>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {{m.winner.nick}}
-                                    </td>
-                                    <td>
-                                        {{__("View match")}} <img mid='{{m._id}}' class='restoreMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Vedi lo stato finale della partita!")}}'>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <p style='height:50px;'></p>
+        </div>
+        <div class="span4">
+            <div class="span4" style="border:1px solid rgba(192, 145, 102, 0.63);-webkit-border-radius: 4px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;min-height: 300px;">
+                <h4 style="text-align:center">Users online</h4>
+                <hr style="color: #e46b24;margin: 0px;"/>
+                <div >
+                    <ul id="users-online" style='list-style-type: none;margin: 3px;font-size:10px;'>
+                        <li>Connecting...</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="chat" class="span7" style="display:none;min-height: 300px;position:relative;border:1px solid rgba(192, 145, 102, 0.63);-webkit-border-radius: 4px 4px 0 0;-moz-border-radius: 4px 4px 0 0;border-radius: 4px 4px 0 0;">
+                <h4 style="text-align:center">Chat</h4>
+                <hr style="color: #e46b24;margin: 0px;"/>
+                <div style="text-align: left;font-size: 0.7em;max-height:300px;overflow-y:auto;margin-bottom:40px;">
+                    <ul style="list-style-type: none;margin: 2px;" id="chat-content" >
+                    </ul>
+                </div>
+                <div style="position: absolute;bottom: 0px;">
+                    <input type="text" id="send-chat" style="width: 125%;height: 10px;font-size: 10px;margin: 10px;" title="Premi [Invio] per inviare il messaggio!">
+                </div>
             </div>
         </div>
     </div>

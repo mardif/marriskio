@@ -5,7 +5,7 @@ var common = require(rootPath+"/games/risiko/common"),
 	Session = require(rootPath+"/games/risiko/session").Session;
 
 var GlobalSessionManager = function(){
-    /*
+    
     var sessions = {};
 
     this.userIsOnline = function(user){
@@ -23,12 +23,10 @@ var GlobalSessionManager = function(){
     this.getUsers = function(){
         return sessions;
     }
-    */
-
-
+    
 };
 
-//var globalSessionManager = new GlobalSessionManager();
+var globalSessionManager = new GlobalSessionManager();
 
 var initializeEvents =  function(sio, socket){
 
@@ -36,23 +34,29 @@ var initializeEvents =  function(sio, socket){
     Inserisco lo user nella mia sessione così da avere un elenco di utenti attualmente online
     */
     util.log("user session: "+socket.handshake.session.passport.user);
-    //globalSessionManager.addUser(socket.handshake.session.passport.user);
+    globalSessionManager.addUser(socket.handshake.session.passport.user);
 
-    //sio.sockets.emit("userOnlineResponse", {users: globalSessionManager.getUsers()});
+    sio.sockets.emit("userOnlineResponse", {users: globalSessionManager.getUsers()});
+    
+    socket.on("account-sent-chat", function(data){
+        if ( data && data.msg ){
+            data.user = socket.handshake.session.passport.user.nick;
+            sio.sockets.emit("account-received-chat-message", data);
+        }
+    });
 
     /*
     socket.on("getUsersOnLine", function(){
 
     });
     */
-    /*
+    
     socket.on('disconnect', function() {
-        sio.sockets.emit("user-disconnected", {user: socket.handshake.session.passport.user});
-        globalSessionManager.removeUser(socket.handshake.session.passport.user._id);
+        util.log(" ***************+ DISCONNECTED **************** ");
+        sio.sockets.emit("userOnlineResponse", {users: globalSessionManager.getUsers()});
     });
-    */
 
 };
 
-//exports.globalSessionManager = globalSessionManager;
+exports.globalSessionManager = globalSessionManager;
 exports.initializeEvents = initializeEvents;

@@ -8,8 +8,10 @@ var common = require(rootPath+"/games/risiko/common");
 var db = require(rootPath+'/db/accessDB').getDBInstance;
 var sessionManager = require(rootPath+"/games/risiko/sessionManager");
 var gamesEvents = require('../games/risiko/gamesEvents');
+var siteEvents = require(rootPath+'/routes/siteEvents');
 var zlib = require("zlib");
 var cryo = require("cryo");
+var util = require("util");
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -146,9 +148,9 @@ module.exports = function(app, sio) {
     //sio.sockets.on("connection", function(socket){
     sio.sockets.on("connection", function(socket){
       
-      //util.log("sio.sockets.on[connection] -> session: "+util.inspect(socket.handshake, true));
+      util.log("sio.sockets.on[connection] -> session: "+util.inspect(socket.handshake, true));
       
-      //siteEvents.initializeEvents(sio, socket);
+      siteEvents.initializeEvents(sio, socket);
       gamesEvents(sio, socket);
 
     });

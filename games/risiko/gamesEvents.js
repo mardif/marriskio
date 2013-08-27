@@ -14,6 +14,10 @@ module.exports = function(sio, socket){
         var sess = socket.handshake.session;
         var user = sess.passport.user;
         
+      if ( !(session && session.matchId) ){
+          return;
+      }
+        
       util.log("first connect called");
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
@@ -22,7 +26,7 @@ module.exports = function(sio, socket){
         sessionManager.setSessionStatus(user._id, true);
         var session = sessionManager.getSession(user._id);
         
-        if ( session ){
+        if ( session && session.matchId ){
           var match = getMatch(session.matchId);
           if ( !match ){ return; }
           var engine = match.getEngine();
