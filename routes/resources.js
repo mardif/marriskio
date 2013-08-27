@@ -22,6 +22,7 @@ module.exports = function(app) {
     //app.get("/easing", common.staticHandler("./games/risiko/js/jquery.easing.1.3.js"));
     app.get("/intro", common.staticHandler("./games/risiko/js/intro.min.js"));
     app.get("/account-intro.js", common.staticHandler("./games/risiko/js/account-intro.js"));
+    app.get("/debellum-intro.js", common.staticHandler("./games/risiko/js/debellum-intro.js"));
     //app.get("/socket.io", common.staticHandler("/socket.io/socket.io.js"));
 
 
@@ -117,6 +118,7 @@ module.exports = function(app) {
     app.get("/user", common.staticHandler("./images/glyphicons_003_user.png"));
     app.get("/bug", common.staticHandler("./images/glyphicons_360_bug.png"));
     app.get("/logo_small", common.staticHandler("./images/logo_small.png"));
+    app.get("/help", common.staticHandler("./images/glyphicons_195_circle_info.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));

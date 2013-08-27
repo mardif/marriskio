@@ -14,7 +14,7 @@ module.exports = function(sio, socket){
         var sess = socket.handshake.session;
         var user = sess.passport.user;
         
-      if ( !(session && session.matchId) ){
+      if ( !(data && data.matchId) ){
           return;
       }
         
@@ -141,6 +141,8 @@ module.exports = function(sio, socket){
         }
         data.color = session.color;
         data.nick = session.nick;
+        
+        util.log(data.nick+" [match "+data.matchId+"] wrote: "+data.msg);
 
         sio.sockets.in(socket.store.data.matchId).emit("broadcastChat", data);
     });

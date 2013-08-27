@@ -41,6 +41,7 @@ var initializeEvents =  function(sio, socket){
     socket.on("account-sent-chat", function(data){
         if ( data && data.msg ){
             data.user = socket.handshake.session.passport.user.nick;
+            util.log("user "+data.user+" wrote: "+data.msg);
             sio.sockets.emit("account-received-chat-message", data);
         }
     });

@@ -873,6 +873,10 @@ $(document).on("click", "#cards", function(){
 	});
 });
 
+$(document).on("click", "#help", function(){
+    intro.start();
+});
+
 $(document).on("click", "#abbandonaMatch", function(){
     var response = confirm("Sicuro di voler abbandonare la partita? Non potrai più rientrare ed il tuo posto verrà preso dal computer!");
     if ( response === true ){
