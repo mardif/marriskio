@@ -118,6 +118,7 @@ module.exports = function(app) {
     app.get("/user", common.staticHandler("./images/glyphicons_003_user.png"));
     app.get("/bug", common.staticHandler("./images/glyphicons_360_bug.png"));
     app.get("/logo_small", common.staticHandler("./images/logo_small.png"));
+    app.get("/logo", common.staticHandler("./images/logo.png"));
     app.get("/help", common.staticHandler("./images/glyphicons_195_circle_info.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));

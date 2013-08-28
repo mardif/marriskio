@@ -70,6 +70,8 @@ module.exports = function(app, sio) {
     app.post("/sendInvitationToMatch", ensureAuthenticated, start.sendInvitations);
 
     app.post("/joinMatch", ensureAuthenticated, start.joinMatch);
+    
+    app.get("/joinToMatch", ensureAuthenticated, start.joinMatchFromInvite);
 
     app.post("/leaveMatch", ensureAuthenticated, start.leaveMatch);
     

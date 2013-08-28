@@ -11,6 +11,8 @@
     </style>
     <script>
     
+    
+    
     var mymatchInterval = undefined;
     var availableInterval = undefined;
     
@@ -139,6 +141,10 @@
             $(document).on("click", "#account-intro", function(){
                 intro.start();
             });
+            {% if inviteFromMail -%}
+                var id = "{{inviteFromMail}}";
+                confirmJoinMatch(id);
+            {% endif %}
             
             
 
@@ -508,7 +514,7 @@
                 <li id="step4"><a href="#availableMatches" data-toggle="tab">{{__("Partite disponibili")}}</a></li>
                 <li id="step5"><a href="#storico" data-toggle="tab">{{__("Storico")}}</a></li>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content" style="min-height:250px;">
                 <div class="tab-pane active matches" id="myMatches">
                     <h3>{{__("Partite a cui partecipi")}} <img src="/loading-small" title='Caricamento dati dal server...' class="loading" border="0"></h3>
                     <table class="table table-striped table-condensed table-hover">

@@ -132,6 +132,10 @@ module.exports = {
             results.msg_level = req.flash("msg_level");
             results.msg_title = req.flash("msg_title");
             results.msg_body = req.flash("msg_body");
+            var invite = req.flash("inviteFromMail");
+            if ( invite && invite != "" ){
+                results.inviteFromMail = invite;
+            }
             res.render('account.html', results);
         }
     );
@@ -212,19 +216,34 @@ module.exports = {
             res.send(result);
         });
     },
+    
+    joinMatchFromInvite: function(req, res){
+        
+        req.flash("inviteFromMail", req.param('mid'));
+        res.redirect("/account");
+        
+    },
 
     sendInvitations: function(req, res){
         var matchId = req.body.matchId;
         var contacts = req.body.contacts;
-
-        var body = " <html>\
-            Hi, your friend "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+" \
-            has invite you to join to Debellum Match! <br/> \
-            Come on, what are you waiting? <a href='http://localhost:8000/account#"+matchId+"' target='_joinDebellumMatch'>Click here and start to play!</a> <br/> \
-            <br/> \
-            If you are not a registered user, please consider to <a href='http://risiko.mardif.c9.io/register' target='_newUser'>sign in</a> for play with your friends! <br/>\
-            <br/>Debellum staff\
+        
+        var body = "<html>\
+                        <body>\
+                            <div style='width:600px;background: url(http://"+req.headers.host+"/logo) no-repeat right center;'>\
+		                        <div style='height:50px;background-color:#2a333c;border-radius:5px 5px 0 0;border:1px solid #99999;width:100%;color:#999999;font-size:30pt;padding-left:42px;opacity:0.5;filter:alpha(opacity=50);'>DEBELLUM</div>\
+		                        <div style='border:1px solid #999999;display:inline-block;padding-top:10px;padding-bottom:10px;padding-left:40px;width:100%;'>\
+			                        Un saluto dal team di Debellum!<br/>\
+			                        <br/>Il tuo amico "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+"\
+			                        ti ha invitato <br/>a giocare <a href='http://"+req.headers.host+"/joinToMatch?mid="+matchId+"' target='_joinDebellumMatch'>questa partita</a> a Debellum <br/>\
+			                        <br/>Cosa stai aspettando? <a href='http://"+req.headers.host+"/joinToMatch?mid="+matchId+"' target='_joinDebellumMatch'>Unisciti a noi!</a><br/>\
+			                        <br/><br/>Debellum staff\
+		                        </div>\
+		                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'>test</div>\
+	                        </div>\
+                        </body>\
             </html>";
+        
         var addresses = [];
         for(var idx in contacts){
             var c = contacts[idx];
