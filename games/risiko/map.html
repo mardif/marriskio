@@ -9,6 +9,7 @@
 	<link href="bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
 	<link href="pnotify.css" media="screen" rel="stylesheet" type="text/css">
 	<link href="pnotify.icons.css" media="screen" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/intro.css" type="text/css"/>
 
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="jquery-ui.js"></script>
@@ -18,6 +19,8 @@
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="mapiconmaker.js"></script>
 	<script type="text/javascript" src="infobubble"></script>
+    <script src="/intro" type="text/javascript"></script>
+    <script type="text/javascript" src="/debellum-intro.js"></script>
   <script>
     var sessionId = "{{sessionId}}";
     var matchId = "{{matchId}}";;
@@ -54,7 +57,7 @@
         <div id="buffer">
         </div>
 		<div style="margin:bottom;">
-			<input type="text" id="chatMsg" style="width:70%;margin-left:5px;"><input type="button" value="Send" id="sendMsg">
+			<input type="text" id="chatMsg" style="width:95%;margin-left:5px;">
 		</div>
     </div>
     <div id="actions">
@@ -87,6 +90,9 @@ Attenzione: non potrai più giocare questa partita!"/>
 		</div>
 		<div style='float:left;'>
 			<img border="0" src="/cards" id="cards" class="buttons" title="Mostra il tuo mazzo di carte bonus"/>
+		</div>
+    	<div style='float:right;'>
+			<img border="0" src="/help" id="help" class="buttons" title="Ti spiego come funziona..."/>
 		</div>
 	</div>
 	<div id="deck" class="ca-container">
