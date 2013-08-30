@@ -338,14 +338,30 @@
                 $(tdinfo).data('popover').options.content = content.html();
 
                 if ( mm.running === false && (mm.num_players - mm.players.length) > 0 ){
-                    trmatch.find("td.status").html('{{__("in attesa di giocatori")}}');
+                    trmatch.find("td.status").html('{{__("Ci sono ancora posti liberi")}}');
                 }
                 else if ( (mm.num_players - mm.players.length) === 0 ){
-                    var uno = '{{__("Pronto alla battaglia")}}';
-                    var due = '{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}';
-                    var td = trmatch.find("td.status");
-                    if ( $(td).find("img.playMatchIcon").length == 0 ){
-                        trmatch.find("td.status").html( uno+" <img mid='"+mm._id+"' class='playMatchIcon' src='/play' border='0' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"+due+"'> ");
+                    
+                    var allOnline = true;
+                    //check if all players are online
+                    for(var i=0; i< mm.players.length; i++){
+                        var id = mm.players[i].player._id;
+                        if ( $("#users-online li#"+id).length == 0 ){
+                            allOnline = false;
+                            break;
+                        }
+                    }
+                    
+                    if ( allOnline === true ){
+                        var uno = '{{__("Pronto alla battaglia")}}';
+                        var due = '{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}';
+                        var td = trmatch.find("td.status");
+                        if ( $(td).find("img.playMatchIcon").length == 0 ){
+                            trmatch.find("td.status").html( uno+" <img mid='"+mm._id+"' class='playMatchIcon' src='/play' border='0' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"+due+"'> ");
+                        }
+                    }
+                    else{
+                        trmatch.find("td.status").html('{{__("Non tutti gli utenti sono ancora online")}}');
                     }
                 }
                 
@@ -422,6 +438,20 @@
                 actionMatch("deleteMatch", matchId);
             });
         }
+        
+        $(document).on("click", "li > a.sendReminder", function(){
+            makeAjaxCall("/sendReminder", "POST", 
+            {
+                matchId:  $(this).parents("ul:eq(0)").attr("mid"),
+                _csrf: '{{token}}'
+            }, 
+            function(data){
+                
+            },
+            function(err){
+                
+            });
+        });
 
         $(document).on("click", "#modalInvitationSender", function(){
 
@@ -548,6 +578,7 @@
                                                         <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick="confirmLeaveMatch('{{m._id}}');">{{__("Abbandona partita")}}</a></li>
                                                     {% endif %}
                                                   <!--li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li-->
+                                                  <li role="presentation"><a role='menuitem' tabindex="-1" class="sendReminder" href="#">Sollecita</a></li>
                                                 </ul>
                                               </div>
                                         </td>

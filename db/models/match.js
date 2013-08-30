@@ -19,7 +19,8 @@ var MatchSchema = new Schema({
       stats: {
         dicesWon: 0,
         dicesLost: 0
-      }
+      },
+      abandoned: false
     }],
     started_at: { type: Date, default: Date.now },
     winner: {type: Schema.ObjectId, ref: 'User', default: null},

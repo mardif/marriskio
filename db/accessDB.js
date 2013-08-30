@@ -158,7 +158,7 @@ var AccessDB = function(){
 
   this.getMatchById = function(matchId, fields, callback){
       
-      Match.findById(matchId, fields).populate('winner').exec(function(err, match){
+      Match.findById(matchId, fields).populate('winner').populate("players.player").exec(function(err, match){
           callback(err, match);
       });
   },
@@ -184,6 +184,23 @@ var AccessDB = function(){
         matchBean.frozen.created_at = new Date();
         //matchBean.frozen.engine = buffer;  //partita salvata zippata
         matchBean.frozen.engine = serializedEngineData; //partita salvata non zippata
+        
+        /*
+        //aggiorno lo stato degli utenti nel match.js nel caso in cui qualcuno abbia abbandonato
+        var sessions = engine.getSessions();
+        for(var i = 0; i<sessions.length; i++){
+            var abandoned = sessions[i].AIActivated;
+            if ( abandoned ){
+                for(var x = 0; x < matchBean.players.length; x++){
+                    var p = matchBean.players[x];
+                    if ( p.player.id == sessions[i].id ){
+                        p.players.abandoned = true;
+                    }
+                }
+            }
+        }
+        */
+        
         matchBean.save(function(err){
           if ( err ) return errorHelper(err, callback);
           callback(null, matchBean);

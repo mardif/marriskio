@@ -82,6 +82,8 @@ module.exports = function(app, sio) {
     app.get("/allColours", function(req, res){
       common.simpleJSON(res, 200, common.colours);
     });
+    
+    app.post("/sendReminder", ensureAuthenticated, siteEvents.sendReminder);
 
     app.post("/getColoursAvailable", ensureAuthenticated, start.getColoursAvailable);
 
