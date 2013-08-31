@@ -31,10 +31,10 @@ var db = accessDB.getDBInstance;
 i18n.configure({
     locales:['it', 'en'],
     register: global,
-    defaultLocale: 'en',
+    defaultLocale: 'it',
     cookie: 'langrisk',
     directory: __dirname+'/locales',
-    updateFiles: false
+    updateFiles: true
 });
 
 swig.init({
@@ -49,6 +49,13 @@ app.configure(function(){
   app.set('view engine', 'html');
   app.set('views', 'pages/');
   app.use(express.cookieParser());
+  app.use(express.session({
+    store: accessDB.getSessionStore
+  , secret: 'riskio'
+  , key: 'r1s1k0.sid'
+  , cookie:{ path: '/', httpOnly: true, maxAge: (1000*3600*12)}
+  }));
+  app.use(flash());
 
   //app.use(i18n.init);   //se voglio che la lingua sia impostata in base alla lingua del browser, devo de-commentare questa riga
   app.use(function(req, res, next) {
@@ -62,25 +69,21 @@ app.configure(function(){
     res.locals.setLocaleLang = res.setLocaleLang = function(locale){
       i18n.setLocale(locale);
     };
+    res.locals.messages = req.session.messages
     next();
   });
 
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.session({
-    store: accessDB.getSessionStore
-  , secret: 'riskio'
-  , key: 'r1s1k0.sid'
-  , cookie:{ path: '/', httpOnly: true, maxAge: (1000*3600*12)}
-  }));
+
   app.use(express.csrf());
-  app.use(flash());
+  
   app.use(passport.initialize());
   app.use(passport.session());
   //app.use(express.static(__dirname + '/pages'));
 });
 
-i18n.setLocale('en');
+i18n.setLocale('it');
 
 db.startup();
 
@@ -92,9 +95,11 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-var sio = io.listen(server);
+var sio = io.listen(server, {origins: '*:*'});
 sio.set('authorization', ioSession(express.cookieParser('riskio'), accessDB.getSessionStore, "r1s1k0.sid"));
-sio.set("log level", 1);
+sio.set("log level", 1); //0:error, 1-warn, 2-info, 3-debug
+sio.set("polling duration", 10);
+sio.set("transports", ["xhr-polling"]);
 
 // Routes
 require('./routes/routes')(app, sio);
