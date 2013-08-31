@@ -999,16 +999,21 @@ $(document).ready(function(){
         socket.emit("caricaStati");
     });
 
+	/*
 	$("#sendMsg").click(function(){
 		if ( $.trim($("#chatMsg").val()) != "" ){
 			sendToChat($("#chatMsg").val());
 			$("#chatMsg").val("");
 		}
 	});
+*/
 
 	$("#chatMsg").keyup(function(event){
 		if(event.keyCode == 13){
-			$("#sendMsg").click();
+			if ( $.trim($(this).val()) != "" ){
+				sendToChat($(this).val());
+				$(this).val("");
+			}
 		}
 	});
 

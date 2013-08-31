@@ -55,7 +55,7 @@ var SessionManager = function(){
     for(var i=0; i< match.getBean().players.length; i++){
       var player = match.getBean().players[i];
       util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
-      if ( player.player.toString() == mySession.id ){
+      if ( player.player.id == mySession.id ){
         mySession.color = player.color;
         util.log("Color set "+mySession.color);
         break;
