@@ -204,8 +204,8 @@ module.exports = {
         var query = req.param('q');
         db.getUsers( {
             "$nor":[{"_id":req.session.passport.user._id}],
-            //"$or":[{"nick":{"$regex":query,"$options":""}},{"email":{"$regex":query,"$options":""}}]
-            "nick": {"$regex":query,"$options":""}
+            "$or":[{"nick":{"$regex":query,"$options":""}},{"email":{"$regex":query,"$options":""}}]
+            //"nick": {"$regex":query,"$options":""}
         }, {
             _id: 1,
             nick:1,
