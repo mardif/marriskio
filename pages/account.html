@@ -346,7 +346,7 @@
                     //check if all players are online
                     for(var i=0; i< mm.players.length; i++){
                         var id = mm.players[i].player._id;
-                        if ( $("#users-online li#"+id).length == 0 ){
+                        if ( !( mm.players[i].abandoned === true ) && $("#users-online li#"+id).length == 0 ){
                             allOnline = false;
                             break;
                         }
