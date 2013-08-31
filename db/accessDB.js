@@ -185,7 +185,6 @@ var AccessDB = function(){
         //matchBean.frozen.engine = buffer;  //partita salvata zippata
         matchBean.frozen.engine = serializedEngineData; //partita salvata non zippata
         
-        /*
         //aggiorno lo stato degli utenti nel match.js nel caso in cui qualcuno abbia abbandonato
         var sessions = engine.getSessions();
         for(var i = 0; i<sessions.length; i++){
@@ -194,12 +193,11 @@ var AccessDB = function(){
                 for(var x = 0; x < matchBean.players.length; x++){
                     var p = matchBean.players[x];
                     if ( p.player.id == sessions[i].id ){
-                        p.players.abandoned = true;
+                        p.abandoned = true;
                     }
                 }
             }
         }
-        */
         
         matchBean.save(function(err){
           if ( err ) return errorHelper(err, callback);
