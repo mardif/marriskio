@@ -24,7 +24,7 @@ $(document).ready(function(){
                   },
                   {
                       element: '#step3a',
-                      intro: "<ul><li>Invitare utenti registrati e nuovi amici alla tua partita</li><li>Decidere di non partecipare più alla partita</li><li>Se sei il creatore della partita, puoi cancellarla</li></ul>"
+                      intro: "<ul><li>Invitare utenti registrati e nuovi amici alla tua partita</li><li>Decidere di non partecipare più alla partita</li><li>Se sei il creatore della partita, puoi cancellarla</li><li>Puoi inviare un sollecito (reminder) ai partecipanti della partita</li></ul>"
                   },
                   {
                       element: '#step3b',

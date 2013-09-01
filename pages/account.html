@@ -7,6 +7,10 @@
     <script type="text/javascript" src="/account-intro.js"></script>
     <link rel="stylesheet" href="/token-input.css" type="text/css" />
     <link rel="stylesheet" href="/token-input-fb.css" type="text/css" />
+    <link href="pnotify.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="pnotify.icons.css" media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="pnotify.js"></script>
+
     <style>
     </style>
     <script>
@@ -38,13 +42,19 @@
                         $(this).remove();
                     });
                 }
-            });            
+            });
         }
     });
     
     socket.on("account-received-chat-message", function(data){
         if ( data && data.msg ){
             $("<li><i>"+data.user+"</i>: "+data.msg+"</li>").prependTo($("#chat-content"));
+        }
+    });
+
+    socket.on("account-received-reminder", function(data){
+        if (data && data.msg){
+            show_note("info", "Sollecito", data.msg, 10000);
         }
     });
 
@@ -442,17 +452,25 @@
         }
         
         $(document).on("click", "li > a.sendReminder", function(){
-            makeAjaxCall("/sendReminder", "POST", 
-            {
-                matchId:  $(this).parents("ul:eq(0)").attr("mid"),
-                _csrf: '{{token}}'
-            }, 
-            function(data){
-                
-            },
-            function(err){
-                
+            var $this = $(this);
+
+            showInputBox('{{__("Invio Solleciti")}}', '{{__("Digita il testo opzionale da inviare insieme al sollecito")}}', function(){
+                makeAjaxCall("/sendReminder", "POST", 
+                {
+                    matchId:  $this.parents("ul:eq(0)").attr("mid"),
+                    msg: $("#inputBox DIV.modal-body textarea#content").val(),
+                    _csrf: '{{token}}'
+                }, 
+                function(data){
+                    
+                },
+                function(err){
+                    
+                });
+                $("#inputBox").modal("hide");
             });
+
+
         });
 
         $(document).on("click", "#modalInvitationSender", function(){
@@ -515,6 +533,36 @@
             });
 
         }
+
+        function showInputBox(title, message, callback){
+            $("#inputBox DIV.modal-header h3").html(title);
+            $("#inputBox DIV.modal-body p").html(message);
+            $("#inputBox").modal({
+                show: true,
+                backdrop: "static"
+            });
+
+            $("#inputBox A#inputBoxNo").unbind("click").click(function(){
+                $("#inputBox").modal("hide");
+            });
+            $("#inputBox A#inputBoxYes").unbind("click").click(function(){
+                callback.call(this);
+            });
+
+        }        
+
+        function show_note(type, title, message, delay) {
+            var opts = {
+                    title: title,
+                    text: message,
+                    type: type,
+                    delay: delay ? delay : 5000,
+                    nonblock: false,
+                    history: true,
+                    sticker: false
+            };
+            $.pnotify(opts);
+        }        
 
         //--------------------------
 
@@ -829,6 +877,21 @@
     <div class="modal-footer">
         <a href="javascript:void(0);" class="btn btn-large" id="confirmBoxNo">{{__("No")}}</a>
         <a href="javascript:void(0);" class="btn btn-success btn-large" id="confirmBoxYes">{{__("Si")}}</a>
+    </div>
+</div>
+
+<div id="inputBox" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3></h3>
+    </div>
+    <div class="modal-body">
+        <p class="lead"></p>
+        <textarea id="content"></textarea>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-large" id="inputBoxNo">{{__("Annulla")}}</a>
+        <a href="javascript:void(0);" class="btn btn-success btn-large" id="inputBoxYes">{{__("OK")}}</a>
     </div>
 </div>
 
