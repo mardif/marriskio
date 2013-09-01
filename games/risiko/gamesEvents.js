@@ -220,8 +220,10 @@ module.exports = function(sio, socket){
             saveMatch(match);
             engine.gameEnd = true;
             engine.winner = data.sessionId;
+            var session = engine.getSession(data.sessionId);
             sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", {
-                winner: engine.winner
+                winner: engine.winner,
+                nick: session.nick
             });
         }
 
