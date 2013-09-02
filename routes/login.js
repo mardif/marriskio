@@ -259,7 +259,7 @@ module.exports = {
            text:    body,
            from:    "admin@debellum.com",
            to:      addresses.join(","),
-           subject: "Debellum invitation"
+           subject: "Invito per Debellum"
         };
 
         common.sendEmail(headers);
