@@ -29,7 +29,12 @@ var GlobalSessionManager = function(){
     this.getUsersOnLine = function(){
         var ss = {};
         for(var id in sessions){
-            ss[id] = sessions[id].handshake.session.passport.user;
+            try{
+                ss[id] = sessions[id].handshake.session.passport.user;
+            }
+            catch(e){
+                util.log("error on getUsersOnLine about session expired: "+e);
+            }
         }
         return ss;
     }

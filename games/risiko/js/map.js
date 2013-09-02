@@ -464,7 +464,7 @@ socket.on("broadcastChat", function(data){
 socket.on("WeHaveAWinner", function(data){
     if ( data && data.winner ){
         show_note("info", "VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!", 10000);
-        $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
+        $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
     }
 });
 

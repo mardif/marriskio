@@ -217,16 +217,21 @@ module.exports = function(sio, socket){
         if ( engine.haveWeAWinner(data) ){
             var match = getMatch(socket.store.data.matchId);
             match.getBean().winner = data.sessionId;
-            saveMatch(match);
             engine.gameEnd = true;
             engine.winner = data.sessionId;
+            saveMatch(match);
             var session = engine.getSession(data.sessionId);
+            util.log("AND THE WINNER IS "+session.nick);
             sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", {
                 winner: engine.winner,
                 nick: session.nick
             });
         }
 
+    });
+    
+    socket.on("testCall", function(data){
+        sio.sockets.in(socket.store.data.matchId).emit(data.action, data.data);
     });
 
     socket.on("caricaStati", function(data){
