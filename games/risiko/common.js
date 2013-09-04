@@ -258,11 +258,13 @@ common.inArray = function (array, value)
     return false;
 };
 
-
 var mailServer = email.server.connect({
-           user:    "mardifoto",
-           password:"martina2010",
-           host:    "smtp.gmail.com",
+           //user:    "mardifoto",
+           //password:"martina2010",
+           //host:    "smtp.gmail.com",
+           user: "debellum.net",
+           password: "eewaashu",
+           host:    "mail.debellum.net",
            ssl:     false,
            tls:     true
         });

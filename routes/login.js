@@ -239,7 +239,7 @@ module.exports = {
 			                        <br/>Cosa stai aspettando? <a href='http://"+req.headers.host+"/joinToMatch?mid="+matchId+"' target='_joinDebellumMatch'>Unisciti a noi!</a><br/>\
 			                        <br/><br/>Debellum staff\
 		                        </div>\
-		                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'>test</div>\
+		                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'></div>\
 	                        </div>\
                         </body>\
             </html>";
@@ -257,9 +257,9 @@ module.exports = {
 
         var headers = {
            text:    body,
-           from:    "admin@debellum.com",
+           from:    "debellum.invites@debellum.net",
            to:      addresses.join(","),
-           subject: "Invito per Debellum"
+           subject: "Debellum: invito"
         };
 
         common.sendEmail(headers);
