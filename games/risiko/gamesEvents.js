@@ -42,7 +42,7 @@ module.exports = function(sio, socket){
           
           
           util.log("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
-          util.log("         match winner "+util.inspect(match.getBean().winner, true));
+          util.log("         match winner "+match.getBean().winner);
           socket.set('matchId', engine.getMatchId(), function() { util.log(session.nick+' join on match ' + engine.getMatchId()); } );
           socket.set("sessionId", session.id, function(){ util.log("sessionId ["+session.id+"] legato al socket!"); });
           socket.set('active', true);
@@ -94,7 +94,6 @@ module.exports = function(sio, socket){
                 }
             }
         }
-        //util.log("socketclient: "+util.inspect(socketClients[0]));
         if ( maintainSession === true ){
             util.log("rimozione del socket, ma non della sessione dell'utente "+(socket.handshake.session ? socket.handshake.session.passport.user.nick : "")+"!")
             return;
@@ -939,7 +938,7 @@ module.exports = function(sio, socket){
     var sendBuildEntireMap = function(sio, socket, match, turno){
         util.log("users abandoned: "+match.getEngine().usersAbandoned);
         util.log("users needed online: "+ (match.getBean().num_players - match.getEngine().usersAbandoned) );
-        util.log("user winner: "+util.inspect(match.getBean().winner, true));
+        util.log("user winner: "+match.getBean().winner);
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  match.getEngine().getActualWorld(),
             engineLoaded: match.getEngine().isEngineLoaded(),

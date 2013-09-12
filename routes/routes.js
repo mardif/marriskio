@@ -152,7 +152,7 @@ module.exports = function(app, sio) {
     //sio.sockets.on("connection", function(socket){
     sio.sockets.on("connection", function(socket){
       
-      util.log("sio.sockets.on[connection] -> session: "+util.inspect(socket.handshake, true));
+      //util.log("sio.sockets.on[connection] -> session: "+util.inspect(socket.handshake, true));
       
       siteEvents.initializeEvents(sio, socket);
       gamesEvents(sio, socket);

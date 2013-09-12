@@ -1,6 +1,7 @@
 // base dependencies for app
 
-require('nodefly').profile(
+//require('nodefly').profile(
+require('strong-agent').profile(
     '025e8804a158b72c325319aa8865a280',
     'risiko'
 );
