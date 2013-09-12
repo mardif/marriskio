@@ -1,10 +1,10 @@
 // base dependencies for app
-/*
+
 require('nodefly').profile(
     '025e8804a158b72c325319aa8865a280',
     'risiko'
 );
-*/
+
 
 global.rootPath = __dirname;
 
