@@ -323,7 +323,7 @@
                 var tddata = trmatch.find("td.date");
                 var started_at = new Date(mm.started_at).toString("d MMMM yyyy HH:mm:ss");
                 
-                tddata.html(started_at + ( ( mm.frozen && mm.frozen.created_at ) ? " <small>salvata il "+new Date(mm.frozen.created_at).toString("d MMMM yyyy HH:mm:ss")+"</small>" : "" ));
+                tddata.html(started_at + ( ( mm.frozen && mm.frozen.created_at ) ? " <br/><small>salvata il "+new Date(mm.frozen.created_at).toString("d MMMM yyyy HH:mm:ss")+"</small>" : "" ));
                 
                 
                 var tdinfo = trmatch.find("td.infos > a");
@@ -635,7 +635,7 @@
                                         <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
                                         <td class="date">{{m.started_at|date('j F Y H:i:s')}} 
                                         {% if m.frozen and m.frozen.created_at %}
-                                            <small>salvata il {{m.frozen.created_at}}</small>
+                                            <br/><small>salvata il {{m.frozen.created_at}}</small>
                                         {% endif %}
                                         </td>
                                         <td class="master">{{m.masterPlayer.nick}}</td>

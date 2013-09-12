@@ -102,12 +102,12 @@ module.exports = function(app, sio) {
                 //m.setEngine(cryo.parse(serializedMatchEngine)); //partita salvata zippata
                 m.setEngineData(cryo.parse(frozen));  //partita salvata non zippata
           }
-          res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id });
+          res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id, csrf: req.session._csrf });
         });
 
       }
       else{
-        res.render("../games/risiko/map.html", { matchId: req.body.matchId, sessionId: req.user._id });
+        res.render("../games/risiko/map.html", { matchId: req.body.matchId, sessionId: req.user._id, csrf: req.session._csrf });
       }
     });
     

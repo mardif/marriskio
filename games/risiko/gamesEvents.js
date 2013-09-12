@@ -32,8 +32,8 @@ module.exports = function(sio, socket){
           var engine = match.getEngine();
           
             if ( session.AIActivated === true ){
-                sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
-                    users: engine.getSessions(), 
+                sio.sockets.in(socket.store.data.matchId).emit("joinUser", {
+                    users: engine.getSessions(),
                     num_players: match.getBean().num_players,
                     engineLoaded: engine.isEngineLoaded()
                 });
@@ -902,13 +902,17 @@ module.exports = function(sio, socket){
         var engine = getEngine(matchId);
         if ( !engine ){
             util.log("Match "+matchId+" non risconosciuto");
-            socket.emit("errorOnAction", {
-                message: "Si e' verificato un problema nell'identificazione del match! La partita verrà chiusa entro 10 secondi, riaprila dalla tua pagina di account!",
+
+            sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", { 
+                message: "Si e' verificato un problema nell'identificazione del match! Il match verrà ricaricato automaticamente. Se dovessero esserci ulteriori problemi, chiudi la pagina della partita e riaprila dalla tua pagina di account!",
                 sessionId: sessionId,
                 matchId: matchId,
-                action: "setTimeout(function(){ window.close(); }, 10000);",
+                action: "setTimeout(function(){ \
+                            reloadMatch('startJoinMatch', '"+matchId+"', false); \
+                         }, 10000);",
                 delay: 10000
-            });            
+            } );
+
             return false;
         }
         if ( engine.isEngineLoaded() ){

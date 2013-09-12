@@ -34,7 +34,8 @@ var continents = {};
 var images = ["/left","/right","/up","/down","/users","/notes","/dices","/dice1","/dice2","/dice3","/dice4","/dice5","/dice6","/dice1r","/dice2r","/dice3r","/dice4r","/dice5r","/dice6r","/dice1g","/dice2g","/dice3g","/dice4g","/dice5g","/dice6g", "/arrow", "/arrow2", "/arrow3", "/arrow4"];
 $(images).preload();
 var lastCenter = center;
-var nick = undefined;
+var nick;
+var mycolor;
 var AIActivated = false;
 
 MyOverlay.prototype = new google.maps.OverlayView();
@@ -231,6 +232,7 @@ socket.on("buildEntireMap", function(data){
       troupesToAdd = {};
       
       if ( prp == sessionId ){
+      	mycolor = color;
         $("#actions, #users, #chat").css("border-color", color);
         truppeRimanenti = players[prp].initialTroupes;
         truppeToAddPerTurno = players[prp].troupeToAdd;
@@ -1327,14 +1329,7 @@ function retrievePolygons(){
 								matchId: matchId
 							});
 						}
-						/*
-						socket.emit("addTroup", {
-							statoId: theMarker.id,
-							sessionId: sessionId,
-							unit: 1,
-							matchId: matchId
-						});
-						*/
+
 					}
 					else if ( contatoreTurni > 0 && turnEnable && statoTurno == 1 && isMyState(theMarker.id) ){
 						//Ora provvedo a selezionare uno dei miei stati da cui attaccare
@@ -1352,6 +1347,12 @@ function retrievePolygons(){
 						});
 					}
 					else if ( contatoreTurni > 0 && turnEnable && statoTurno == 1 && attackFrom !== undefined && isStatoConfinante(theMarker.id) ){
+
+						var offender = getMarker(attackFrom);
+						if ( !offender || ( offender && offender.troupes < 2 ) ){
+							show_note("error", "Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title);
+							return;
+						}
 
 						if ( $("#dices").is(":visible") == false ){
 							socket.emit("attack", {
@@ -1500,6 +1501,16 @@ function show_note(type, message, delay) {
 			sticker: false
 	};
 	$.pnotify(opts);
+}
+
+function reloadMatch(actionUrl, matchId, newPage){
+    var form = $("<form method='POST' action='/"+actionUrl+"?q="+new Date().getTime()+"' id='joinMatchForm' "+(newPage ? " target='_blank_"+matchId+"' " : "")+">\
+                        <input type='hidden' name='matchId' value='"+matchId+"'>\
+                        <input type='hidden' name='_csrf' value='"+csrf+"'>\
+                        <input type='hidden' name='player_color' value='"+mycolor+"'>\
+                    </form>");
+    form.appendTo($('body'));
+    form.submit();
 }
 
 /**
