@@ -1,6 +1,7 @@
 {% extends 'template.html' %}
 {% block head %}
     {% parent %}
+    {% block title %}Debellum - Real-time war game{% endblock %}
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/tokeninput.js"></script>
     <script type="text/javascript" src="/date.js"></script>
