@@ -163,6 +163,13 @@ var AccessDB = function(){
       });
   },
 
+  this.getMatchByIdWithoutPopulate = function(matchId, fields, callback){
+      
+      Match.findById(matchId, fields).exec(function(err, match){
+          callback(err, match);
+      });
+  },
+
   this.getColoursAvailableOnMatch = function(matchId, callback){
     Match.findById(matchId, "players", function(err, players){
       callback(err, players);

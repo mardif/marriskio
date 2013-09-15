@@ -100,12 +100,12 @@ module.exports = {
     async.parallel(
         {
             myMatchList: function(callback){
-                db.getMatchesAssociated(req.user._id, function(err, result){
+                db.getMatchesAssociated(req.session.passport.user._id, function(err, result){
                     callback(err, result);
                 });
             },
             allMatches: function(callback){
-                db.getAllMatchesOpen(req.user.id, function(err, result){
+                db.getAllMatchesOpen(req.session.passport.user._id, function(err, result){
                     var r = [];
                     for(var i=0;i<result.length;i++){
                         var match = result[i];
@@ -118,7 +118,7 @@ module.exports = {
                 });
             },
             allUsers: function(callback){
-                db.getUsers(req.user._id, function(err, result){
+                db.getUsers(req.session.passport.user._id, function(err, result){
                     callback(err, result);
                 });
             }
@@ -281,7 +281,7 @@ module.exports = {
     joinMatch: function(req, res){
         var matchId = req.body.matchId;
         var color = req.body.player_color;
-        db.getMatchById(matchId, "players name", function(err, match){
+        db.getMatchById(matchId, "players name num_players", function(err, match){
             if ( err ) throw err;
 
             var addresses = [];
@@ -294,14 +294,29 @@ module.exports = {
 
 
             match.players.push({player: req.session.passport.user._id, color: color});
+
+            var num_players = match.num_players;
+
             match.save(function(err, result){
                 if (err) throw err;
 
                 var body = common.getHeaderMailTemplate(req);
-                body += "Un saluto dal team di Debellum<br/><br/>\
-                Volevamo avvisarti che l'utente <br/><b>"+req.session.passport.user.name.first+" "+req.session.passport.user.name.last+" ("+req.session.passport.user.nick+")</b><br/>\
-                si e' unito alla partita "+match.name+" a cui partecipi<br/>\
-                <br/>Invita i tuoi amici a giocare con te a Debellum!";
+
+                if ( match.players.length == num_players ){
+                    body += "Un saluto dal team di Debellum<br/><br/>\
+                        Volevamo avvisarti che l'utente <br/><b>"+req.session.passport.user.name.first+" "+req.session.passport.user.name.last+" ("+req.session.passport.user.nick+")</b><br/>\
+                        si e' unito alla partita "+match.name+" a cui partecipi<br/>\
+                        Ora tutti gli slot della partita sono occupati<br/>\
+                        quindi la partita e' pronta per iniziare!<br/><br/>\
+                        Cosa aspetti? <a href='http://"+req.headers.host+"/account'>Fatti trovare online e pronto alla battaglia!</a>";
+
+                }
+                else{
+                    body += "Un saluto dal team di Debellum<br/><br/>\
+                    Volevamo avvisarti che l'utente <br/><b>"+req.session.passport.user.name.first+" "+req.session.passport.user.name.last+" ("+req.session.passport.user.nick+")</b><br/>\
+                    si e' unito alla partita "+match.name+" a cui partecipi<br/>\
+                    <br/>Invita i tuoi amici a giocare con te a Debellum!";
+                }
                 body += common.getFooterMailTemplate();
 
 
@@ -315,6 +330,8 @@ module.exports = {
                 };
 
                 common.sendEmail(headers);
+
+                //Se tutti i posti del match sono stati occupati, si manda un'email che è tutto pronto per giocare!
 
             });
         });
@@ -349,7 +366,7 @@ module.exports = {
             var found = false;
             var i = 0;
             for(; i< match.players.length; i++){
-                if ( String(match.players[i].player) === String(req.session.passport.user._id) ){
+                if ( String(match.players[i].player.id) === String(req.session.passport.user._id) ){
                     found = true;
                     break;
                 }
@@ -358,13 +375,19 @@ module.exports = {
             if ( found === true ){
                 var p = match.players.splice(i, 1);
                 if ( p && p.length > 0 ){
-                    match.save(function(err, result){
+
+                    db.getMatchByIdWithoutPopulate(matchId, "players", function(err, result){
                         if (err) throw err;
-                        req.flash("msg_level", "success");
-                        req.flash("msg_title", "Confirmed!");
-                        req.flash("msg_body", "You left this match successfully!");
-                        res.redirect("/account");
+                        result.players.splice(i, 1);
+                        result.save(function(err, result){
+                            if (err) throw err;
+                            req.flash("msg_level", "success");
+                            req.flash("msg_title", "Confermato!");
+                            req.flash("msg_body", "Hai abbandonato il match con successo!");
+                            res.redirect("/account");
+                        });
                     });
+
                 }
                 else{
                   req.flash("msg_level", "error");
