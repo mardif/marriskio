@@ -279,3 +279,20 @@ common.sendEmail = function(headers){
         console.log("OK: "+message);
     });
 }
+
+common.getHeaderMailTemplate = function(req){
+  return "<html>\
+                <body>\
+                    <div style='width:600px;background: url(http://"+req.headers.host+"/logo) no-repeat right center;'>\
+                        <div style='height:50px;background-color:#2a333c;border-radius:5px 5px 0 0;border:1px solid #99999;width:100%;color:#999999;font-size:30pt;padding-left:42px;opacity:0.5;filter:alpha(opacity=50);'>DEBELLUM</div>\
+                        <div style='border:1px solid #999999;display:inline-block;padding-top:10px;padding-bottom:10px;padding-left:40px;width:100%;'>";
+}
+
+common.getFooterMailTemplate = function(){
+  return "              </div>\
+                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'></div>\
+                    </div>\
+                </body>\
+            </html>";
+
+}

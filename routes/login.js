@@ -228,21 +228,13 @@ module.exports = {
         var matchId = req.body.matchId;
         var contacts = req.body.contacts;
         
-        var body = "<html>\
-                        <body>\
-                            <div style='width:600px;background: url(http://"+req.headers.host+"/logo) no-repeat right center;'>\
-		                        <div style='height:50px;background-color:#2a333c;border-radius:5px 5px 0 0;border:1px solid #99999;width:100%;color:#999999;font-size:30pt;padding-left:42px;opacity:0.5;filter:alpha(opacity=50);'>DEBELLUM</div>\
-		                        <div style='border:1px solid #999999;display:inline-block;padding-top:10px;padding-bottom:10px;padding-left:40px;width:100%;'>\
-			                        Un saluto dal team di Debellum!<br/>\
+        var body = common.getHeaderMailTemplate(req);
+        body += "Un saluto dal team di Debellum!<br/>\
 			                        <br/>Il tuo amico "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+"\
 			                        ti ha invitato <br/>a giocare <a href='http://"+req.headers.host+"/joinToMatch?mid="+matchId+"' target='_joinDebellumMatch'>questa partita</a> a Debellum <br/>\
 			                        <br/>Cosa stai aspettando? <a href='http://"+req.headers.host+"/joinToMatch?mid="+matchId+"' target='_joinDebellumMatch'>Unisciti a noi!</a><br/>\
-			                        <br/><br/>Debellum staff\
-		                        </div>\
-		                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'></div>\
-	                        </div>\
-                        </body>\
-            </html>";
+			                        <br/><br/>Debellum staff";
+        body += common.getFooterMailTemplate();
         
         var addresses = [];
         for(var idx in contacts){
@@ -289,11 +281,41 @@ module.exports = {
     joinMatch: function(req, res){
         var matchId = req.body.matchId;
         var color = req.body.player_color;
-        db.getMatchById(matchId, "players", function(err, match){
+        db.getMatchById(matchId, "players name", function(err, match){
             if ( err ) throw err;
+
+            var addresses = [];
+            for(var i=0; i < match.players.length; i++){
+                var p = match.players[i].player;
+                if ( p.id != req.session.passport.user._id ){
+                    addresses.push(p.email);
+                }
+            }
+
+
             match.players.push({player: req.session.passport.user._id, color: color});
             match.save(function(err, result){
                 if (err) throw err;
+
+                var body = common.getHeaderMailTemplate(req);
+                body += "Un saluto dal team di Debellum<br/><br/>\
+                Volevamo avvisarti che l'utente <br/><b>"+req.session.passport.user.name.first+" "+req.session.passport.user.name.last+" ("+req.session.passport.user.nick+")</b><br/>\
+                si e' unito alla partita "+match.name+" a cui partecipi<br/>\
+                <br/>Invita i tuoi amici a giocare con te a Debellum!";
+                body += common.getFooterMailTemplate();
+
+
+                util.log("send mail to "+addresses.join(","));
+
+                var headers = {
+                   text:    body,
+                   from:    "debellum.invites@debellum.net",
+                   to:      addresses.join(","),
+                   subject: "Debellum: notifica"
+                };
+
+                common.sendEmail(headers);
+
             });
         });
 

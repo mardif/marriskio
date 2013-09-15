@@ -83,20 +83,17 @@ var sendReminder = function(req, res){
         }
 
         //ora invio anche l'email
-        var body = "<html>\
-                <body>\
-                    <div style='width:600px;background: url(http://"+req.headers.host+"/logo) no-repeat right center;'>\
-                        <div style='height:50px;background-color:#2a333c;border-radius:5px 5px 0 0;border:1px solid #99999;width:100%;color:#999999;font-size:30pt;padding-left:42px;opacity:0.5;filter:alpha(opacity=50);'>DEBELLUM</div>\
-                        <div style='border:1px solid #999999;display:inline-block;padding-top:10px;padding-bottom:10px;padding-left:40px;width:100%;'>\
-                            Un saluto dal team di Debellum!<br/>\
+        var body = common.getHeaderMailTemplate(req);
+        body += "Un saluto dal team di Debellum!<br/>\
                             <br/>Il tuo amico "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+"\
                             ti ha sollecitato<br/>a partecipare alla sua partita "+match.name+" su Debellum <br/>";
         if ( msg && msg.trim() != "" ){
             body += "<br/>Messaggio di "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+": <br/><i>\""+msg+"\"</i><br/>";
         }
         body += "           <br/>Cosa stai aspettando? <a href='http://"+req.headers.host+"/account' target='_joinDebellumMatch'>Autenticati e gioca</a><br/>\
-                            <br/><br/>Debellum staff\
-                        </div>\
+                            <br/><br/>Debellum staff";
+        body += common.getFooterMailTemplate();
+        body += "                </div>\
                         <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'></div>\
                     </div>\
                 </body>\
