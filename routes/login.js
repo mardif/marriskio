@@ -250,7 +250,7 @@ module.exports = {
         var headers = {
            text:    body,
            from:    "debellum.invites@debellum.net",
-           to:      addresses.join(","),
+           bcc:      addresses.join(","),
            subject: "Debellum: invito"
         };
 
@@ -310,7 +310,7 @@ module.exports = {
                 var headers = {
                    text:    body,
                    from:    "debellum.invites@debellum.net",
-                   to:      addresses.join(","),
+                   bcc:      addresses.join(","),
                    subject: "Debellum: notifica"
                 };
 

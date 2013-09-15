@@ -102,7 +102,7 @@ var sendReminder = function(req, res){
         var headers = {
            text:    body,
            from:    "debellum.reminder@debellum.net",
-           to:      addresses.join(","),
+           bcc:      addresses.join(","),
            subject: "Debellum: Sollecito partita"
         };
 
