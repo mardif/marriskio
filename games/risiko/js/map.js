@@ -220,6 +220,8 @@ socket.on("buildEntireMap", function(data){
       var color = players[prp].color;
       var states = players[prp].states;
       var isMaster = players[prp].master;
+      var old_num_cards = $("#num_cards").html();
+      var num_cards = players[prp].cards.length;
       var scudo = players[prp].haveDefensiveCard;
       if ( scudo ){
       	if ( $("#elenco li[id='"+prp+"'] img.scudo").length == 0 ){
@@ -229,9 +231,15 @@ socket.on("buildEntireMap", function(data){
       else{
         $("#elenco li[id='"+prp+"'] img.scudo").remove();
       }
+
+
       troupesToAdd = {};
       
       if ( prp == sessionId ){
+	    $("#num_cards").attr("title", num_cards == 0 ? "Non hai alcuna carta giocabile" : ( num_cards == 1 ? "Hai una carta nel tuo mazzo" : "Hai "+num_cards+" carte nel tuo mazzo" ) ).html(num_cards);
+	    if ( old_num_cards != num_cards ){
+	    	$("#cards").parent().animate({ opacity: 0}, 500).animate({ opacity: 1}, 500).animate({ opacity: 0}, 500).animate({ opacity: 1}, 500).animate({ opacity: 0}, 500).animate({ opacity: 1}, 500);
+	    }
       	mycolor = color;
         $("#actions, #users, #chat").css("border-color", color);
         truppeRimanenti = players[prp].initialTroupes;
