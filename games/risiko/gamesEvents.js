@@ -938,14 +938,20 @@ module.exports = function(sio, socket){
     var sendBuildEntireMap = function(sio, socket, match, turno){
         util.log("users abandoned: "+match.getEngine().usersAbandoned);
         util.log("users needed online: "+ (match.getBean().num_players - match.getEngine().usersAbandoned) );
-        util.log("user winner: "+match.getBean().winner);
+        var winner = match.getBean().winner;
+        var nickWinner;
+        if ( winner ){
+            nickWinner = sessionManager.getSession(winner).nick;
+        }
+        util.log("user winner: "+winner);
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  match.getEngine().getActualWorld(),
             engineLoaded: match.getEngine().isEngineLoaded(),
             turno: turno,
             num_players: match.getBean().num_players - match.getEngine().usersAbandoned,
             gameEnd: match.getEngine().gameEnd,
-            winner: match.getBean().winner
+            winner: match.getBean().winner,
+            nick: nickWinner
         });
     };
     

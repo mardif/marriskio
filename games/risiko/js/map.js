@@ -282,7 +282,7 @@ socket.on("buildEntireMap", function(data){
     }
     
         if ( data.gameEnd === true ){
-            $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
+            $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
             $("#buttonbar").hide();
             return;
         }
