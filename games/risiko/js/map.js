@@ -455,7 +455,10 @@ socket.on("attackResults", function(data){
 
 socket.on("broadcastChat", function(data){
 	if ( data ){
-		var msg = $("<span style='display:none;width:100%;float:left;color:"+data.color+"'>"+data.nick+": "+data.msg+"</span>");
+		var fontproperties="font-style:normal;font-weight:bold";
+		if (data.isStatusMessage)
+			fontproperties="font-style:italic";
+		var msg = $("<span style='display:none;width:100%;"+fontproperties+";float:left;color:"+data.color+"'>"+data.nick+": "+data.msg+"</span>");
 		msg.prependTo($("#buffer"));
 		msg.fadeIn(300, function(){
 			sm.play("bell");
@@ -1013,7 +1016,8 @@ $(document).ready(function(){
 	$("#chatMsg").keyup(function(event){
 		if(event.keyCode == 13){
 			if ( $.trim($(this).val()) != "" ){
-				sendToChat($(this).val());
+				/* distingui i messaggi di chat degli utenti dai messaggi di stato */
+				sendToChat($(this).val(), false);
 				$(this).val("");
 			}
 		}
@@ -1423,10 +1427,14 @@ function getMarker(statoId){
     return marker;
 }
 
-function sendToChat(msg, onNote){
+function sendToChat(msg, isStatusMessage, onNote){
+	if (isStatusMessage !== false) {
+    	isStatusMessage = true;
+    }
 	socket.emit("chatMessage", {
 				msg: msg,
 				from: sessionId,
+				isStatusMessage: isStatusMessage,
 				matchId: matchId
 	});
 	if ( onNote ){
