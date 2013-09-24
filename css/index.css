@@ -109,3 +109,9 @@ img.loading{
     border:0px;
     display:none;
 }
+
+span#beta{
+    position: relative;
+    top: -3px;
+    left: 125px;
+}
