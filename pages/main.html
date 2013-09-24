@@ -2,6 +2,20 @@
 {% block head %}
     {% parent %}
     {% block title %}Debellum - Real-time war game{% endblock %}
+    <script>
+      var ischrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
+      var isfirefox = /firefox/.test(navigator.userAgent.toLowerCase());
+      console.log("firefox: "+isfirefox);
+      console.log("chrome: "+ischrome);
+      $(document).ready(function(){
+        if ( isfirefox ){
+          alert("Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare CHROME");
+        }
+        else if ( !ischrome ){
+          alert("Spiacente, Debellum è compatibile solo con Chrome (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
+        }
+      });
+    </script>
 {% endblock %}
 {% block content %}
     <div class="container" style="margin-top:80px;">
