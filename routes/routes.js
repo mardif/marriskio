@@ -147,6 +147,8 @@ module.exports = function(app, sio) {
         
     });
 
+    app.post("/feedback", ensureAuthenticated, start.sendFeedback);
+
     require("./resources")(app);
 
     //sio.sockets.on("connection", function(socket){

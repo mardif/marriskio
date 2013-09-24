@@ -278,6 +278,26 @@ module.exports = {
 
     },
 
+    sendFeedback: function(req, res){
+        var nome = req.body.name;
+        var email = req.body.email;
+        var message = req.body.message;
+
+        var body = "Hai ricevuto il seguente feedback da "+nome+" ["+email+"]<br/><br/>\""+message+"\"";
+
+        var headers = {
+           text:    body,
+           from:    "feedback@debellum.net",
+           to:      "mariano.difelice@gmail.com",
+           subject: "Debellum: ricevuto feedback"
+        };
+
+
+        common.sendEmail(headers);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end("{}");        
+    },
+
     joinMatch: function(req, res){
         var matchId = req.body.matchId;
         var color = req.body.player_color;

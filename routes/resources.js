@@ -23,6 +23,7 @@ module.exports = function(app) {
     app.get("/intro", common.staticHandler("./games/risiko/js/intro.min.js"));
     app.get("/account-intro.js", common.staticHandler("./games/risiko/js/account-intro.js"));
     app.get("/debellum-intro.js", common.staticHandler("./games/risiko/js/debellum-intro.js"));
+    app.get("/feedback.js", common.staticHandler("./games/risiko/js/jquery.feedback_me.js"));
     //app.get("/socket.io", common.staticHandler("/socket.io/socket.io.js"));
 
 
@@ -53,6 +54,7 @@ module.exports = function(app) {
     app.get("/token-input-fb.css", common.staticHandler("./css/token-input-facebook.css"));
     app.get("/index.css", common.staticHandler("./css/index.css"));
     app.get("/intro.css", common.staticHandler("./css/introjs.min.css"));
+    app.get("/feedback.css", common.staticHandler("./css/jquery.feedback_me.css"));
 
 
     app.get("/left", common.staticHandler("./images/leftB.png"));
