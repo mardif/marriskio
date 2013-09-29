@@ -55,7 +55,7 @@ var interactCardSet = undefined;
 /*
 SOCKETS
 */
-var socket = io.connect(location.protocol+'//'+location.host);
+var socket = io.connect(location.protocol+'//'+location.host, {'sync disconnect on unload': true });
 //var sessionId = null;
 //var matchId = null;
 var myStates = [];
@@ -325,7 +325,7 @@ socket.on("initialTroupAdded", function(data){
 				$("#stepStatus").html("Rafforza i tuoi territori con "+truppeRimanenti+" armate");
 			}
 			else{
-				$("#stepStatus").html("Rafforzamento completato! Ottimo lavoro... ora attendi che gli avversari siano pronti!");
+				$("#stepStatus").html("Rafforzamento completato! Ottimo lavoro... ora attendi che gli avversari siano pronti!<br/>Riceverai un'email di notifica quando sarà di nuovo il tuo turno!");
 			}
 		}
 
@@ -679,8 +679,11 @@ function checkTurn(turno){
 	$("#elenco li[id='"+turno.session.id+"']").css("font-size", "24px").css("font-weight", "bold");
 
 	var status = "";
-	if ( contatoreTurni == 0 ){
+	if ( contatoreTurni == 0 && truppeRimanenti > 0 ){
 		status = "Rafforza i tuoi territori con "+truppeRimanenti+" armate";
+	}
+	else if ( contatoreTurni == 0 && truppeRimanenti === 0 ){
+		status = "Rafforzamento completato! Ottimo lavoro... ora attendi che gli avversari siano pronti!<br/>Riceverai un'email di notifica quando sarà di nuovo il tuo turno!";
 	}
 	else if ( contatoreTurni > 0 ){
 		if ( turno.stepTurno == 0 ){
@@ -765,10 +768,10 @@ function fillJoinUsers(data){
               masterSession = user;
             }
             
-            $("<li id='"+user.id+"' class='user-"+(user.statusActive ? "active" : "inactive")+"' style='background-color:"+user.color+"'><img src='/"+(user.AIActivated ? "bug" : "user")+"' title='"+(user.AIActivated ? "Il generale "+user.nick+" ha abbandonato la partita! Il sistema gestirà le sue truppe solo per la difesa!" : "Generale "+user.nick+" online e pronto a combattere!")+"' border='0'><span>"+user.nick+"</span><span style='float:right;'><img title='"+(user.statusActive ? "Connesso! Pronto per giocare!" : "In connessione...")+"' src='/"+(user.statusActive ? "connected" : "loading-small")+"' style='height:23px;'></span></li>").appendTo($("#elenco"));;
+            $("<li id='"+user.id+"' class='user-"+(user.statusActive ? "active" : "inactive")+"' style='background-color:"+user.color+"'><img src='/"+(user.AIActivated ? "bug" : "user")+"' title='"+(user.AIActivated ? "Il generale "+user.nick+" ha abbandonato la partita! Il sistema gestirà le sue truppe solo per la difesa!" : "Generale "+user.nick+" online e pronto a combattere!")+"' border='0'><span>"+user.nick+"</span><span style='float:right;'><img title='"+(user.statusActive ? "Connesso! Pronto per giocare!" : "Non connesso")+"' src='/"+(user.statusActive ? "connected" : "disconnected")+"'></span></li>").appendTo($("#elenco"));;
             
         }
-        
+        /*
         if ( data.engineLoaded === false ){
           if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
             $("#makeWorld").css("display", "inline-block");
@@ -781,6 +784,7 @@ function fillJoinUsers(data){
             $("#makeWorld").css("display", "none");
           }
         }
+        */
         
         /*
         if ( data.gameEnd === true ){
@@ -1541,7 +1545,7 @@ function buildNewInfoBubble(map) {
           arrowPosition: 50,
           //backgroundClassName: 'infowin-bck',
           arrowStyle: 0,
-		  opacity: 0.8
+		  opacity: 0.65
       });
 	  return ib;
 }

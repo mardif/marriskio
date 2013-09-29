@@ -1,6 +1,7 @@
 var EngineData = function(){
     
     this.states = undefined;
+    this.cards = undefined;
 	this.worldSize= undefined;
 	this.engineIsLoaded= undefined;
 	this.turni= undefined;

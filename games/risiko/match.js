@@ -1,11 +1,13 @@
 var engine = require("./engine");
 var util = require("util");
+var Session = require("./session").Session;
+var common = require("./common");
 
 var Match = function(bean){
   var bean = bean
 	var id = bean.id;
 	var motore = new engine.Engine(id);
-    var restoredSessionsMap = undefined;
+  var restoredSessionsMap = undefined;
 
 	this.getEngine = function(){
 		return motore;
@@ -39,8 +41,27 @@ var Match = function(bean){
             }
         }
     }
+    this.init();
 
   };
+
+  this.init = function(){
+    for(var i = 0; i < bean.num_players; i++){
+      var sess = bean.players[i];
+      var mySession = require("./sessionManager").getSession(sess.player.id);
+      if ( mySession == null ){
+        mySession = new Session({_id: sess.player.id, nick: sess.player.nick, color: sess.color, email: sess.player.email});
+      }
+      mySession.setMatchId(id);
+      mySession.disconnected = true;
+      mySession.statusActive = false;
+      motore.addSessionToEngine(mySession);
+      common.setSessionPropsFromDb(mySession, this);
+
+    }
+  };
+
+  this.init();
 
 };
 

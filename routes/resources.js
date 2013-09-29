@@ -115,6 +115,7 @@ module.exports = function(app) {
     app.get("/play", common.staticHandler("./images/play.png"));
     app.get("/loading-small", common.staticHandler("./images/loading-small.gif"));
     app.get("/connected", common.staticHandler("./images/connected.png"));
+    app.get("/disconnected", common.staticHandler("./images/disconnected.png"));
     app.get("/user_add", common.staticHandler("./images/glyphicons_006_user_add.png"));
     app.get("/leave_match", common.staticHandler("./images/glyphicons_063_power.png"));
     app.get("/user", common.staticHandler("./images/glyphicons_003_user.png"));

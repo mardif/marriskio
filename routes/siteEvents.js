@@ -83,7 +83,7 @@ var sendReminder = function(req, res){
         }
 
         //ora invio anche l'email
-        var body = common.getHeaderMailTemplate(req);
+        var body = common.getHeaderMailTemplate();
         body += "Un saluto dal team di Debellum!<br/>\
                             <br/>Il tuo amico "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+"\
                             ti ha sollecitato<br/>a partecipare alla sua partita "+match.name+" su Debellum <br/>";
@@ -93,11 +93,6 @@ var sendReminder = function(req, res){
         body += "           <br/>Cosa stai aspettando? <a href='http://"+req.headers.host+"/account' target='_joinDebellumMatch'>Autenticati e gioca</a><br/>\
                             <br/><br/>Debellum staff";
         body += common.getFooterMailTemplate();
-        body += "                </div>\
-                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'></div>\
-                    </div>\
-                </body>\
-            </html>";
 
         var headers = {
            text:    body,

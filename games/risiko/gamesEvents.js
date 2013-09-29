@@ -2,7 +2,8 @@ var util = require("util"),
     sessionManager = require("./sessionManager"),
     cards = require("./cards"),
     parseCookie = require('connect').utils.parseCookie,
-    db = require(rootPath+'/db/accessDB').getDBInstance;
+    db = require(rootPath+'/db/accessDB').getDBInstance,
+    common = require("./common");
 
 module.exports = function(sio, socket){
   
@@ -23,7 +24,9 @@ module.exports = function(sio, socket){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
       }
+
         sessionManager.setSessionStatus(user._id, true);
+        util.log("rilevato l'utente "+user.nick+" in partita!");
         var session = sessionManager.getSession(user._id);
         
         if ( session && session.matchId ){
@@ -66,7 +69,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("disconnect", function(){
-        util.log("disconnect");
+        util.log("disconnecting");
         
         if ( socket.handshake.session && socket.handshake.session.passport ){
             util.log("socket dell'utente "+socket.handshake.session.passport.user.nick+" disconnesso!");
@@ -109,7 +112,7 @@ module.exports = function(sio, socket){
         
         //util.log("socket in disconnessione: "+util.inspect(socket, true));
         
-        // se dopo 15 secondi il socket non è tornato su, provvedo a rimuovere la sessione definitivamente
+        // se dopo 60 secondi il socket non è tornato su, provvedo a rimuovere la sessione definitivamente
         
         setTimeout(function(){
             var mysession = sessionManager.getSession(sessionId);
@@ -122,7 +125,7 @@ module.exports = function(sio, socket){
             else{
                 util.log("utente "+(mysession !== undefined && mysession !== null ? mysession.nick : "non riconosciuto") +" riconnesso!");
             }
-        }, 10000);  //10 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
+        }, 60000);  //60 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
         
         sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
     });
@@ -225,6 +228,31 @@ module.exports = function(sio, socket){
                 winner: engine.winner,
                 nick: session.nick
             });
+
+            var body = common.getHeaderMailTemplate();
+            body += "Un saluto dal team di Debellum<br/><br/>\
+                    Notizie dal fronte della partita "+match.getBean().name+": le tue truppe sono state spazzate via!<br/>\
+                    Ora il mondo è governato da "+session.nick+"<br/>\
+                    <br/>Partecipa ad altre partite oppure creane di nuove invitando i tuoi amici!<br/>\
+                    <br/>A presto su Debellum";
+
+            var addresses = [];
+            for(var i=0; i < match.players.length; i++){
+                var player = match.players[i].player;
+                addresses.push(player.email);
+            }
+
+            body += common.getFooterMailTemplate();
+            var headers = {
+               text:    body,
+               from:    "summary@debellum.net",
+               bcc:      addresses.join(","),
+               subject: "Debellum: Partita "+match.getBean().name+" terminata!"
+            };
+
+            common.sendEmail(headers);            
+
+
         }
 
     });
@@ -285,12 +313,55 @@ module.exports = function(sio, socket){
             var changePlayer = engine.nextStep();
             if ( changePlayer === true ){
                 saveMatch(match);
+                /*
+                verifica se il giocatore del prossimo turno è online o meno: 
+                - se è online, si continua così
+                - se è offline, viene mandata un'email ed inviata una notifica a tutti gli altri giocatori online
+                */
+                var turnSession = sessionManager.getSession(engine.getSessioneDiTurno());
+                if ( turnSession && turnSession.statusActive === false ){
+                    var body = common.getHeaderMailTemplate();
+                    body += "Un saluto dal team di Debellum!<br/>\
+                                        <br/>Volevamo informarti che è il tuo turno nella partita "+match.getBean().name+"!<br/>\
+                                        <br/><b>Entra subito, gioca le tue carte e conquista il mondo!</b>";
+                    body += common.getFooterMailTemplate();
+
+                    var headers = {
+                       text:    body,
+                       from:    "debellum.reminder@debellum.net",
+                       bcc:      turnSession.email,
+                       subject: "Debellum: è il tuo turno!"
+                    };
+
+                    common.sendEmail(headers);
+
+                    sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", {
+                        level: "info",
+                        message: "L'utente "+turnSession.nick+" non è al momento disponibile. Attendi online le sue mosse, oppure chiudi tranquillamente: verrai avvisato tramite email quando sarà di nuovo il tuo turno!",
+                        delay: 30000
+                    });
             }
+
+
+            }
+
         }
-        else if ( data && data.prevStep ){
+        else if ( data && data.prevStep === true ){
             var canBack = engine.prevStep();
+            if ( canBack === false ){
+                sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", {
+                        level: "error",
+                        message: "Non puoi tornare alla fase di attacco: hai già eseguito lo spostamento di fine turno. Se credi ci sia un problema, chiudi questa pagina e rientra dalla tua pagina di account!",
+                        delay: 10000
+                });
+            }
             util.log("clicco sul prevStep: result: "+canBack);
         }
+        else if ( data && data.nextStep === false ){
+            util.log("salvataggio dei rinforzi initiali effettuato: ora si iniziano i turni preliminari");
+            saveMatch(match);
+        }
+
         sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());
         /*
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
@@ -314,6 +385,11 @@ module.exports = function(sio, socket){
         var engine = getEngine(data.matchId);
         if ( !engine ){ return; }
         var obj = addTroupe(session, data, engine);
+
+        if ( obj.initialTroupes === 0 ){
+            saveMatch(getMatch(data.matchId));
+        }
+
         sio.sockets.in(socket.store.data.matchId).emit("initialTroupAdded", {
             sessionId: data.sessionId,
             statoId: data.statoId,
@@ -415,9 +491,11 @@ module.exports = function(sio, socket){
     socket.on("getStatesOfContinent", function(data){
         util.log("getStatesOfContinent: "+util.inspect(data)+" -> returnStatesMap");
 
+        /*
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
         }
+        */
 
         var match = getMatch(data.matchId);
         if ( !match ){
@@ -843,7 +921,7 @@ module.exports = function(sio, socket){
         saveMatch(match, populateWinner);  //salvo comunque...
         
     });
-    
+
     //Eventi della mappa
     socket.on("zoom_changed", function(zoomLevel){
         sio.sockets.in(socket.store.data.matchId).emit("setZoom", {zoomLevel: zoomLevel});
@@ -903,7 +981,7 @@ module.exports = function(sio, socket){
             util.log("Match "+matchId+" non risconosciuto");
 
             sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", { 
-                message: "Si e' verificato un problema nell'identificazione del match! Il match verrà ricaricato automaticamente. Se dovessero esserci ulteriori problemi, chiudi la pagina della partita e riaprila dalla tua pagina di account!",
+                message: "Si e' verificato un problema! Il match verrà ricaricato automaticamente entro 10 secondi. Se dovessero esserci ulteriori problemi, chiudi la pagina della partita e riaprila dalla tua pagina di account oppure mandare un feedback dalla pagina di account segnalando l'accaduto!",
                 sessionId: sessionId,
                 matchId: matchId,
                 action: "setTimeout(function(){ \
@@ -925,6 +1003,10 @@ module.exports = function(sio, socket){
             }
             else if ( engine.getSessioneDiTurno() != session.user._id ){
                 util.log("Il giocatore "+session.user.nick+" sta effettuando un'operazione che non può seguire in quanto non è il suo turno!");
+                socket.emit("errorOnAction", {
+                    delay: 10000,
+                    message: "Stai effettuando un'operazione che non puoi eseguire in quanto non è il tuo turno!"
+                });
                 return false;
             }
             else{

@@ -7,23 +7,6 @@ var common = require("./common"),
 
 var SessionManager = function(){
     
-    var propertiesToRetrieve = [
-        "initialTroupes",
-        "troupesToAdd",
-        "cards",
-        "applyingTurnCards",
-        "applyingVolatileCard",
-        "sabotaged",
-        "alliances",
-        "states",
-        "haveDefensiveCard",
-        "turno",
-        "AIActivated",
-        "nick",
-        "color",
-        "_id"
-    ];
-
   var matchList = new MatchList();
   var self = this;
 
@@ -41,64 +24,11 @@ var SessionManager = function(){
 			return false;
 		}
 		mySession.setMatchId(match.getId());
-        this.setSessionPropsFromDb(mySession, match);
+        common.setSessionPropsFromDb(mySession, match);
 		match.getEngine().addSessionToEngine(mySession);
 
 		return true;
 	};
-
-  this.setSessionPropsFromDb = function(mySession, match){
-    var masterPlayer = match.getBean().masterPlayer;
-    util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
-    mySession.setMaster( masterPlayer.toString() == mySession.id ? true : false  );
-    
-    for(var i=0; i< match.getBean().players.length; i++){
-      var player = match.getBean().players[i];
-      util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
-      if ( player.player.id == mySession.id ){
-        mySession.color = player.color;
-        util.log("Color set "+mySession.color);
-        break;
-      }
-    }
-    
-    /*
-    Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)
-    */
-    util.log("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
-    if ( match && match.getRestoredSessionsMap() !== undefined ){
-        var map = match.getRestoredSessionsMap();
-        if ( map[mySession.id] !== undefined ){
-            var m = cryo.parse(map[mySession.id]);//JSON.parse(map[mySession.id]);
-            util.log("");
-            util.log(" -------------------------------- ");
-            for(var idx in propertiesToRetrieve){
-                var prop = propertiesToRetrieve[idx];
-                util.log("chiave "+prop);
-                util.log("valore in sessione: "+mySession[prop]);
-                util.log("valore da db: "+m[prop]);
-                util.log("");
-                mySession[prop] = m[prop];
-            }
-            util.log(" -------------------------------- ");
-        }
-        
-        //Già che ci sono, aggiunto in lista le sessioni abbandonate
-        for(var prp in map){
-            var sess = cryo.parse(map[prp]); //JSON.parse(map[prp]);
-            if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) && sess.id != mySession.id ){
-                var mySession = new Session({_id: sess.id, nick: sess.nick, color: sess.color});
-                mySession.setMatchId(match.getId());
-                for(var idx in propertiesToRetrieve){
-                    var prop = propertiesToRetrieve[idx];
-                    mySession[prop] = sess[prop];
-                }                
-                match.getEngine().addSessionToEngine(mySession);
-            }
-        }
-    }    
-    
-  };
 
 	this.removeSession = function(matchId, sessionId){
 		"use strict";
@@ -276,5 +206,5 @@ var SessionManager = function(){
 
 };
 
-
-module.exports = new SessionManager();
+var sessionManager = new SessionManager();
+module.exports = sessionManager;

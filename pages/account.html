@@ -41,7 +41,7 @@
     var mymatchInterval = undefined;
     var availableInterval = undefined;
     
-    var socket = io.connect(location.protocol+'//'+location.host);
+    var socket = io.connect(location.protocol+'//'+location.host, {'sync disconnect on unload': true });
     
     socket.on("userOnlineResponse", function(data){
         if ( data ){
@@ -283,7 +283,7 @@
                 $(tdinfo).data('content', content.html());
 
                 if ( mm.running === false && (mm.num_players - mm.players.length) > 0 ){
-                    trmatch.find("td.status").html('{{__("in attesa di giocatori")}} <a mid="'+mm._id+'" href=\"javascript:confirmJoinMatch(\''+mm._id+'\');\" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title=\'{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}\'>{{__("Partecipa")}}</a>');
+                    trmatch.find("td.status").html('{{__("in attesa di giocatori")}} <a mid="'+mm._id+'" href=\"javascript:confirmJoinMatch(\''+mm._id+'\');\" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title=\'{{__("Entra nella partita e dai il via alle ostilità!")}}\'>{{__("Partecipa")}}</a>');
                 }
                 
                 
@@ -312,7 +312,7 @@
                     td.append('<a href="javascript:confirmJoinMatch(\''+m._id+'\');"><img src="seatFree" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="Posto Libero! Partecipa!"></a>');
                 }
                 tr.append(td);
-                tr.append('<td class="status">in attesa di giocatori <a mid='+m._id+' href="javascript:confirmJoinMatch(\''+m._id+'\');" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="Entra nella partita ed attendi che il master player dia il via alle ostilità!">Partecipa</a></td>');
+                tr.append('<td class="status">in attesa di giocatori <a mid='+m._id+' href="javascript:confirmJoinMatch(\''+m._id+'\');" class="btn btn-success btn-mini" src="/play" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="Entra nella partita e dai il via alle ostilità!">Partecipa</a></td>');
                 //tr.prependTo(tbody);
                 tbody.prepend(tr);
                 tr.fadeIn(1000);
@@ -374,7 +374,8 @@
                     trmatch.find("td.status").html('{{__("Ci sono ancora posti liberi")}}');
                 }
                 else if ( (mm.num_players - mm.players.length) === 0 ){
-                    
+
+                    /*                    
                     var allOnline = true;
                     //check if all players are online
                     for(var i=0; i< mm.players.length; i++){
@@ -396,6 +397,14 @@
                     else{
                         trmatch.find("td.status").html('{{__("Non tutti gli utenti sono ancora online")}}');
                     }
+                    */
+                    var uno = '{{__("Avvia la partita")}}';
+                    var due = '{{__("Entra nella partita e dai il via alle ostilità!")}}';
+                    var td = trmatch.find("td.status");
+                    if ( $(td).find("img.playMatchIcon").length == 0 ){
+                        trmatch.find("td.status").html( uno+" <img mid='"+mm._id+"' class='playMatchIcon' src='/play' border='0' data-toggle=\"tooltip\" data-placement=\"top\" title=\"\" data-original-title='"+due+"'> ");
+                    }
+
                 }
                 
                 
@@ -423,7 +432,7 @@
                     }
                     tr.append(td);
                     tr.append('<td class="winner">'+m.winner.nick+'</td>');
-                    tr.append( $('<td> {{__("Visualizza Partita")}} <img mid="'+m._id+'" class="playMatchIcon" src="/play" border="0"0 data-toggle="tooltip" data-placement="top" title="" data-original-title=\'{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}\'> </td>') );
+                    tr.append( $('<td> {{__("Visualizza Partita")}} <img mid="'+m._id+'" class="playMatchIcon" src="/play" border="0"0 data-toggle="tooltip" data-placement="top" title="" data-original-title=\'{{__("Entra nella partita ed dai il via alle ostilità!")}}\'> </td>') );
                     tbody.prepend(tr);
                     tr.fadeIn(1000);
                     
@@ -672,7 +681,7 @@
                                             {% if m.running == false && m.free > 0 %}
                                                 {{__("in attesa di giocatori")}}
                                             {% else if m.free == 0 %}
-                                                {{__("Pronto a giocare")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}'>
+                                                {{__("Avvia la partita")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita e dai il via alle ostilità!")}}'>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -715,7 +724,7 @@
                                     </td>
                                     <td class="status">
                                         {% if m.running == false && m.free > 0 %}
-                                            waiting for players <a mid='{{m._id}}' href="javascript:confirmJoinMatch('{{m._id}}');" class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed attendi che il master player dia il via alle ostilità!")}}'>{{__("Partecipa")}}</a>
+                                            waiting for players <a mid='{{m._id}}' href="javascript:confirmJoinMatch('{{m._id}}');" class='btn btn-success btn-mini' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita ed dai il via alle ostilità!")}}'>{{__("Partecipa")}}</a>
                                         {% else if m.pause %}
                                             pausa
                                         {% else %}

@@ -48,7 +48,17 @@ var Engine = function(matchId){
 	};
 
 	this.addSessionToEngine = function(session){
-		this.sessions.push(session);
+
+		var exists = false;
+		for(var i=0; i < this.sessions.length; i++){
+			if ( this.sessions[i].id === session.id ){
+				exists = true;
+				break;
+			}
+		}
+		if ( exists === false ){
+			this.sessions.push(session);
+		}
 	};
 
 	this.applyEpidemia = function(enemyId){

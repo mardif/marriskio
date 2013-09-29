@@ -13,6 +13,7 @@ var Session = function(user){
   this.id = user._id;
   this.nick = user.nick;
   this.color = user.color;
+  this.email = user.email;
   this.internalSession = user;
 	this.master = false;
 	this.initialTroupes = 5;

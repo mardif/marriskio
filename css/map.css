@@ -370,7 +370,7 @@
 
 .user-inactive{
     font-size:14px;
-    filter: Alpha(Opacity=30);
+    filter: Alpha(Opacity=50);
     opacity:0.3;
     border-radius:3px;
 }

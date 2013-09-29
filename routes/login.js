@@ -7,7 +7,8 @@ var common = require("../games/risiko/common"),
     db = require('../db/accessDB').getDBInstance,
     async = require("async")
     util = require("util"),
-    gsm = require(rootPath+"/routes/siteEvents").globalSessionManager;
+    gsm = require(rootPath+"/routes/siteEvents").globalSessionManager,
+    sessionManager = require(rootPath+"/games/risiko/sessionManager");
 
 var SSL = false;  //da impostare se l'url sarà HTTPS o no
 
@@ -228,7 +229,7 @@ module.exports = {
         var matchId = req.body.matchId;
         var contacts = req.body.contacts;
         
-        var body = common.getHeaderMailTemplate(req);
+        var body = common.getHeaderMailTemplate();
         body += "Un saluto dal team di Debellum!<br/>\
 			                        <br/>Il tuo amico "+[req.session.passport.user.name.first, req.session.passport.user.name.last].join(" ")+"\
 			                        ti ha invitato <br/>a giocare <a href='http://"+req.headers.host+"/joinToMatch?mid="+matchId+"' target='_joinDebellumMatch'>questa partita</a> a Debellum <br/>\
@@ -301,7 +302,7 @@ module.exports = {
     joinMatch: function(req, res){
         var matchId = req.body.matchId;
         var color = req.body.player_color;
-        db.getMatchById(matchId, "players name num_players", function(err, match){
+        db.getMatchById(matchId, "players name num_players masterPlayer", function(err, match){
             if ( err ) throw err;
 
             var addresses = [];
@@ -320,9 +321,10 @@ module.exports = {
             match.save(function(err, result){
                 if (err) throw err;
 
-                var body = common.getHeaderMailTemplate(req);
+                var body = common.getHeaderMailTemplate();
 
                 if ( match.players.length == num_players ){
+                //Se tutti i posti del match sono stati occupati, si manda un'email che è tutto pronto per giocare!
                     body += "Un saluto dal team di Debellum<br/><br/>\
                         Volevamo avvisarti che l'utente <br/><b>"+req.session.passport.user.name.first+" "+req.session.passport.user.name.last+" ("+req.session.passport.user.nick+")</b><br/>\
                         si e' unito alla partita "+match.name+" a cui partecipi<br/>\
@@ -351,7 +353,30 @@ module.exports = {
 
                 common.sendEmail(headers);
 
-                //Se tutti i posti del match sono stati occupati, si manda un'email che è tutto pronto per giocare!
+                if ( result.players.length == num_players ){
+                    //ora che tutti gli slot sono assegnati, provvedo a creare il mondo!
+
+                    db.getMatchById(matchId, "players num_players masterPlayer", function(err, allOk){
+
+                        var m = sessionManager.getMatchList().getMatch(matchId);
+                        if ( !m ){
+                            m = sessionManager.getMatchList().createMatch(allOk);
+                        }
+                        m.getBean().running = true;
+
+                        var engine = m.getEngine();
+                        engine.caricaStati();
+
+                        db.saveMatchStatus(engine, m.getBean(), function(err, dbMatch){
+                            if ( err ){
+                                util.log("Error saving match "+result.id);
+                                return;
+                            }
+                            util.log("Match "+m.getId()+" was saved correctly");
+                        });
+                    });
+                }
+
 
             });
         });
@@ -446,5 +471,13 @@ module.exports = {
           common.simpleJSON(res, 200, colours);
       });
     },
+
+    getMatch: function(matchId){
+      var match = sessionManager.getMatchList().getMatch(matchId);
+      if ( match ){
+        return match;
+      }
+      return null;
+    }
 
 };

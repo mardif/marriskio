@@ -2,6 +2,7 @@ var util = require("util");
 var readFile = require("fs").readFile;
 var engine = require("./engine");
 var email = require("emailjs");
+var cryo = require("cryo");
 
 var common = exports;
 
@@ -276,23 +277,93 @@ common.sendEmail = function(headers){
         if (err) {
             console.log("error sending email: "+err);
         };
-        console.log("OK: "+message);
+        console.log("OK: "+util.inspect(message, true));
     });
 }
 
-common.getHeaderMailTemplate = function(req){
+common.getHeaderMailTemplate = function(){
   return "<html>\
                 <body>\
-                    <div style='width:600px;background: url(http://"+req.headers.host+"/logo) no-repeat right center;'>\
+                    <div style='width:600px;background: url(http://www.debellum.net/logo) no-repeat right center;'>\
                         <div style='height:50px;background-color:#2a333c;border-radius:5px 5px 0 0;border:1px solid #99999;width:100%;color:#999999;font-size:30pt;padding-left:42px;opacity:0.5;filter:alpha(opacity=50);'>DEBELLUM</div>\
                         <div style='border:1px solid #999999;display:inline-block;padding-top:10px;padding-bottom:10px;padding-left:40px;width:100%;'>";
 }
 
 common.getFooterMailTemplate = function(){
   return "              </div>\
-                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'></div>\
+                        <div style='height:50px;background-color:#2a333c;border-radius:0 0 5px 5px;border:1px solid #99999;padding-left:42px;width:100%;opacity:0.5;filter:alpha(opacity=50);'>&nbsp;</div>\
                     </div>\
                 </body>\
             </html>";
 
 }
+
+var propertiesToRetrieve = [
+    "initialTroupes",
+    "troupesToAdd",
+    "cards",
+    "applyingTurnCards",
+    "applyingVolatileCard",
+    "sabotaged",
+    "alliances",
+    "states",
+    "haveDefensiveCard",
+    "turno",
+    "AIActivated",
+    "nick",
+    "color",
+    "_id"
+];
+
+common.setSessionPropsFromDb = function(mySession, match){
+    var masterPlayer = match.getBean().masterPlayer;
+    util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
+    mySession.setMaster( masterPlayer.toString() == mySession.id ? true : false  );
+    
+    for(var i=0; i< match.getBean().players.length; i++){
+      var player = match.getBean().players[i];
+      util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
+      if ( player.player.id == mySession.id ){
+        mySession.color = player.color;
+        util.log("Color set "+mySession.color);
+        break;
+      }
+    }
+    
+    /*
+    Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)
+    */
+    util.log("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
+    if ( match && match.getRestoredSessionsMap() !== undefined ){
+        var map = match.getRestoredSessionsMap();
+        if ( map[mySession.id] !== undefined ){
+            var m = cryo.parse(map[mySession.id]);//JSON.parse(map[mySession.id]);
+            util.log("");
+            util.log(" -------------------------------- ");
+            for(var idx in propertiesToRetrieve){
+                var prop = propertiesToRetrieve[idx];
+                util.log("chiave "+prop);
+                util.log("valore in sessione: "+mySession[prop]);
+                util.log("valore da db: "+m[prop]);
+                util.log("");
+                mySession[prop] = m[prop];
+            }
+            util.log(" -------------------------------- ");
+        }
+        
+        //Già che ci sono, aggiunto in lista le sessioni abbandonate
+        for(var prp in map){
+            var sess = cryo.parse(map[prp]); //JSON.parse(map[prp]);
+            if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) && sess.id != mySession.id ){
+                var mySession = new Session({_id: sess.id, nick: sess.nick, color: sess.color, email: sess.email});
+                mySession.setMatchId(match.getId());
+                for(var idx in propertiesToRetrieve){
+                    var prop = propertiesToRetrieve[idx];
+                    mySession[prop] = sess[prop];
+                }                
+                match.getEngine().addSessionToEngine(mySession);
+            }
+        }
+    }    
+    
+  };
