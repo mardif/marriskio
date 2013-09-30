@@ -36,7 +36,7 @@ var SessionManager = function(){
 		var exists = false;
 		var sessions = getInternalSessions();
 		for(var i in sessions){
-			if ( sessions[i].id == sessionId ){
+			if ( sessions[i].id == sessionId && sessions[i].matchId == matchId ){
 				sessions.splice(i,1);
 				exists = true;
 				break;
@@ -46,21 +46,24 @@ var SessionManager = function(){
 		/*Rimozione della sessione dal motore della partita*/
 		for(var i in matchList.getMatchesList()){
 			var match = matchList.getMatchesList()[i];
-			match.getEngine().removeSessionFromEngine(sessionId);
+			if ( match.getId() == matchId ){
+				match.getEngine().removeSessionFromEngine(sessionId);
+			}
 		}
 
 		return exists;
 	};
 
-	this.setSessionStatus = function(sessionId, enabled){
+	this.setSessionStatus = function(sessionId, matchId, enabled){
 		var sessions = getInternalSessions();
 		for(var i in sessions){
-			if ( sessions[i].id == sessionId ){
+			if ( sessions[i].id == sessionId && sessions[i].matchId == matchId  ){
 				sessions[i].disconnected = !enabled;
 				break;
 			}
 		}
 
+		/*
 		for(var i in matchList.getMatchesList()){
 			var match = matchList.getMatchesList()[i];
 			var ss = match.getEngine().getSession(sessionId);
@@ -70,53 +73,22 @@ var SessionManager = function(){
 				break;
 			}
 		}
-	}
-
-	this.setSessionStatus_old = function(sessionId, enabled){
-		var enabled = false;
-		globalSession = undefined;
-		var sessions = getInternalSessions();
-		for(var i in sessions){
-			if ( sessions[i].id == sessionId ){
-				globalSession = sessions[i];
-				globalSession.disconnected = !enabled;
-				enabled = true;
-			}
-		}
-
-		if ( enabled == false ){
-			return enabled;
-		}
+		*/
 
 		for(var i in matchList.getMatchesList()){
 			var match = matchList.getMatchesList()[i];
-			var ss = match.getEngine().getSession(sessionId);
-			if ( ss ){
-				ss.disconnected = false;
-			}
-			else{
-				enabled = false;
-				globalSession.disconnected = !globalSession.disconnected;
-			}
-		}
-
-		return enabled;
-	};
-
-	this.removeSessionFromNick = function(nickname){
-		"use strict";
-		var exists = false;
-		var sessions = getInternalSessions();
-		for(var i in sessions){
-			if ( sessions[i].nick == nickname ){
-				sessions.splice(i,1);
-				exists = true;
-				break;
+			if ( match.getId() == matchId ){
+				var ss = match.getEngine().getSession(sessionId);
+				if ( ss ){
+					ss.disconnected = !enabled;
+					ss.statusActive = enabled;
+					break;
+				}
 			}
 		}
-		return exists;
-	};
+	}
 
+	//non piu usato
 	this.checkUserExists = function(nickname){
 		var sessions = getInternalSessions();
 		for(var i in sessions){
@@ -128,51 +100,6 @@ var SessionManager = function(){
 		return false;
 	};
 
-	this.checkColorAvailable = function(color){
-		"use strict";
-		var exists = true;
-		var sessions = getInternalSessions();
-		for(var i in sessions){
-			if ( sessions[i].color === color ){
-				exists = false;
-				break;
-			}
-		}
-		return exists;
-	};
-
-	this.checkSessionId = function(id){
-		var sessions = getInternalSessions();
-		for(var i in sessions){
-			if ( sessions[i].id == id ){
-				return true;
-			}
-		}
-		return false;
-	};
-
-	/*
-	 * Da rivedere... il colore deve dipendere dalla partita associata
-	 */
-	this.getColoriDisponibili = function(){
-		var colors = [];
-		for(var c in common.colours){
-			var color = common.colours[c];
-			var available = true;
-			for(var s in sessions){
-				if ( sessions[s].color == color.color ){
-					available = false;
-					break;
-				}
-			}
-			if ( available ){
-				colors.push( { name: color.name, color: color.color } );
-			}
-		}
-
-		return colors;
-	};
-
 	var getInternalSessions = function(){
 		var sessions = [];
 		var matches = self.getMatchList().getMatchesList();
@@ -182,22 +109,10 @@ var SessionManager = function(){
 		return sessions;
 	};
 
-	this.getSessions = function(){
-		var activeSessions = [];
+	this.getSession = function(sessionId, matchId){
 		var sessions = getInternalSessions();
 		for(var i in sessions){
-			if ( sessions[i].disconnected == false ){
-				activeSessions.push(sessions[i]);
-			}
-		}
-		util.log("sessioni totali attive non disconnesse: "+activeSessions.length);
-		return activeSessions;
-	};
-
-	this.getSession = function(sessionId){
-		var sessions = getInternalSessions();
-		for(var i in sessions){
-			if ( sessions[i].id == sessionId ){
+			if ( sessions[i].id == sessionId && sessions[i].matchId == matchId ){
 				return sessions[i];
 			}
 		}

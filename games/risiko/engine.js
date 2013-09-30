@@ -33,6 +33,7 @@ var Engine = function(matchId){
 				break;
 			}
 		}
+		return null;
 	};
 
 	this.getSessions = function(){

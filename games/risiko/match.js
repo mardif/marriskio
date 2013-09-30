@@ -41,22 +41,25 @@ var Match = function(bean){
             }
         }
     }
-    this.init();
+
+    for(var idx in motore.getSessions() ){
+      var ss = motore.getSessions()[idx];
+      common.setSessionPropsFromDb(ss, this);
+    }
+
+    //this.init();
 
   };
 
   this.init = function(){
     for(var i = 0; i < bean.num_players; i++){
       var sess = bean.players[i];
-      var mySession = require("./sessionManager").getSession(sess.player.id);
-      if ( mySession == null ){
-        mySession = new Session({_id: sess.player.id, nick: sess.player.nick, color: sess.color, email: sess.player.email});
-      }
+      mySession = new Session({_id: sess.player.id, nick: sess.player.nick, color: sess.color, email: sess.player.email});
       mySession.setMatchId(id);
       mySession.disconnected = true;
       mySession.statusActive = false;
       motore.addSessionToEngine(mySession);
-      common.setSessionPropsFromDb(mySession, this);
+      //common.setSessionPropsFromDb(mySession, this);
 
     }
   };

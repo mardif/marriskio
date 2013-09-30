@@ -351,7 +351,9 @@ common.setSessionPropsFromDb = function(mySession, match){
             util.log(" -------------------------------- ");
         }
         
-        //Già che ci sono, aggiunto in lista le sessioni abbandonate
+        //Già che ci sono, aggiungo in lista le sessioni abbandonate
+        /*
+        //NON SERVE PIU: GLI UTENTI VENGONO PRE-INSERITI IN FASE DI CREAZIONE DELLA PARTITA
         for(var prp in map){
             var sess = cryo.parse(map[prp]); //JSON.parse(map[prp]);
             if ( sess.AIActivated === true && !this.checkUserExists(sess.nick) && sess.id != mySession.id ){
@@ -364,6 +366,7 @@ common.setSessionPropsFromDb = function(mySession, match){
                 match.getEngine().addSessionToEngine(mySession);
             }
         }
+        */
     }    
     
   };

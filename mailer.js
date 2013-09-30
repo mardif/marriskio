@@ -3,8 +3,6 @@ global.rootPath = __dirname;
 var util = require("util");
 var db = require("./db/accessDB").getDBInstance;
 var common = require("./games/risiko/common");
-//var User = require('./db/models/user');
-//var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
 
 var subject, message;
 

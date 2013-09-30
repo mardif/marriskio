@@ -1,5 +1,5 @@
 var util = require("util"),
-    sessionManager = require("./sessionManager"),
+    //sessionManager = require("./sessionManager"),
     cards = require("./cards"),
     parseCookie = require('connect').utils.parseCookie,
     db = require(rootPath+'/db/accessDB').getDBInstance,
@@ -20,19 +20,23 @@ module.exports = function(sio, socket){
       }
         
       util.log("first connect called");
+      /*
       if ( sessionManager.checkUserExists(user.nick) === false ){
         util.log("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
       }
+      */
 
-        sessionManager.setSessionStatus(user._id, true);
         util.log("rilevato l'utente "+user.nick+" in partita!");
-        var session = sessionManager.getSession(user._id);
+        var session = sessionManager.getSession(user._id, data.matchId);
         
         if ( session && session.matchId ){
           var match = getMatch(session.matchId);
           if ( !match ){ return; }
           var engine = match.getEngine();
+
+          sessionManager.setSessionStatus(user._id, session.matchId, true);
+
           
             if ( session.AIActivated === true ){
                 sio.sockets.in(socket.store.data.matchId).emit("joinUser", {
@@ -103,35 +107,38 @@ module.exports = function(sio, socket){
         }
         //------------------------------------------------------------------------------------------------------------------
         
-        //sessionManager.removeSession(socket.handshake.sessionID);
         var sessionId = socket.handshake.session.passport.user._id;
-        sessionManager.setSessionStatus(sessionId, false);
         var match = getMatch(socket.store.data.matchId);
         if ( !match ){ return; }
         var engine = match.getEngine();
+
+        sessionManager.setSessionStatus(sessionId, socket.store.data.matchId, false);
+
         
         //util.log("socket in disconnessione: "+util.inspect(socket, true));
         
         // se dopo 60 secondi il socket non è tornato su, provvedo a rimuovere la sessione definitivamente
-        
+        /*
+        //SERVE PIÙ A QUESTO PUNTO? SE L'UTENTE HA CHIUSO LA PAGINA E' PERCHÈ L'HA VOLUTA CHIUDERE O È ANDATO GIÙ INTERNET. E CMQ NON SERVE RIMUOVERE LA SESSIONE DAL SOCKET
         setTimeout(function(){
-            var mysession = sessionManager.getSession(sessionId);
+            var mysession = sessionManager.getSession(sessionId, match.getId());
             if ( mysession !== null && mysession.disconnected === true ){
                 util.log("rimozione della sessione "+sessionId);
-                sessionManager.removeSession(sessionId); //devo togliere anche il giocatore dal motore
+                sessionManager.removeSession(match.getId(), sessionId); //devo togliere anche il giocatore dal motore
                 //engine.removeSessionFromEngine(sessionId);
                 sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
             }
             else{
                 util.log("utente "+(mysession !== undefined && mysession !== null ? mysession.nick : "non riconosciuto") +" riconnesso!");
             }
-        }, 60000);  //60 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
+        }, 15000);  //60 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
+        */
         
         sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
     });
 
     socket.on("chatMessage", function(data){
-        var session = sessionManager.getSession(data.from);
+        var session = sessionManager.getSession(data.from, data.matchId);
         if ( !session ){
             util.log("ricevuto messaggio di chat da sconosciuto");
             return;
@@ -237,8 +244,8 @@ module.exports = function(sio, socket){
                     <br/>A presto su Debellum";
 
             var addresses = [];
-            for(var i=0; i < match.players.length; i++){
-                var player = match.players[i].player;
+            for(var i=0; i < match.getBean().players.length; i++){
+                var player = match.getBean().players[i].player;
                 addresses.push(player.email);
             }
 
@@ -318,7 +325,8 @@ module.exports = function(sio, socket){
                 - se è online, si continua così
                 - se è offline, viene mandata un'email ed inviata una notifica a tutti gli altri giocatori online
                 */
-                var turnSession = sessionManager.getSession(engine.getSessioneDiTurno());
+                //var turnSession = sessionManager.getSession(engine.getSessioneDiTurno());
+                var turnSession = engine.getSession(engine.getSessioneDiTurno());
                 if ( turnSession && turnSession.statusActive === false ){
                     var body = common.getHeaderMailTemplate();
                     body += "Un saluto dal team di Debellum!<br/>\
@@ -381,9 +389,11 @@ module.exports = function(sio, socket){
             return;
         }
 
-        var session = sessionManager.getSession(data.sessionId);
         var engine = getEngine(data.matchId);
         if ( !engine ){ return; }
+
+        var session = engine.getSession(data.sessionId);
+
         var obj = addTroupe(session, data, engine);
 
         if ( obj.initialTroupes === 0 ){
@@ -408,11 +418,11 @@ module.exports = function(sio, socket){
 
         var match = getMatch(data.matchId);
         if ( !match ){ return; }
-        var session = sessionManager.getSession(data.sessionId);
+        var engine = getEngine(data.matchId);
+        if ( !engine ){ return; }
+        var session = engine.getSession(data.sessionId);
         if ( !session ){ return; }
         
-        var engine = match.getEngine();
-
         //TODO: controllo!!!!
         var result = addMassiveTroupes(session, data, engine);
         if ( result === true ){
@@ -1023,7 +1033,7 @@ module.exports = function(sio, socket){
         var winner = match.getBean().winner;
         var nickWinner;
         if ( winner ){
-            nickWinner = sessionManager.getSession(winner).nick;
+            nickWinner = match.getEngine().getSession(winner.id).nick;
         }
         util.log("user winner: "+winner);
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
