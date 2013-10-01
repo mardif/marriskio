@@ -326,7 +326,7 @@ module.exports = function(sio, socket){
                         message: "L'utente "+turnSession.nick+" non è al momento disponibile. Attendi online le sue mosse, oppure chiudi tranquillamente: verrai avvisato tramite email quando sarà di nuovo il tuo turno!",
                         delay: 30000
                     });
-            }
+                }
 
 
             }
@@ -346,6 +346,29 @@ module.exports = function(sio, socket){
         else if ( data && data.nextStep === false ){
             util.log("salvataggio dei rinforzi initiali effettuato: ora si iniziano i turni preliminari");
             saveMatch(match);
+            var turnSession = engine.getSession(engine.getSessioneDiTurno());
+            if ( turnSession && turnSession.statusActive === false ){
+                var body = common.getHeaderMailTemplate();
+                body += "Un saluto dal team di Debellum!<br/>\
+                                    <br/>Volevamo informarti che è il tuo turno nella partita "+match.getBean().name+"!<br/>\
+                                    <br/><b>Entra subito, gioca le tue carte e conquista il mondo!</b>";
+                body += common.getFooterMailTemplate();
+
+                var headers = {
+                   text:    body,
+                   from:    "debellum.reminder@debellum.net",
+                   bcc:      turnSession.email,
+                   subject: "Debellum: è il tuo turno!"
+                };
+
+                common.sendEmail(headers);
+
+                sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", {
+                    level: "info",
+                    message: "L'utente "+turnSession.nick+" non è al momento disponibile. Attendi online le sue mosse, oppure chiudi tranquillamente: verrai avvisato tramite email quando sarà di nuovo il tuo turno!",
+                    delay: 30000
+                });
+            }            
         }
 
         sendBuildEntireMap(sio, socket, match, engine.getTurnoAttuale());

@@ -356,7 +356,7 @@ module.exports = {
                 if ( result.players.length == num_players ){
                     //ora che tutti gli slot sono assegnati, provvedo a creare il mondo!
 
-                    db.getMatchById(matchId, "players num_players masterPlayer", function(err, allOk){
+                    db.getMatchById(matchId, "players name num_players masterPlayer", function(err, allOk){
 
                         var m = sessionManager.getMatchList().getMatch(matchId);
                         if ( !m ){
