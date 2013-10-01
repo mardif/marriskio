@@ -236,29 +236,7 @@ module.exports = function(sio, socket){
                 nick: session.nick
             });
 
-            var body = common.getHeaderMailTemplate();
-            body += "Un saluto dal team di Debellum<br/><br/>\
-                    Notizie dal fronte della partita "+match.getBean().name+": le tue truppe sono state spazzate via!<br/>\
-                    Ora il mondo è governato da "+session.nick+"<br/>\
-                    <br/>Partecipa ad altre partite oppure creane di nuove invitando i tuoi amici!<br/>\
-                    <br/>A presto su Debellum";
-
-            var addresses = [];
-            for(var i=0; i < match.getBean().players.length; i++){
-                var player = match.getBean().players[i].player;
-                addresses.push(player.email);
-            }
-
-            body += common.getFooterMailTemplate();
-            var headers = {
-               text:    body,
-               from:    "summary@debellum.net",
-               bcc:      addresses.join(","),
-               subject: "Debellum: Partita "+match.getBean().name+" terminata!"
-            };
-
-            common.sendEmail(headers);            
-
+            sendVictoryEmail(match, session.nick);
 
         }
 
@@ -921,10 +899,12 @@ module.exports = function(sio, socket){
             engine.winner = humans[0];
             match.getBean().winner = engine.winner.id;
             populateWinner = true;
+
+            sendVictoryEmail(match, humans[0].nick);
             
             //abbiamo un vincitore per abbandono degli altri giocatori!!! (KO tecnico)
             setTimeout(function(){
-                sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", { winner: humans[0] } );
+                sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", { winner: true, nick: humans[0].nick } );
             },1000);
         }
         
@@ -1064,6 +1044,32 @@ module.exports = function(sio, socket){
             }
             
         });
+    };
+
+    var sendVictoryEmail = function(match, nick){
+        var body = common.getHeaderMailTemplate();
+        body += "Un saluto dal team di Debellum<br/><br/>\
+                Notizie dal fronte della partita "+match.getBean().name+": le tue truppe sono state spazzate via!<br/>\
+                Ora il mondo è governato da "+nick+"<br/>\
+                <br/>Partecipa ad altre partite oppure creane di nuove invitando i tuoi amici!<br/>\
+                <br/>A presto su Debellum";
+
+        var addresses = [];
+        for(var i=0; i < match.getBean().players.length; i++){
+            var player = match.getBean().players[i].player;
+            addresses.push(player.email);
+        }
+
+        body += common.getFooterMailTemplate();
+        var headers = {
+           text:    body,
+           from:    "summary@debellum.net",
+           bcc:      addresses.join(","),
+           subject: "Debellum: Partita "+match.getBean().name+" terminata!"
+        };
+
+        common.sendEmail(headers);            
+
     };
     
     /*
