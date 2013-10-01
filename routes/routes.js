@@ -91,7 +91,8 @@ module.exports = function(app, sio) {
 
       if ( !sessionManager.getMatchList().getMatch(req.body.matchId)  ){
         /*Provvedo a caricare i dati dal db, poi redirigo alla pagina di gioco*/
-        db.getMatchById(req.body.matchId, "players name num_players masterPlayer", function(err, match){
+        //"players name num_players masterPlayer"
+        db.getMatchById(req.body.matchId, null, function(err, match){
           if (err) throw err;
           
           var m = sessionManager.getMatchList().createMatch(match);
