@@ -55,11 +55,14 @@ var AccessDB = function(){
   var myEventID = null
 
   // initialize DB
-  this.startup = function() {
+  this.startup = function(callback) {
     mongoose.connect(conn);
     // Check connection to mongoDB
     mongoose.connection.on('open', function() {
       console.log('We have connected to mongodb');
+      if ( callback ){
+        callback();
+      }
     });
 
   },
@@ -117,9 +120,9 @@ var AccessDB = function(){
           masterPlayer: req.user._id
       });
       newMatch.save(function(err) {
-      if (err) return errorHelper(err, callback);
-      callback(null, newMatch);
-    });
+        if (err) return errorHelper(err, callback);
+        callback(null, newMatch);
+      });
   },
 
   this.createPlayerMatch = function(matchId, playerId, color, callback){
@@ -217,7 +220,9 @@ var AccessDB = function(){
         matchBean.running = isRunning;
         matchBean.save(function(err){
             if ( err ){ return errorHelper(err, callback); }
-            callback(null, matchBean);
+            if ( callback ){
+              callback(null, matchBean);
+            }
         });
     };
 
