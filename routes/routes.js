@@ -51,6 +51,8 @@ module.exports = function(app, sio) {
 
   app.get('/loginAuth', start.login);
 
+  app.get('/activate', start.activateUser);
+
   app.post('/loginAuth', passport.authenticate('local',
     {
       successRedirect: '/account',
@@ -112,42 +114,6 @@ module.exports = function(app, sio) {
       }
     });
     
-    app.post("/restoreJoinMatch", ensureAuthenticated, function(req, res){
-        
-        if ( !sessionManager.getMatchList().getMatch(req.body.matchId)  ){
-          /*Provvedo a caricare i dati dal db, carico i dati del motore di gioco e poi redirigo alla pagina di gioco*/
-          db.getMatchById(req.body.matchId, null, function(err, match){
-            if (err) throw err;
-            
-            var m = sessionManager.getMatchList().getMatch(req.body.matchId);
-            if ( !m ){
-                m = sessionManager.getMatchList().createMatch(match);
-            }
-            //provvedo a unzippare lo statusmatch e aggiornare quello in memoria
-            var frozen = match.frozen.engine;
-            require("util").log("frozen: "+frozen);
-            zlib.inflate(frozen, function(error, serializedMatchEngine){
-                
-              if ( error ){
-                  //res.send("Error on "+error, 404);
-                  //return;
-              }
-              
-              //m.setEngine(cryo.parse(serializedMatchEngine)); //partita salvata zippata
-              m.setEngineData(cryo.parse(frozen));  //partita salvata non zippata
-                
-              res.render("../games/risiko/map.html", { matchId: match.id, sessionId: req.user._id });
-            });
-            
-          });
-
-        }
-        else{
-          res.render("../games/risiko/map.html", { matchId: req.body.matchId, sessionId: req.user._id });
-        }
-        
-    });
-
     app.post("/feedback", ensureAuthenticated, start.sendFeedback);
 
     require("./resources")(app);

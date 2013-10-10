@@ -166,6 +166,12 @@ var AccessDB = function(){
       });
   },
 
+  this.getUserById = function(userId, fields, callback){
+    User.findById(userId, fields, function(err, usr){
+      callback(err, usr);
+    });
+  }
+
   this.getMatchByIdWithoutPopulate = function(matchId, fields, callback){
       
       Match.findById(matchId, fields).exec(function(err, match){

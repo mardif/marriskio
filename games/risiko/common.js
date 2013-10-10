@@ -272,12 +272,14 @@ var mailServer = email.server.connect({
 
 common.sendEmail = function(headers){
     var message = email.message.create(headers);
+    util.log("invio della email in corso...");
     message.attach_alternative(headers.text);
     mailServer.send(message, function(err, message) {
         if (err) {
             console.log("error sending email: "+err);
+            return;
         };
-        console.log("OK: "+util.inspect(message, true));
+        console.log("mail sending OK: "+util.inspect(message, true));
     });
 }
 

@@ -18,6 +18,7 @@ var UserSchema = new Schema({
 
   , salt: { type: String, required: true }
   , hash: { type: String, required: true }
+  , active: { type: Boolean, default: false }
 });
 
 UserSchema
@@ -36,7 +37,7 @@ UserSchema.method('verifyPassword', function(password, callback) {
 });
 
 UserSchema.static('authenticate', function(email, password, callback) {
-  this.findOne({ email: email }, function(err, user) {
+  this.findOne({ email: email, active: true }, function(err, user) {
       if (err) { return callback(err); }
       if (!user) { return callback(null, false); }
       user.verifyPassword(password, function(err, passwordCorrect) {

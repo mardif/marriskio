@@ -82,9 +82,33 @@ module.exports = {
                         newuser: newUser,
                         action: action
                     });
+                    return;
                     //callback(newUser);
                 }
-                res.render("login.html", {token: req.session._csrf, info: "Welcome "+docs.cognome+" "+docs.nome +", please insert email and password used in register form"});
+
+                //invio della email
+                var body = common.getHeaderMailTemplate();
+                var link = "http://www.debellum.net/activate?q="+new Date().getTime()+"&u="+docs.id+"&i="+new Date().getTime();
+                body += "Benvenuto "+docs.cognome+" "+docs.nome+"!<br/><br/>\
+                Completa questo passaggio per cominciare a giocare!<br/><br/>\
+                Stai ricevendo questo messaggio perchè ti sei registrato su Debellum.<br/>\
+                Per completare il processo di registrazione clicca sul seguente link:<br/><br/>\
+                <a href='"+link+"'>"+link+"</a><br/><br/>\
+                Ci vediamo presto!<br/><br/>\
+                Un saluto dal team di Debellum!";
+                body += common.getFooterMailTemplate();
+
+                var headers = {
+                   text:    body,
+                   from:    "wargod@debellum.net",
+                   bcc:      "marshare@gmail.com",
+                   subject: "Attiva il tuo account su Debellum"
+                };
+
+                common.sendEmail(headers);
+
+
+                res.render("login.html", {token: req.session._csrf, info: "Salve "+docs.cognome+" "+docs.nome +", un'email di attivazione è stata inviata all'indirizzo da te fornito. Accedi e clicca sul link per attivare il tuou account ed iniziare a giocare!"});
                 //callback(docs);
             });
         }
@@ -478,6 +502,29 @@ module.exports = {
         return match;
       }
       return null;
+    },
+
+    activateUser: function(req, res){
+        var userId = req.param('u')
+        db.getUserById(userId, "active", function(err, utente){
+
+            if ( err ){
+                res.render("login.html", {token: req.session._csrf, info: "Si è verificato un errore durante l'attivazione del tuo account"});
+                return;
+            }
+
+            utente.active = true;
+            utente.save(function(err, result){
+
+                if ( err ){
+                    res.render("login.html", {token: req.session._csrf, info: "Si è verificato un errore durante l'attivazione del tuo account"});
+                    return;
+                }
+
+                res.render("login.html", {token: req.session._csrf, info: "Il tuo account è stato attivato con successo! Ora puoi effettuare il login ed iniziare a giocare!"});
+            });
+
+        });
     }
 
 };
