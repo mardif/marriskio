@@ -177,8 +177,32 @@
                 confirmJoinMatch(id);
             {% endif %}
             
-            
-
+            $(document).on("click", "IMG.seatBusy", function(){
+                var matchCreator = $(this).parent().prev().html();
+                var loggedUser = "{{user.nick}}";
+                var userToBeKicked = $(this).attr("data-original-title");
+                alert(matchCreator + " --> " + loggedUser + " --> " + userToBeKicked);
+                //l'utente loggato, se è proprietario della partita, può cacciare un altro utente
+                if (matchCreator == loggedUser && loggedUser!=userToBeKicked)
+                {
+                    $( "#kick-user" ).dialog({
+                        resizable: false,
+                        height:140,
+                        modal: true,
+                        buttons: {
+                            "Rimuovi solo l'utente": function() {
+                                $( this ).dialog( "close" );
+                            },
+                            "Rimuovi l'utente e lo slot": function() {
+                                $( this ).dialog( "close" );
+                            },
+                            "Cancella": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    });
+                }
+            });
         });
 
         $(document).on("click", "IMG.playMatchIcon", function(){
@@ -599,6 +623,9 @@
     </script>
 {% endblock %}
 {%block content%}
+<div id="kick-user" title="Rimuovi l'utente">
+    <p>Cosa vuoi fare?</p>
+</div>
 <div class="hero-unit" style="position:relative;top:80px;padding:10px 60px;">
     <div class="row-fluid">
         <h2 style="float:left;" id='step1'>
@@ -671,7 +698,7 @@
                                         <td class="master">{{m.masterPlayer.nick}}</td>
                                         <td class="seats">
                                             {% for p in m.players %}
-                                                <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                                <img src='seatBusy' class='playerImage seatBusy' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
                                             {% endfor %}
                                             {% for idx in m.free|buildArray %}
                                                 <img src='seatFree' border='0'>
