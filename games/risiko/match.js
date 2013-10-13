@@ -33,7 +33,7 @@ var Match = function(bean){
     for (var name in engineData) {
         if (engineData.hasOwnProperty(name) ) {
             if ( name !== "sessionsMap" ){
-                util.log("restore engine data "+name+" with value "+engineData[name]);
+                //util.log("restore engine data "+name+" with value "+engineData[name]);
                 motore[name] = engineData[name];
             }
             else if (name === "sessionsMap" ){

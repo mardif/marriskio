@@ -92,6 +92,7 @@ module.exports = function(app, sio) {
     app.post("/startJoinMatch", ensureAuthenticated, function(req, res){
 
       if ( !sessionManager.getMatchList().getMatch(req.body.matchId)  ){
+        util.log("match "+req.body.matchId+" caricato da db");
         /*Provvedo a caricare i dati dal db, poi redirigo alla pagina di gioco*/
         //"players name num_players masterPlayer"
         db.getMatchById(req.body.matchId, null, function(err, match){
@@ -110,6 +111,8 @@ module.exports = function(app, sio) {
 
       }
       else{
+        var m = sessionManager.getMatchList().getMatch(req.body.matchId);
+        util.log("match "+req.body.matchId+" residente in memoria: ["+m.getId()+"]");
         res.render("../games/risiko/map.html", { matchId: req.body.matchId, sessionId: req.user._id, csrf: req.session._csrf });
       }
     });

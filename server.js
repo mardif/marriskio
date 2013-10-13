@@ -1,11 +1,12 @@
 // base dependencies for app
 
 //require('nodefly').profile(
+/*
 require('strong-agent').profile(
     '025e8804a158b72c325319aa8865a280',
     'risiko'
 );
-
+*/
 
 global.rootPath = __dirname;
 
@@ -86,7 +87,9 @@ app.configure(function(){
 
 i18n.setLocale('it');
 
-db.startup();
+db.startup(function(){
+  require("./games/risiko/Daemons");
+});
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
@@ -101,12 +104,17 @@ sio.set('authorization', ioSession(express.cookieParser('riskio'), accessDB.getS
 sio.set("log level", 1); //0:error, 1-warn, 2-info, 3-debug
 sio.set("polling duration", 10);
 sio.set("transports", ["xhr-polling"]);
+sio.set("heartbeats", true);
+sio.set("heartbeat timeout", 10);
+sio.enable('browser client minification');  // send minified client
+sio.enable('browser client etag');          // apply etag caching logic based on version number
+sio.enable('browser client gzip');          // gzip the file
 
 // Routes
 require('./routes/routes')(app, sio);
 
-server.listen(process.env.PORT, process.env.IP);
-//server.listen(8000, process.env.IP);
+//server.listen(process.env.PORT, process.env.IP);
+server.listen(8000, process.env.IP);
 //app.listen(process.env.PORT, process.env.IP);
 
 console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);

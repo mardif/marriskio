@@ -32,7 +32,10 @@
     "socket.io-session": "0.0.5",
     "cryo": "0.0.5",
     "strong-agent": "~0.2.13",
-    "nodefly": "~0.1.46"
+    "nodefly": "~0.1.46",
+    "reminder": "~0.1.1",
+    "date-utils": "~1.2.14",
+    "memwatch": "~0.2.2"
   },
   "description": "There are a couple of things you should do first, before you can use all of Git's power:",
   "main": "server.js",

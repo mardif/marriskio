@@ -43,8 +43,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
-//var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
+//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -230,6 +230,12 @@ var AccessDB = function(){
               callback(null, matchBean);
             }
         });
+    };
+
+    this.getMatches = function(filters, fields, callback){
+      Match.find(filters, fields).exec(function(err, match){
+          callback(err, match);
+      });
     };
 
 }

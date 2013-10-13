@@ -29,7 +29,7 @@ common.staticHandler = function (filename) {
       return;
     }
 
-    util.puts("loading " + filename + "...");
+    //util.puts("loading " + filename + "...");
     readFile(filename, function (err, data) {
       if (err) {
         util.puts(" -+-+-+-+-+-+-+- Error loading " + filename);
@@ -39,7 +39,7 @@ common.staticHandler = function (filename) {
                     "Content-Length": body.length
                   };
         //if (!DEBUG) headers["Cache-Control"] = "public";
-        util.puts("static file " + filename + " loaded");
+        //util.puts("static file " + filename + " loaded");
         callback();
       }
     });
@@ -319,15 +319,15 @@ var propertiesToRetrieve = [
 
 common.setSessionPropsFromDb = function(mySession, match){
     var masterPlayer = match.getBean().masterPlayer;
-    util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
+    //util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
     mySession.setMaster( masterPlayer.toString() == mySession.id ? true : false  );
     
     for(var i=0; i< match.getBean().players.length; i++){
       var player = match.getBean().players[i];
-      util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
+      //util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
       if ( player.player.id == mySession.id ){
         mySession.color = player.color;
-        util.log("Color set "+mySession.color);
+        //util.log("Color set "+mySession.color);
         break;
       }
     }
@@ -335,22 +335,22 @@ common.setSessionPropsFromDb = function(mySession, match){
     /*
     Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)
     */
-    util.log("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
+    //util.log("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
     if ( match && match.getRestoredSessionsMap() !== undefined ){
         var map = match.getRestoredSessionsMap();
         if ( map[mySession.id] !== undefined ){
             var m = cryo.parse(map[mySession.id]);//JSON.parse(map[mySession.id]);
-            util.log("");
-            util.log(" -------------------------------- ");
+            //util.log("");
+            //util.log(" -------------------------------- ");
             for(var idx in propertiesToRetrieve){
                 var prop = propertiesToRetrieve[idx];
-                util.log("chiave "+prop);
-                util.log("valore in sessione: "+mySession[prop]);
-                util.log("valore da db: "+m[prop]);
-                util.log("");
+                //util.log("chiave "+prop);
+                //util.log("valore in sessione: "+mySession[prop]);
+                //util.log("valore da db: "+m[prop]);
+                //util.log("");
                 mySession[prop] = m[prop];
             }
-            util.log(" -------------------------------- ");
+            //util.log(" -------------------------------- ");
         }
         
         //Già che ci sono, aggiungo in lista le sessioni abbandonate
