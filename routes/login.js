@@ -268,7 +268,7 @@ module.exports = {
                 addresses.push(c.email);
             }
             else{
-                addresses.push(c.id);
+                addresses.push(c._id);
             }
         }
 
