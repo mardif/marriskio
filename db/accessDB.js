@@ -33,7 +33,7 @@ passport.use(new LocalStrategy({
 
 // serialize user on login
 passport.serializeUser(function(user, done) {
-  done(null, {_id: user._id, nick: user.nick, name: user.name});
+  done(null, {_id: user._id, nick: user.nick, name: user.name, email: user.email});
 });
 
 // deserialize user on logout
