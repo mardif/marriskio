@@ -360,12 +360,12 @@ var fm = (function () {
 				+	'</span></div>');
 
 		$('body').append('<div id="feedback_content" class="feedback_content_closed ' + fm_options.position + email_feedback_content_class + radio_button_list_class + jQueryUIClasses2 + fm_class + jquery_class + bootstrap_class + bootstrap_hero_unit + '">'
-							+ '<div class="feedback_title ' + jQueryUIClasses1 + jQueryUIClasses3 + '">'
+							+ '<div class="feedback_title ' + jQueryUIClasses1 + jQueryUIClasses3 + '" style="margin-top:15px;font-weight:bold;font-size:15px;" >'
 							+	'<span class="' + jQueryUIClasses4 + '">' + fm_options.title_label + '</span>'
 							+ '</div>'
 							+	'<form id="feedback_me_form">'
 							+	'<ul style="list-style-type:none;">'
-							+		'<li>	<label for="feedback_name">' + fm_options.name_label + '</label> ' + name_asterisk + ' <input type="text" id="feedback_name" ' + name_required + ' placeholder="' + fm_options.name_placeholder + '"></input> </li>'
+							//+		'<li>	<label for="feedback_name">' + fm_options.name_label + '</label> ' + name_asterisk + ' <input type="text" id="feedback_name" ' + name_required + ' placeholder="' + fm_options.name_placeholder + '"></input> </li>'
 
 							+		 email_html
 

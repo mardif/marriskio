@@ -304,8 +304,8 @@ module.exports = {
     },
 
     sendFeedback: function(req, res){
-        var nome = req.body.name;
-        var email = req.body.email;
+        var nome = req.session.passport.name.first+" "+req.session.passport.name.last;
+        var email = req.session.passport.user.email;
         var message = req.body.message;
 
         var body = "Hai ricevuto il seguente feedback da "+nome+" ["+email+"]<br/><br/>\""+message+"\"";
