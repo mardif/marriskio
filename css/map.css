@@ -386,3 +386,8 @@
     color: red;
     font-size:0.8em;
 }
+
+
+A.card:hover{
+	cursor: help;
+}

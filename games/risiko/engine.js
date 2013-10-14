@@ -36,6 +36,10 @@ var Engine = function(matchId){
 		return null;
 	};
 
+	this.getCard4Help = function(id){
+		return this.deck.getCardById(id);
+	};
+
 	this.getSessions = function(){
 		return this.sessions;
 	};

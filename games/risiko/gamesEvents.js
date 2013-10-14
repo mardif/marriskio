@@ -114,26 +114,6 @@ module.exports = function(sio, socket){
 
         sessionManager.setSessionStatus(sessionId, socket.store.data.matchId, false);
 
-        
-        //util.log("socket in disconnessione: "+util.inspect(socket, true));
-        
-        // se dopo 60 secondi il socket non è tornato su, provvedo a rimuovere la sessione definitivamente
-        /*
-        //SERVE PIÙ A QUESTO PUNTO? SE L'UTENTE HA CHIUSO LA PAGINA E' PERCHÈ L'HA VOLUTA CHIUDERE O È ANDATO GIÙ INTERNET. E CMQ NON SERVE RIMUOVERE LA SESSIONE DAL SOCKET
-        setTimeout(function(){
-            var mysession = sessionManager.getSession(sessionId, match.getId());
-            if ( mysession !== null && mysession.disconnected === true ){
-                util.log("rimozione della sessione "+sessionId);
-                sessionManager.removeSession(match.getId(), sessionId); //devo togliere anche il giocatore dal motore
-                //engine.removeSessionFromEngine(sessionId);
-                sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
-            }
-            else{
-                util.log("utente "+(mysession !== undefined && mysession !== null ? mysession.nick : "non riconosciuto") +" riconnesso!");
-            }
-        }, 15000);  //60 secondi per tornare in partita! sarebbe impostare a circa 10 minuti
-        */
-        
         sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
     });
 
@@ -556,6 +536,15 @@ module.exports = function(sio, socket){
             matchId: data.matchId,
             nick: player.nick
         });
+
+    });
+
+    socket.on("getCardHelp", function(data){
+        util.log("getCardHelp: "+util.inspect(data)+" --> receiveCardHelp");
+
+        var engine = getEngine(data.matchId);
+        var card = engine.getCard4Help(data.cardId);
+        socket.emit("receiveCardHelp", {card: card});
 
     });
 

@@ -26,6 +26,14 @@ var CardBonusDeck = function(){
 		return card;
 	};
 
+	this.getCardById = function(id){
+		for(var idx=0; idx < cards.length;idx++){
+			if ( cards[idx].id == id ){
+				return cards[idx];
+			}
+		}
+	}
+
 	this.init = function(){
 		cards.push( new Epidemia() );
 		cards.push( new Epidemia() );
@@ -177,6 +185,7 @@ var Card = Class.extend({
 		this.description = description;
 		this.id = new Date().getTime() - diff;
 		diff -= 10;
+		util.log(title+": "+this.id);
 	},
 
 	getTemplate: function(){
