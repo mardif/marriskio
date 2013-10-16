@@ -183,6 +183,7 @@
                 var userToBeKicked = $(this).attr("data-original-title");
                 alert(matchCreator + " --> " + loggedUser + " --> " + userToBeKicked);
                 //l'utente loggato, se è proprietario della partita, può cacciare un altro utente
+                //occhio! si può fare solo se la partita non è cominciata!
                 if (matchCreator == loggedUser && loggedUser!=userToBeKicked)
                 {
                     $( "#kick-user" ).dialog({
@@ -191,9 +192,11 @@
                         modal: true,
                         buttons: {
                             "Rimuovi solo l'utente": function() {
+                                removeUserFromMatch();
                                 $( this ).dialog( "close" );
                             },
                             "Rimuovi l'utente e lo slot": function() {
+                                removeUserAndSlotFromMatch();
                                 $( this ).dialog( "close" );
                             },
                             "Cancella": function() {
@@ -505,6 +508,50 @@
             });
         }
         
+        var removeUserFromMatch = function(){
+            makeAjaxCall("/removeUserFromMatch", "POST",
+                {
+                    _csrf: '{{token}}'
+                },
+                function(data){ //success
+                    if ( data ){
+                        updateMyMatches(data);
+                    }
+                },
+                function(err){ //failure
+                    //console.log("error: "+err.responseText);
+                },
+                function (){ //before
+                    $("img.loading").show();
+                },
+                function(){ //complete
+                    $("img.loading").fadeOut(400);
+                }
+            );            
+        }
+
+        var removeUserAndSlotFromMatch = function(){
+            makeAjaxCall("/removeUserAndSlotFromMatch", "POST",
+                {
+                    _csrf: '{{token}}'
+                },
+                function(data){ //success
+                    if ( data ){
+                        updateMyMatches(data);
+                    }
+                },
+                function(err){ //failure
+                    //console.log("error: "+err.responseText);
+                },
+                function (){ //before
+                    $("img.loading").show();
+                },
+                function(){ //complete
+                    $("img.loading").fadeOut(400);
+                }
+            );            
+        }
+
         $(document).on("click", "li > a.sendReminder", function(){
             var $this = $(this);
 

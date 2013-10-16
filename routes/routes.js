@@ -116,6 +116,10 @@ module.exports = function(app, sio) {
     
     app.post("/feedback", ensureAuthenticated, start.sendFeedback);
 
+    app.post("/removeUserFromMatch", ensureAuthenticated, start.removeUserFromMatch)
+
+    app.post("/removeUserAndSlotFromMatch", ensureAuthenticated, start.removeUserAndSlotFromMatch)
+
     require("./resources")(app);
 
     //sio.sockets.on("connection", function(socket){

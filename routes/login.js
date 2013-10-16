@@ -527,4 +527,30 @@ module.exports = {
         });
     }
 
+    removeUserFromMatch: function(req, res)
+    {
+        var userId = req.param('user');
+        var matchId = req.param('match');
+
+        //trova giocatore da eliminare
+        var user = null;
+        db.getUserById(userId, function(err, utente){
+            if ( err ){
+                res.render("login.html", {token: req.session._csrf, info: "Si è verificato un errore durante l'attivazione del tuo account"});
+                return;
+            }
+            user = utente;
+        }
+        if (user!=null)
+        {
+            //trova partita
+            db.getMatchById(matchId, "players", function(err, players)){
+                if (err){
+
+                }
+                //togli il giocatore da eliminare dalla lista dei giocatori della partita
+                //players. Usa $push
+            }
+        }
+    }
 };
