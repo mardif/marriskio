@@ -525,32 +525,23 @@ module.exports = {
             });
 
         });
-    }
+    },
 
     removeUserFromMatch: function(req, res)
     {
-        var userId = req.param('user');
-        var matchId = req.param('match');
+        var userId = req.body.userId;
+        var matchId = req.body.matchId;
 
-        //trova giocatore da eliminare
-        var user = null;
-        db.getUserById(userId, function(err, utente){
+        db.removePlayerFromMatch(matchId, userId, function(err, rowAffected, raw){
             if ( err ){
-                res.render("login.html", {token: req.session._csrf, info: "Si è verificato un errore durante l'attivazione del tuo account"});
+                util.error("Error on removeUserFromMatch: "+err);
                 return;
             }
-            user = utente;
-        }
-        if (user!=null)
-        {
-            //trova partita
-            db.getMatchById(matchId, "players", function(err, players)){
-                if (err){
+            util.log("users remove from match: "+rowAffected);
+            util.log("raw: "+raw);
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end("{}");              
+        });
 
-                }
-                //togli il giocatore da eliminare dalla lista dei giocatori della partita
-                //players. Usa $push
-            }
-        }
     }
 };

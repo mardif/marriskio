@@ -181,28 +181,27 @@
                 var matchCreator = $(this).parent().prev().html();
                 var loggedUser = "{{user.nick}}";
                 var userToBeKicked = $(this).attr("data-original-title");
-                alert(matchCreator + " --> " + loggedUser + " --> " + userToBeKicked);
+                var userToBeKickedId = $(this).attr("id");
+                var matchId = $(this).attr("mid");
+                //alert(matchCreator + " --> " + loggedUser + " --> " + userToBeKicked);
                 //l'utente loggato, se è proprietario della partita, può cacciare un altro utente
                 //occhio! si può fare solo se la partita non è cominciata!
                 if (matchCreator == loggedUser && loggedUser!=userToBeKicked)
                 {
-                    $( "#kick-user" ).dialog({
-                        resizable: false,
-                        height:140,
-                        modal: true,
-                        buttons: {
-                            "Rimuovi solo l'utente": function() {
-                                removeUserFromMatch();
-                                $( this ).dialog( "close" );
-                            },
-                            "Rimuovi l'utente e lo slot": function() {
-                                removeUserAndSlotFromMatch();
-                                $( this ).dialog( "close" );
-                            },
-                            "Cancella": function() {
-                                $( this ).dialog( "close" );
-                            }
-                        }
+
+                    $("#kick-user DIV.modal-body p").html('{{__("Sei sicuro di voler eliminare il giocatore ")}}'+userToBeKicked);
+                    $("#kick-user").modal({
+                        show: true,
+                        backdrop: "static"
+                    });
+
+                    $("#kick-user A#removeOnlyPlayer").unbind("click").click(function(){
+                        removeUserFromMatch(matchId, userToBeKickedId, function(){
+                            $("#kick-user").modal("hide");
+                        });
+                    });
+                    $("#kick-user A#removePlayerAndSlot").unbind("click").click(function(){
+                        alert("faccio qualcosa...");
                     });
                 }
             });
@@ -353,7 +352,8 @@
             for(var idx in data){
                 var mm = data[idx].match;
                 mm.free = data[idx].free;
-                mm.infos = data[idx].infos;                elements.push(mm._id);
+                mm.infos = data[idx].infos;                
+                elements.push(mm._id);
                 var trmatch = $("#myMatches tr#"+mm._id);
                 
                 if ( mm.winner ){
@@ -387,7 +387,7 @@
                     if ( idx < mm.players.length ){
                         var p = mm.players[idx];
                         $("<li>"+p.player.nick+"</li>").appendTo(elenco);
-                        $(this).attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick);
+                        $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick).attr("mid", mm._id).attr("id", p.player._id);
                     }
                     else{
                         $(this).attr("src", "seatFree").removeClass("playerImage").removeAttr("data-toggle").removeAttr("data-placement").removeAttr("title").removeAttr("data-original-title");
@@ -508,24 +508,23 @@
             });
         }
         
-        var removeUserFromMatch = function(){
+        var removeUserFromMatch = function(matchId, userId, callback){
             makeAjaxCall("/removeUserFromMatch", "POST",
                 {
+                    matchId: matchId,
+                    userId: userId,
                     _csrf: '{{token}}'
                 },
                 function(data){ //success
                     if ( data ){
-                        updateMyMatches(data);
+                        getMatchUpdates();
+                        if ( callback ){
+                            callback();
+                        }
                     }
                 },
                 function(err){ //failure
                     //console.log("error: "+err.responseText);
-                },
-                function (){ //before
-                    $("img.loading").show();
-                },
-                function(){ //complete
-                    $("img.loading").fadeOut(400);
                 }
             );            
         }
@@ -670,9 +669,6 @@
     </script>
 {% endblock %}
 {%block content%}
-<div id="kick-user" title="Rimuovi l'utente">
-    <p>Cosa vuoi fare?</p>
-</div>
 <div class="hero-unit" style="position:relative;top:80px;padding:10px 60px;">
     <div class="row-fluid">
         <h2 style="float:left;" id='step1'>
@@ -745,7 +741,7 @@
                                         <td class="master">{{m.masterPlayer.nick}}</td>
                                         <td class="seats">
                                             {% for p in m.players %}
-                                                <img src='seatBusy' class='playerImage seatBusy' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                                <img src='seatBusy' id='{{p.player._id}}' mid='{{m._id}}' class='playerImage seatBusy' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
                                             {% endfor %}
                                             {% for idx in m.free|buildArray %}
                                                 <img src='seatFree' border='0'>
@@ -998,5 +994,18 @@
         <a href="javascript:void(0);" class="btn btn-success btn-large" id="inputBoxYes">{{__("OK")}}</a>
     </div>
 </div>
-
+<div id="kick-user" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>{{__("Rimozione giocatori")}} </h3>
+    </div>
+    <div class="modal-body">
+        <p class="lead"></p>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-small btn-success" id="removeOnlyPlayer">{{__("Rimuovi solo il giocatore")}}</a>
+        <a href="javascript:void(0);" class="btn btn-small btn-success" id="removePlayerAndSlot">{{__("Rimuovi il giocatore &#10; riducendo i posti disponibili")}}</a>
+        <a href="javascript:void(0);" class="btn btn-small" data-dismiss="modal">{{__("Annulla")}}</a>
+    </div>
+</div>
 {%endblock%}
