@@ -1,3 +1,5 @@
+var _ = require("underscore");
+
 var EPIDEMIA = "EPIDEMIA";
 var ATOMIC_BOMB_CARD = "ATOMIC_BOMB_CARD";
 var DEFENSIVE_CARD = "DEFENSIVE_CARD";
@@ -24,6 +26,26 @@ var CardBonusDeck = function(){
 			shuffle(cards);
 		}
 		return card;
+	};
+
+	this.getCardById = function(id){
+		for(var idx=0; idx < cards.length;idx++){
+			if ( cards[idx].id == id ){
+				return cards[idx];
+			}
+		}
+	}
+
+	this.getDistinctCards = function(){
+	    var derivedArray = [];
+	    var dcards = [];
+	    for (var i = 0; i < cards.length; i++) {
+	        if (!_.contains(derivedArray,cards[i].type)) {
+	        	derivedArray.push(cards[i].type)
+	            dcards.push(cards[i]);
+	        }
+	    }
+	    return dcards;
 	};
 
 	this.init = function(){
@@ -177,6 +199,7 @@ var Card = Class.extend({
 		this.description = description;
 		this.id = new Date().getTime() - diff;
 		diff -= 10;
+		util.log(title+": "+this.id);
 	},
 
 	getTemplate: function(){
@@ -770,7 +793,7 @@ var Epidemia = PlayersCard.extend({
 	template: undefined,
 
 	init: function(){
-		this._super("Epidemia", "Provoca un'epidemia di colera alle truppe di un tuo avversario: ogni suo territorio perder&agrave; il 30% delle truppe!", 1, -1);
+		this._super("Epidemia", "Provoca un'epidemia di colera alle truppe di un tuo avversario: ogni suo territorio perder&agrave; il 30% delle armate!", 1, -1);
 		this.interactMessage= "Seleziona l'utente a cui applicare la carta Epidemia";
 		this.applyOnAllRound = false;
         this.type = EPIDEMIA;
@@ -798,8 +821,8 @@ var Epidemia = PlayersCard.extend({
 						<a href='#' class='ca-close'>close</a> \
 						<div class='ca-content-text'> \
 							<p>Carta devastante! Utilizzarla con estrema attenzione!</p> \
-							<p>Utilizzando questa carta su un vostro avversario, ad ogni suo territorio verranno eliminate il 30% delle truppe</p> \
-							<p style='color:red;'><b>Attenzione</b>: il 30% si applica per difetto, tenendo presente che gli stati devono avere almeno una truppa, per cui i territori con 1 armata non subiranno alcun effetto.</p> \
+							<p>Utilizzando questa carta su un vostro avversario, ad ogni suo territorio verranno eliminate il 30% delle armate</p> \
+							<p style='color:red;'><b>Attenzione</b>: il 30% si applica per difetto, tenendo presente che gli stati devono avere almeno un'armata, i territori con 1 armata non subiranno alcun effetto.</p> \
 						</div> \
 					</div> \
 			</div> \

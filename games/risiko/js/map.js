@@ -75,7 +75,7 @@ socket.on('connect', function () {
 socket.emit("firstConnect", {matchId: matchId});
 
 socket.on("errorOnAction", function(data){
-	show_note(data.level ? data.level : "error", data.message, data.delay);
+	show_note({type: data.level, message: data.message, delay:data.delay});
 	if ( data.action ){
 		try{
 			eval(data.action);
@@ -102,11 +102,11 @@ socket.on("playerUsesBonusCard", function(data){
 	}
 	if ( data.card.canInteract == undefined || data.card.canInteract == false ){
 		if ( data.sessionId == sessionId && data.matchId == matchId ){
-			sendToChat("Ho utilizzato la carta "+data.card.title, {type:"info"});
-
+			//sendToChat("Ho utilizzato la carta "+data.card.title, {type:"info"});
+			show_note({type:"info", message: "<strong>Hai utilizzato la carta "+data.card.title+"</strong>"});
 		}
 		else{
-		    show_note("info", "<strong>Il generale "+data.nick+" ha utilizzato la carta "+data.card.title+"</strong>");
+		    show_note({type:"info", message:"<strong>Il generale "+data.nick+" ha utilizzato la carta "+data.card.title+"<br/><a href='javascript:void(0);' class='card' id='"+data.card.id+"'>Cosa significa?</a></strong>", notblocking:false});
 		}
 
 		try{
@@ -120,14 +120,27 @@ socket.on("receiveMyBonyusCard", function(data){
 	$("#deck > .ca-wrapper").empty();
 	for(i in data.cards){
 		var card = data.cards[i];
-		addCardToDeck(card);
+		addCardToDeck("#deck", card);
 	}
 	$('#deck').contentcarousel();
 	$("#deck").draggable({
 		'cursor': 'move'
 	});
-	$("#deck").fadeIn(1000);
+	$("#deck").fadeIn(300);
 
+});
+
+socket.on("receiveCardForHelp", function(data){
+	$("#deckhelp > .ca-wrapper").empty();
+	for(i in data.cards){
+		var card = data.cards[i];
+		addCardToDeck("#deckhelp", card);
+	}
+	$('#deckhelp').contentcarousel();
+	$("#deckhelp").draggable({
+		'cursor': 'move'
+	});
+	$("#deckhelp").fadeIn(300);
 });
 
 socket.on("joinUser", function(data){
@@ -203,7 +216,7 @@ socket.on("showDices", function(data){
 		sendToChat("Attacco "+data.defenderName+" da "+offenderName, {type:"info"});
 	}
 	else{
-		show_note("info", "Attacco "+data.defenderName+" da "+offenderName);
+		show_note({type:"info", message:"Attacco "+data.defenderName+" da "+offenderName});
 	}
 	showDices("<img src='/dices' border='0'/>");
 });
@@ -382,7 +395,7 @@ socket.on("troupAddedOnTurn", function(data){
 socket.on("attackResults", function(data){
 	if ( data ){
 		if ( data.error && data.sessionId == sessionId ){
-            show_note("error", data.error);
+            show_note({type:"error", message:data.error});
 			return;
 		}
 
@@ -432,7 +445,7 @@ socket.on("attackResults", function(data){
 				sendToChat("Ho conquistato "+data.defenderName+"!!!", {type:"info"});
 			}
 			else{
-				show_note("info", data.defenderName+" conquistato!");
+				show_note({type:"info", message:data.defenderName+" conquistato!"});
 			}
 
 			socket.emit("getActualWorld", {nextStep: false, matchId: matchId, sessionId: sessionId});
@@ -476,7 +489,7 @@ socket.on("broadcastChat", function(data){
 
 socket.on("WeHaveAWinner", function(data){
     if ( data && data.winner ){
-        show_note("info", "VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!", 10000);
+        show_note({type:"info", message:"VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!", delay:10000});
         $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
     }
 });
@@ -503,7 +516,7 @@ socket.on("resultMoveTroupesTo", function(data){
 		}
 
 		if ( data.error && data.sessionId === sessionId ){
-            show_note("error", data.error);
+            show_note({type:"error", message:data.error});
 			if ( data.closePopup && movementOpen == true ){
 				infowindow.close();
 			}
@@ -528,42 +541,42 @@ socket.on("impostaCentroMappa", function(data){
 });
 
 socket.on('reconnecting', function () {
-    show_note("warn", "Attempting to reconnect with the server", 1000);
+    show_note({type:"warn", message:"Attempting to reconnect with the server", delay:1000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('reconnect', function () {
-    show_note("warn", "Successfully reconnected to the server", 1000);
+    show_note({type:"warn", message:"Successfully reconnected to the server", delay:1000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-inactive").addClass("user-active");
 });
 
 socket.on('reconnect_failed', function () {
-    show_note("warn", "Reconnection failed! Please, check your internet connection!", 3000);
+    show_note({type:"warn", message:"Reconnection failed! Please, check your internet connection!", delay:3000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('error', function () {
-    show_note("error", "An unbelievable error occurs! Please, close this page and return to your account page!", 10000);
+    show_note({type:"error", message:"An unbelievable error occurs! Please, close this page and return to your account page!", delay:10000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('connect', function () {
-    show_note("info", "Connected successfully to server... Enjoy!");
+    show_note({type:"info", message:"Connected successfully to server... Enjoy!"});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-inactive").addClass("user-active");
 });
 
 socket.on('connecting', function () {
-    show_note("info", "Connecting to server... wait please!");
+    show_note({type:"info", message:"Connecting to server... wait please!"});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('disconnect', function () {
-    show_note("warn", "Disconnected from server... please check your internet connection!", 3000);
+    show_note({type:"warn", message:"Disconnected from server... please check your internet connection!", delay:3000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
 socket.on('connect_failed', function () {
-    show_note("error", "Connection to server failed... please check your internet connection!", 3000);
+    show_note({type:"error", message:"Connection to server failed... please check your internet connection!", delay:3000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
 });
 
@@ -744,7 +757,7 @@ function checkTurn(turno){
 		if ( turno.session.id == sessionId ){
 			sendToChat(turno.cardMessage+ (m ? " ("+m.title+")" : ""));
 		}
-		/*$("#cardStatus").html*/show_note("info", "<strong>"+turno.cardMessage+"</strong>");
+		/*$("#cardStatus").html*/show_note({type:"info", message:"<strong>"+turno.cardMessage+"</strong>"});
 		/*
 		setTimeout(function(){
 			$("#cardStatus").html("");
@@ -817,7 +830,7 @@ function isStatoConfinante(statoId){
 	}
 	for(var i in nemiciConfinantiAlleati){
 		if ( nemiciConfinantiAlleati[i] == statoId ){
-            show_note("error", "Non puoi attaccarlo: hai stretto un'alleanza con questo giocatore!");
+            show_note({type:"error", message:"Non puoi attaccarlo: hai stretto un'alleanza con questo giocatore!"});
 			return false;
 		}
 	}
@@ -855,6 +868,18 @@ $(document).on("click", "#makeWorld", function(){
 $(document).on("click", "#stepForward", function(){
 	hideDices();
 	socket.emit("getActualWorld", {nextStep: true, matchId: matchId, sessionId: sessionId});
+});
+
+$(document).on("click", "#deckhelp DIV.ca-item-help", function(){
+	$(this).hide();
+});
+
+$(document).on("click", "#deckhelp DIV.ca-item-image", function(){
+	$(this).siblings(".ca-item-help").click();
+});
+
+$(document).on("click", "#btnCardList", function(){
+	socket.emit("getCardForHelp", {matchId: matchId});
 });
 
 var statesSelected = [];
@@ -908,7 +933,7 @@ $(document).on("click", "#prevStep", function(){
 	socket.emit("getActualWorld", {nextStep: false, matchId: matchId, prevStep: true, sessionId: sessionId});
 });
 
-$(document).on("click", "DIV.ca-item-image", function(){
+$(document).on("click", "#deck DIV.ca-item-image", function(){
 	socket.emit("useCardBonus", {
 		sessionId: sessionId,
 		matchId: matchId,
@@ -925,12 +950,12 @@ $(document).on("click", "#annullaCartaMarker", function(){
 	socket.emit("cancelBonusCardAction", {sessionId: sessionId, matchId: matchId});
 });
 
-$(document).on("click", "#deck .ca-close-main", function(){
-	$(this).parent().parent().fadeOut(500);
+$(document).on("click", "#deck .ca-close-main, #deckhelp .ca-close-main", function(){
+	$(this).parent().parent().fadeOut(300);
 });
 
-var addCardToDeck = function(card){
-	$("#deck > .ca-wrapper").append( card.template );
+var addCardToDeck = function(selector, card){
+	$(selector+" > .ca-wrapper").append( card.template );
 };
 
 var maximizeUsers = function(){
@@ -1117,6 +1142,28 @@ $(document).on("click", ".bandellaButtonV", function(){
 				thisis.attr("closed", "true");
 			}
 		);
+	}
+
+});
+
+$(document).on('click', ".card", function(){
+
+	var id = $(this).attr("id");
+	socket.emit("getCardHelp", {sessionId: sessionId, matchId: matchId, cardId: id});
+
+});
+
+socket.on("receiveCardHelp", function(data){
+
+	if ( data && data.card ){
+
+		$("#helpcard p.lead").empty();
+		$("#helpcard p.lead").append( data.card.template );
+		$("#helpcard p.lead DIV.ca-item").css("top", "-45px");
+		$("#helpcard p.lead").append($("<div style='width:230px;float:left;color:#cacaca;margin:0px;padding:0px;' class='ca-content-text'>"+$("#helpcard p.lead DIV.ca-content-text").html()+"</div>"));
+		$("#helpcard p.lead").unbind("click");
+
+		$("#helpcard").modal("show");
 	}
 
 });
@@ -1350,7 +1397,7 @@ function retrievePolygons(){
 					else if ( contatoreTurni > 0 && turnEnable && statoTurno == 1 && isMyState(theMarker.id) ){
 						//Ora provvedo a selezionare uno dei miei stati da cui attaccare
 						if ( theMarker.troupes < 2 ){
-                            show_note("error", "Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title);
+                            show_note({type:"error", message:"Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title});
 							return;
 						}
 						theMarker.attackFrom = !theMarker.attackFrom;
@@ -1366,7 +1413,7 @@ function retrievePolygons(){
 
 						var offender = getMarker(attackFrom);
 						if ( !offender || ( offender && offender.troupes < 2 ) ){
-							show_note("error", "Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title);
+							show_note({type:"error", message:"Non puoi attaccare con 1 sola armata dal territorio "+theMarker.title});
 							return;
 						}
 
@@ -1384,7 +1431,7 @@ function retrievePolygons(){
 					}
 					else if ( contatoreTurni > 0 && turnEnable && statoTurno == 2 && isMyState(theMarker.id) ){
 						if ( theMarker.troupes < 2 ){
-                            show_note("error", "Non puoi spostare nulla da questo stato!");
+                            show_note({type:"error", message:"Non puoi spostare nulla da questo stato!"});
 							return;
 						}
 						moveFrom = theMarker.id;
@@ -1398,7 +1445,7 @@ function retrievePolygons(){
 						);
 					}
 					else{
-						show_note("warn", "Stai facendo qualcosa che non dovresti....");
+						show_note({type:"warn", message:"Stai facendo qualcosa che non dovresti...."});
 					}
                 });
 
@@ -1450,7 +1497,7 @@ function sendToChat(msg, isStatusMessage, onNote){
 				matchId: matchId
 	});
 	if ( onNote ){
-		show_note(onNote.type, msg, onNote.delay);
+		show_note({type:onNote.type, message:msg, delay:onNote.delay});
 	}
 }
 
@@ -1498,8 +1545,12 @@ function createCenterIcon(num, color) {
 
 }
 
-function show_note(type, message, delay) {
-	var title = "News";
+function show_note(opts) {
+	var title = opts.title ? opts.title : "News";
+	var blk = opts.notblocking === undefined ? true : opts.notblocking;
+	var type = opts.type ? opts.type : "info";
+	var delay = opts.delay ? opts.delay : 5000;
+	var message = opts.message ? opts.message : "";
 	switch(type){
 		case "error":
 			title = "Azione non valida!";
@@ -1515,9 +1566,9 @@ function show_note(type, message, delay) {
 			title: title,
 			text: message,
 			type: type,
-			delay: delay ? delay : 5000,
-			nonblock: true,
-			history: false,
+			delay: delay,
+			nonblock: blk,
+			history: true,
 			sticker: false
 	};
 	$.pnotify(opts);

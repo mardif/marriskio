@@ -124,7 +124,7 @@
 	text-align:center;
 	text-shadow: 0px 1px 1px #e4ebe9;
 	margin:0px;
-	margin-top:22px;
+	margin-top:14px;
 }
 .ca-item h4{
 	font-family: "Georgia","Times New Roman",serif;
@@ -263,20 +263,21 @@
 .ca-nav span{
 	width:25px;
 	height:38px;
-	background:transparent url(/arrows.png) no-repeat top left;
+	background:#8f8f8f url(/arrows.png) no-repeat top left;
 	position:absolute;
 	top:50%;
 	margin-top:-19px;
-	left:-40px;
+	left:-28px;
 	text-indent:-9000px;
 	opacity:0.7;
 	cursor:pointer;
 	z-index:100;
+	border-radius:10px;
 }
 .ca-nav span.ca-nav-next{
 	background-position:top right;
 	left:auto;
-	right:-40px;
+	right:-28px;
 }
 .ca-nav span:hover{
 	opacity:1.0;
