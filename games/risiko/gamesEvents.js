@@ -514,6 +514,13 @@ module.exports = function(sio, socket){
         socket.emit("receiveMyBonyusCard", { cards: player.getCards() });
     });
 
+    socket.on("getCardForHelp", function(data){
+        if ( data && data.matchId ){
+            var engine = getEngine(data.matchId);
+            socket.emit("receiveCardForHelp", { cards: engine.deck.getDistinctCards() });
+        }
+    });
+
     socket.on("useCardBonus", function(data){
         util.log("useCardBonus: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){

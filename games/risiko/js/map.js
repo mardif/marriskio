@@ -120,14 +120,27 @@ socket.on("receiveMyBonyusCard", function(data){
 	$("#deck > .ca-wrapper").empty();
 	for(i in data.cards){
 		var card = data.cards[i];
-		addCardToDeck(card);
+		addCardToDeck("#deck", card);
 	}
 	$('#deck').contentcarousel();
 	$("#deck").draggable({
 		'cursor': 'move'
 	});
-	$("#deck").fadeIn(1000);
+	$("#deck").fadeIn(300);
 
+});
+
+socket.on("receiveCardForHelp", function(data){
+	$("#deckhelp > .ca-wrapper").empty();
+	for(i in data.cards){
+		var card = data.cards[i];
+		addCardToDeck("#deckhelp", card);
+	}
+	$('#deckhelp').contentcarousel();
+	$("#deckhelp").draggable({
+		'cursor': 'move'
+	});
+	$("#deckhelp").fadeIn(300);
 });
 
 socket.on("joinUser", function(data){
@@ -857,6 +870,18 @@ $(document).on("click", "#stepForward", function(){
 	socket.emit("getActualWorld", {nextStep: true, matchId: matchId, sessionId: sessionId});
 });
 
+$(document).on("click", "#deckhelp DIV.ca-item-help", function(){
+	$(this).hide();
+});
+
+$(document).on("click", "#deckhelp DIV.ca-item-image", function(){
+	$(this).siblings(".ca-item-help").click();
+});
+
+$(document).on("click", "#btnCardList", function(){
+	socket.emit("getCardForHelp", {matchId: matchId});
+});
+
 var statesSelected = [];
 
 $(document).on("mouseenter", "DIV.continent", function(){
@@ -908,7 +933,7 @@ $(document).on("click", "#prevStep", function(){
 	socket.emit("getActualWorld", {nextStep: false, matchId: matchId, prevStep: true, sessionId: sessionId});
 });
 
-$(document).on("click", "DIV.ca-item-image", function(){
+$(document).on("click", "#deck DIV.ca-item-image", function(){
 	socket.emit("useCardBonus", {
 		sessionId: sessionId,
 		matchId: matchId,
@@ -925,12 +950,12 @@ $(document).on("click", "#annullaCartaMarker", function(){
 	socket.emit("cancelBonusCardAction", {sessionId: sessionId, matchId: matchId});
 });
 
-$(document).on("click", "#deck .ca-close-main", function(){
-	$(this).parent().parent().fadeOut(500);
+$(document).on("click", "#deck .ca-close-main, #deckhelp .ca-close-main", function(){
+	$(this).parent().parent().fadeOut(300);
 });
 
-var addCardToDeck = function(card){
-	$("#deck > .ca-wrapper").append( card.template );
+var addCardToDeck = function(selector, card){
+	$(selector+" > .ca-wrapper").append( card.template );
 };
 
 var maximizeUsers = function(){
@@ -1132,7 +1157,11 @@ socket.on("receiveCardHelp", function(data){
 
 	if ( data && data.card ){
 
+		$("#helpcard p.lead").empty();
 		$("#helpcard p.lead").append( data.card.template );
+		$("#helpcard p.lead DIV.ca-item").css("top", "-45px");
+		$("#helpcard p.lead").append($("<div style='width:230px;float:left;color:#cacaca;margin:0px;padding:0px;' class='ca-content-text'>"+$("#helpcard p.lead DIV.ca-content-text").html()+"</div>"));
+		$("#helpcard p.lead").unbind("click");
 
 		$("#helpcard").modal("show");
 	}
