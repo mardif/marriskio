@@ -101,7 +101,7 @@ module.exports = {
                 var headers = {
                    text:    body,
                    from:    "wargod@debellum.net",
-                   bcc:      "marshare@gmail.com",
+                   bcc:      docs.email,
                    subject: "Attiva il tuo account su Debellum"
                 };
 
