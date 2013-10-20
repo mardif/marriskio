@@ -8,6 +8,18 @@ var MatchList = function(){
 		return matches;
 	};
 
+	this.removeMatchFromList = function(id){
+		for(var i in matches){
+			var m = matches[i];
+			if (  m.getId() == id ){
+				var toRemove = matches.splice(i,1);
+				delete toRemove;
+				return true;
+			}
+		}
+		return false;
+	};
+
 	this.getAvailableMatches = function(){
 		var ms = [];
 		for(var i in matches){

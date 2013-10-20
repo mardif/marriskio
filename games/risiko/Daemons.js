@@ -19,9 +19,10 @@ memwatch.on('stats', function(stats) {
 */
 
 //Demone controllo partite in memoria
-DeamonReminder.every('minute', function(date){
+DeamonReminder.every('12 hours', function(date){
 
 	util.log("[reminder matches in memory]: running at "+new Date());
+	var globalhd = new memwatch.HeapDiff();
 
 
 	var matchesInMemory = sessionManager.getMatchList().getMatchesList();
@@ -51,9 +52,26 @@ DeamonReminder.every('minute', function(date){
 
 				if ( matchDate.isBefore(now) ){
 
-					util.log("[reminder matches in memory]: rimozione del match [id: "+match.id+"][created_at: "+match.frozen.created_at+"]");
-					match = null;
-					delete match;
+					util.log("1 -> match in memoria: "+sessionManager.getMatchList().getMatchesList().length);
+
+					//riprendo il match dalla matchList
+					for(var j=0; j<matchesInMemory.length;j++){
+						if ( matchesInMemory[j].getId() == match.id ){
+
+							//matchesInMemory[j] = null;
+							//delete matchesInMemory[j];
+
+							var result = sessionManager.getMatchList().removeMatchFromList(match.id);
+							util.log("match removed from memory? "+result);
+
+							util.log("[reminder matches in memory]: rimozione del match bean e del match nella matchesList [id: "+match.id+"][created_at: "+match.frozen.created_at+"]");
+							match = null;
+							delete match;
+
+							break;
+						}
+					}
+					util.log("2 -> match in memoria: "+sessionManager.getMatchList().getMatchesList().length);
 
 				}
 				else{
@@ -64,12 +82,11 @@ DeamonReminder.every('minute', function(date){
 
 			}
 
-			var diff = hd.end();
-			util.log("[heap usage after GC called]: "+util.inspect(diff));
-			util.log("[heap usage after GC called]: details: "+util.inspect(diff.change.details,true));
-
 		});
 
 	}
+
+	var diff = globalhd.end();
+	util.log("actual memory occupancy diff: "+util.inspect(diff));
 
 });
