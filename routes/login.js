@@ -98,6 +98,7 @@ module.exports = {
                 Un saluto dal team di Debellum!";
                 body += common.getFooterMailTemplate();
 
+
                 var headers = {
                    text:    body,
                    from:    "wargod@debellum.net",
