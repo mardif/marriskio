@@ -33,7 +33,7 @@ passport.use(new LocalStrategy({
 
 // serialize user on login
 passport.serializeUser(function(user, done) {
-  done(null, {_id: user._id, nick: user.nick, name: user.name});
+  done(null, {_id: user._id, nick: user.nick, name: user.name, email: user.email});
 });
 
 // deserialize user on logout
@@ -238,6 +238,12 @@ var AccessDB = function(){
     });
   };
 
+  this.removeSlot = function (matchId, callback)
+  {
+    Match.update({_id: matchId}, {$inc: {num_players: -1 } }, function(err, numberAffected, raw){
+      callback(err, numberAffected, raw);
+    });
+  }
 }
 
 var saveEngineData = function(engine){

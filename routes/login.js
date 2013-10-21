@@ -268,7 +268,7 @@ module.exports = {
                 addresses.push(c.email);
             }
             else{
-                addresses.push(c.id);
+                addresses.push(c._id);
             }
         }
 
@@ -304,8 +304,8 @@ module.exports = {
     },
 
     sendFeedback: function(req, res){
-        var nome = req.body.name;
-        var email = req.body.email;
+        var nome = req.session.passport.name.first+" "+req.session.passport.name.last;
+        var email = req.session.passport.user.email;
         var message = req.body.message;
 
         var body = "Hai ricevuto il seguente feedback da "+nome+" ["+email+"]<br/><br/>\""+message+"\"";
@@ -537,11 +537,35 @@ module.exports = {
                 util.error("Error on removeUserFromMatch: "+err);
                 return;
             }
-            util.log("users remove from match: "+rowAffected);
+            util.log("users removed from match: "+rowAffected);
             util.log("raw: "+raw);
             res.writeHead(200, {'Content-Type': 'application/json'});
             res.end("{}");              
         });
 
+    },
+
+    removeUserAndSlotFromMatch: function(req, res)
+    {
+        var userId = req.body.userId;
+        var matchId = req.body.matchId;
+
+        db.removePlayerFromMatch(matchId, userId, function(err, rowAffected, raw){
+            if ( err ){
+                util.error("Error on removeUserFromMatch: "+err);
+                return;
+            }
+            util.log("users removed from match: "+rowAffected);
+            util.log("raw: "+raw);             
+        });
+        db.removeSlot(matchId, function (err, rowAffected, raw){
+            if ( err ){
+                util.error("Error on removeUserFromMatch: "+err);
+                return;
+            }
+            util.log("slot removed from match: "+matchId);
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end("{}"); 
+        })
     }
 };

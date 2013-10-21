@@ -118,7 +118,7 @@ module.exports = function(app, sio) {
 
     app.post("/removeUserFromMatch", ensureAuthenticated, start.removeUserFromMatch);
 
-    //app.post("/removeUserAndSlotFromMatch", ensureAuthenticated, start.removeUserAndSlotFromMatch);
+    app.post("/removeUserAndSlotFromMatch", ensureAuthenticated, start.removeUserAndSlotFromMatch);
 
     require("./resources")(app);
 

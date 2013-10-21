@@ -18,16 +18,17 @@
     
     fm_options = {
         bootstrap : true,
-        show_email: true,
+        show_email: false,
+        show_name: false,
         name_label: "Nome",
         name_placeholder:"Inserisci il tuo nome",
         email_placeholder: "Digita il tuo indirizzo email (non verrà pubblicato nè reso pubblico)",
-        name_required : true,
-        email_required: true,
+        name_required : false,
+        email_required: false,
         message_required: true,
         message_placeholder:"Go ahead, type your feedback here...",
         feedback_url : "/feedback",
-        message_label: "La tua opinione",
+        message_label: "Feedback",
         message_placeholder: "Scrivi qui la tua opinione o i bugs rilevati: è importante per noi!",
         submit_label: "Invia",
         show_asterisk_for_required: true,
@@ -179,29 +180,30 @@
             
             $(document).on("click", "IMG.seatBusy", function(){
                 var matchCreator = $(this).parent().prev().html();
+                var status = $(this).parent().next().html();
                 var loggedUser = "{{user.nick}}";
                 var userToBeKicked = $(this).attr("data-original-title");
                 var userToBeKickedId = $(this).attr("id");
                 var matchId = $(this).attr("mid");
-                //alert(matchCreator + " --> " + loggedUser + " --> " + userToBeKicked);
                 //l'utente loggato, se è proprietario della partita, può cacciare un altro utente
                 //occhio! si può fare solo se la partita non è cominciata!
-                if (matchCreator == loggedUser && loggedUser!=userToBeKicked)
+                if (status.indexOf("playMatchIcon") == -1 && matchCreator == loggedUser && loggedUser!=userToBeKicked)
                 {
-
                     $("#kick-user DIV.modal-body p").html('{{__("Sei sicuro di voler eliminare il giocatore ")}}'+userToBeKicked);
                     $("#kick-user").modal({
                         show: true,
                         backdrop: "static"
-                    });
-
+                    });                    
                     $("#kick-user A#removeOnlyPlayer").unbind("click").click(function(){
                         removeUserFromMatch(matchId, userToBeKickedId, function(){
                             $("#kick-user").modal("hide");
                         });
                     });
-                    $("#kick-user A#removePlayerAndSlot").unbind("click").click(function(){
-                        alert("faccio qualcosa...");
+                    //occhio! si può rimuovere lo slot solo se il numero dei giocatori è maggiore di 2
+                    $("#kick-user A#removePlayerAndSlot").unbind("click").click(function(){                       
+                        removeUserAndSlotFromMatch(matchId, userToBeKickedId, function(){
+                            $("#kick-user").modal("hide");
+                        });
                     });
                 }
             });
@@ -383,14 +385,19 @@
                 
                 var seats = trmatch.find("td.seats");
                 seats.children().each(function(idx){
-                    
+                    //setup degli slot occupate
                     if ( idx < mm.players.length ){
                         var p = mm.players[idx];
                         $("<li>"+p.player.nick+"</li>").appendTo(elenco);
                         $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick).attr("mid", mm._id).attr("id", p.player._id);
                     }
-                    else{
+                    //setup degli slot liberi
+                    else if (idx < mm.players.length + mm.free) {
                         $(this).attr("src", "seatFree").removeClass("playerImage").removeAttr("data-toggle").removeAttr("data-placement").removeAttr("title").removeAttr("data-original-title");
+                    }
+                    //nascondi slot rimossi
+                    else {
+                        $(this).hide();
                     }
                     
                 });
@@ -529,24 +536,23 @@
             );            
         }
 
-        var removeUserAndSlotFromMatch = function(){
+        var removeUserAndSlotFromMatch = function(matchId, userId, callback){
             makeAjaxCall("/removeUserAndSlotFromMatch", "POST",
                 {
+                    matchId: matchId,
+                    userId: userId,
                     _csrf: '{{token}}'
                 },
                 function(data){ //success
                     if ( data ){
-                        updateMyMatches(data);
+                        getMatchUpdates();
+                        if ( callback ){
+                            callback();
+                        }
                     }
                 },
                 function(err){ //failure
                     //console.log("error: "+err.responseText);
-                },
-                function (){ //before
-                    $("img.loading").show();
-                },
-                function(){ //complete
-                    $("img.loading").fadeOut(400);
                 }
             );            
         }
