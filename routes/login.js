@@ -7,9 +7,10 @@ var common = require("../games/risiko/common"),
     db = require('../db/accessDB').getDBInstance,
     async = require("async")
     util = require("util"),
-    gsm = require(rootPath+"/routes/siteEvents").globalSessionManager,
+    siteEvents = require(rootPath+"/routes/siteEvents");
     sessionManager = require(rootPath+"/games/risiko/sessionManager");
 
+var gsm = siteEvents.globalSessionManager;
 var SSL = false;  //da impostare se l'url sarà HTTPS o no
 
 var PUBLIC_KEY = "6LdE-N0SAAAAAIj6cS-w4LJkZZo9Ayr_bOryJu5c";
@@ -543,6 +544,29 @@ module.exports = {
             res.end("{}");              
         });
 
+        //send mail
+        var body = common.getHeaderMailTemplate();        
+        body += "Un saluto dal team di Debellum<br/><br/>\
+                Volevamo avvisarti che sei stato espulso da una partita alla quale partecipi<br/>\
+                Controlla la schermata 'Partite a cui partecipi' per maggiori informazioni. ";
+        body += common.getFooterMailTemplate();
+
+        db.getUserById(userId, "email", function(err, utente){
+            if ( err ){
+                util.log("user removed mail notification not sent!");
+                return;
+            }
+            var address = utente.email;
+            util.log("send removed mail notification to "+address);
+            var headers = {
+               text:    body,
+               from:    "debellum.invites@debellum.net",
+               bcc:      address,
+               subject: "Debellum: notifica espulsione da una partita"
+            };
+
+            common.sendEmail(headers);
+        });
     },
 
     removeUserAndSlotFromMatch: function(req, res)
@@ -558,14 +582,16 @@ module.exports = {
             util.log("users removed from match: "+rowAffected);
             util.log("raw: "+raw);             
         });
+        
         db.removeSlot(matchId, function (err, rowAffected, raw){
             if ( err ){
                 util.error("Error on removeUserFromMatch: "+err);
                 return;
             }
-            util.log("slot removed from match: "+matchId);
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end("{}"); 
-        })
-    }
+            util.log("slot removed from match: "+matchId);            
+        });
+        siteEvents.sendRemovedUserNotification(req, res);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end("{}");     
+    },
 };
