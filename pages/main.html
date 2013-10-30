@@ -3,18 +3,26 @@
     {% parent %}
     {% block title %}Debellum - Real-time war game{% endblock %}
     <script>
+      var ischromeMobile = /CriOS/.test(navigator.userAgent);
       var ischrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
       var isfirefox = /firefox/.test(navigator.userAgent.toLowerCase());
       console.log("firefox: "+isfirefox);
       console.log("chrome: "+ischrome);
       $(document).ready(function(){
         if ( isfirefox ){
-          alert("Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare CHROME");
+          showAlertBox("Attenzione", "Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>CHROME</a>");
         }
-        else if ( !ischrome ){
-          alert("Spiacente, Debellum è compatibile solo con Chrome (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
+        else if ( !ischrome && !ischromeMobile ){
+          showAlertBox("Attenzione", "Spiacente, Debellum è compatibile solo con <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>CHROME</a> (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
         }
       });
+
+      function showAlertBox(title, message){
+        $("#alertBox DIV.modal-header h3").html(title);
+        $("#alertBox DIV.modal-body p").html(message);
+        $("#alertBox").modal("show");
+      }
+
     </script>
 {% endblock %}
 {% block content %}
@@ -68,4 +76,17 @@
             </div>
         </div>
     </div>
+    <div id="alertBox" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3></h3>
+        </div>
+        <div class="modal-body">
+            <p class="lead"></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">{{__("Chiudi")}}</a>
+        </div>
+    </div>
+
 {% endblock %}
