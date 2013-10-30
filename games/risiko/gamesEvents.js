@@ -1068,8 +1068,8 @@ module.exports = function(sio, socket){
     var sendVictoryEmail = function(match, nick){
         var body = common.getHeaderMailTemplate();
         body += "Un saluto dal team di Debellum<br/><br/>\
-                Notizie dal fronte della partita "+match.getBean().name+": le tue truppe sono state spazzate via!<br/>\
-                Ora il mondo è governato da "+nick+"<br/>\
+                Notizie dal fronte:<br/>\
+                La partita "+match.getBean().name+" è stata vinta da "+nick+"<br/>\
                 <br/>Partecipa ad altre partite oppure creane di nuove invitando i tuoi amici!<br/>\
                 <br/>A presto su Debellum";
 
@@ -1082,7 +1082,7 @@ module.exports = function(sio, socket){
         body += common.getFooterMailTemplate();
         var headers = {
            text:    body,
-           from:    "summary@debellum.net",
+           from:    "wargod@debellum.net",
            bcc:      addresses.join(","),
            subject: "Debellum: Partita "+match.getBean().name+" terminata!"
         };
