@@ -37,6 +37,59 @@ module.exports = {
     res.render('newUser.html', {recaptcha_form: recaptcha.toHTML(), token: req.session._csrf});
   },
 
+  recoveryPassword: function(req, res){
+    res.render("recoveryPwd.html", {token: req.session._csrf});
+  },
+
+  postRecoveryPassword: function(req, res){
+
+    var email = req.body.email;
+    db.getUsers({email: email}, null, function(err, users){
+
+        if ( err ){
+            util.error("error on postRecoveryPassword: "+err.message);
+            res.render("recoveryPwd.html", {
+                        token: req.session._csrf,
+                        error: err.message, 
+                    });
+            return;
+        }
+
+        if ( users && users.length == 0 ){
+            res.render("recoveryPwd.html", {
+                        token: req.session._csrf,
+                        error: "Spiacente, questo indirizzo non è presente nei nostri sistemi", 
+                    });
+            return;
+        }
+
+        if ( users && users.length == 1 ){
+
+            var user = users[0];
+            db.createRecoveryPwd(email, function(err){
+
+                if ( err ){
+                    res.render("recoveryPwd.html", {
+                                token: req.session._csrf,
+                                error: "Si è verificato un problema durante la generazione dell'email. Riprova più tardi!", 
+                            });
+                    return;                    
+                }
+
+                res.render("login.html", {
+                            token: req.session._csrf,
+                            info: "L'email è stata inviata correttamente all'indirizzo da te indicato.", 
+                        });
+                return;            
+                
+            });
+
+        }
+
+    });
+
+  },
+
   // app.post('/register'...)
   postRegister: function(req, res) {
 

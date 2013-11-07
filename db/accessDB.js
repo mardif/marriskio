@@ -5,6 +5,7 @@ var	Schema = mongoose.Schema;
 var cryo = require("cryo");
 var zlib = require('zlib');
 var util = require("util");
+var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 
 // dependencies for authentication
@@ -13,6 +14,7 @@ var passport = require('passport')
 
 var User = require('./models/user');
 var Match = require('./models/match');
+var Recovery = require("./models/temp");
 //var PlayerMatch = require('./models/playerMatch');
 
 // Define local strategy for Passport
@@ -43,8 +45,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
-//var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
+//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -222,15 +224,27 @@ var AccessDB = function(){
     });
   };
   
-    this.setStatusMatch = function(isRunning, matchBean, callback){
-        matchBean.running = isRunning;
-        matchBean.save(function(err){
-            if ( err ){ return errorHelper(err, callback); }
-            if ( callback ){
-              callback(null, matchBean);
-            }
-        });
-    };
+  this.setStatusMatch = function(isRunning, matchBean, callback){
+      matchBean.running = isRunning;
+      matchBean.save(function(err){
+          if ( err ){ return errorHelper(err, callback); }
+          if ( callback ){
+            callback(null, matchBean);
+          }
+      });
+  };
+
+  this.createRecoveryPwd = function(email, callback){
+    var recovery = new Recovery({
+      email: email,
+      expire_at: (Date.now() + 7200000),
+      checkKey: bcrypt.genSaltSync(10)
+    });
+    recovery.save(function(err) {
+      if (err) return errorHelper(err, callback);
+      callback(null);
+    });
+  };
 
 }
 
