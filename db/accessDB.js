@@ -45,8 +45,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
-var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
+var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+//var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -263,6 +263,21 @@ var AccessDB = function(){
         }
       }
     });
+  };
+
+  this.changePassword = function(email, newpwd, callback){
+    User.findOne({email: email}, null, function(err, doc){
+        if ( err ){
+          return errorHelper(err, callback);
+        }
+
+        doc.password = newpwd;
+        doc.save(function(){
+          callback(err, doc);
+        });
+
+    });
+
   };
 
 }

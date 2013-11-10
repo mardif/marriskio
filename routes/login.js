@@ -145,9 +145,34 @@ module.exports = {
         }
 
         res.render("changePassword.html", {
-            token: req.session._csrf
+            token: req.session._csrf,
+            email: email
         });
 
+    });
+
+  },
+
+  changePasswordExecute: function(req, res){
+
+    var email = req.body.email;
+    var newpwd = req.body.pass;
+
+    db.changePassword(email, newpwd, function(err, doc){
+        if ( err ){
+            res.render("changePassword.html", {
+                token: req.session._csrf,
+                email: email,
+                error: "Si è verificato un errore nell'impostazione della nuova password. "+err.message
+            });
+        }
+
+        db.findRecoveryAndRemove(email);
+
+        res.render("login.html", {
+            token: req.session._csrf, 
+            info: "Password impostata correttamente!"
+        });
     });
 
   },
