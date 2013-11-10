@@ -1,13 +1,13 @@
 {% extends 'template.html' %}
 {% block head %}
     {% parent %}
-    {% block title %}Debellum - Login page{% endblock %}
+    {% block title %}Debellum - Recovery Page{% endblock %}
 {% endblock %}
 {% block content%}
     <div class="hero-unit" style="margin-top:70px;">
         <div id="betaModal">
             <div class="modal-header">
-                    <h3>{{__("Digita i tuoi dati di accesso")}}</h3>
+                    <h3>{{__("Recupera password")}}</h3>
             </div>
             <div class="modal-body">
                 <div class="row-fluid">
@@ -28,22 +28,16 @@
                                     <a class="close" data-dismiss="alert" href="#">×</a>{{info}}
                                 </div>
                             {% endif %}
-                            <form method="POST" action="/loginAuth" class="form-horizontal">
+                            <form method="POST" action="/recoveryPassword" class="form-horizontal">
                                 <input type="hidden" name="_csrf" value="{{token}}">
-                                <p class="help-block">Email</p>
+                                <p class="help-block">Digita il tuo indirizzo email</p>
                                 <div class="input-prepend">
                                     <span class="add-on">@</span><input autofocus class="prependedInput" name="email" placeholder="email@email.com" size="20" type="email" required>
                                 </div>
-                                <p class="help-block">Password</p>
-                                <div class="input-prepend">
-                                    <span class="add-on">*</span><input class="prependedInput" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required><br/>
-                                    <p class="small"><a href='/recoveryPassword'>{{__("Password dimenticata")}}</a></p>
-                                </div>
-                                  <hr>
+                                <p style="font-size:0.8em;line-height:26px;">{{__("Verrà inviata un'email all'indirizzo indicato<br/>con le istruzioni da seguire per cambiare la tua password.<br/>Se non la trovi nella tua cartella principale,<br/>prova a controllare la cartella Spam!")}}</p>
                                 <div class="well-small">
-                                    <button type="submit" class="btn btn-large btn-info">{{__("Fammi entrare!!")}}</button>&nbsp;
+                                    <button type="submit" class="btn btn-large btn-info">{{__("Recupera")}}</button>&nbsp;
                                     <a href="/" class="btn btn-large btn-inverse">{{__("Annulla")}}</a>
-                                    <p style="margin-top: 9px;margin-bottom: 0px;"><a href='/register'>{{__("Non ancora registrato?")}}</a></p>
                                 </div>
                             </form>
                         </div>

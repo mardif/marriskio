@@ -5,6 +5,7 @@ var	Schema = mongoose.Schema;
 var cryo = require("cryo");
 var zlib = require('zlib');
 var util = require("util");
+var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 
 // dependencies for authentication
@@ -13,6 +14,7 @@ var passport = require('passport')
 
 var User = require('./models/user');
 var Match = require('./models/match');
+var Recovery = require("./models/temp");
 //var PlayerMatch = require('./models/playerMatch');
 
 // Define local strategy for Passport
@@ -222,15 +224,61 @@ var AccessDB = function(){
     });
   };
   
-    this.setStatusMatch = function(isRunning, matchBean, callback){
-        matchBean.running = isRunning;
-        matchBean.save(function(err){
-            if ( err ){ return errorHelper(err, callback); }
-            if ( callback ){
-              callback(null, matchBean);
-            }
+  this.setStatusMatch = function(isRunning, matchBean, callback){
+      matchBean.running = isRunning;
+      matchBean.save(function(err){
+          if ( err ){ return errorHelper(err, callback); }
+          if ( callback ){
+            callback(null, matchBean);
+          }
+      });
+  };
+
+  this.createRecoveryPwd = function(email, callback){
+    var recovery = new Recovery({
+      email: email,
+      expire_at: (Date.now() + 7200000),
+      checkKey: bcrypt.genSaltSync(10)
+    });
+    recovery.save(function(err) {
+      if (err) return errorHelper(err, callback);
+      callback(null, recovery);
+    });
+  };
+
+  this.verifyRecoveryPwd = function(email, key, callback){
+    Recovery.find({email: email, checkKey: key}, function(err, recovery){
+      if ( err ) {
+        return errorHelper(err, callback);
+      }
+      callback(err, recovery);
+    });
+  };
+
+  this.findRecoveryAndRemove = function(email, callback){
+    Recovery.find({email: email}, null, function(err, recs){
+      if ( recs && recs.length > 0 ){
+        for(var j = 0; j < recs.length; j++){
+          recs[j].remove();
+        }
+      }
+    });
+  };
+
+  this.changePassword = function(email, newpwd, callback){
+    User.findOne({email: email}, null, function(err, doc){
+        if ( err ){
+          return errorHelper(err, callback);
+        }
+
+        doc.password = newpwd;
+        doc.save(function(){
+          callback(err, doc);
         });
-    };
+
+    });
+
+  };
 
 }
 

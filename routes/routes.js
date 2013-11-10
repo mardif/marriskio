@@ -51,6 +51,14 @@ module.exports = function(app, sio) {
 
   app.get('/loginAuth', start.login);
 
+  app.get("/recoveryPassword", start.recoveryPassword);
+
+  app.post("/recoveryPassword", start.postRecoveryPassword);
+
+  app.get("/changeYourPWD", start.changePassword);
+
+  app.post("/changeYourPWD", start.changePasswordExecute);
+
   app.get('/activate', start.activateUser);
 
   app.post('/loginAuth', passport.authenticate('local',
