@@ -242,7 +242,26 @@ var AccessDB = function(){
     });
     recovery.save(function(err) {
       if (err) return errorHelper(err, callback);
-      callback(null);
+      callback(null, recovery);
+    });
+  };
+
+  this.verifyRecoveryPwd = function(email, key, callback){
+    Recovery.find({email: email, checkKey: key}, function(err, recovery){
+      if ( err ) {
+        return errorHelper(err, callback);
+      }
+      callback(err, recovery);
+    });
+  };
+
+  this.findRecoveryAndRemove = function(email, callback){
+    Recovery.find({email: email}, null, function(err, recs){
+      if ( recs && recs.length > 0 ){
+        for(var j = 0; j < recs.length; j++){
+          recs[j].remove();
+        }
+      }
     });
   };
 

@@ -65,8 +65,10 @@ module.exports = {
 
         if ( users && users.length == 1 ){
 
+            db.findRecoveryAndRemove(email);
+
             var user = users[0];
-            db.createRecoveryPwd(email, function(err){
+            db.createRecoveryPwd(email, function(err, recovery){
 
                 if ( err ){
                     res.render("recoveryPwd.html", {
@@ -76,15 +78,75 @@ module.exports = {
                     return;                    
                 }
 
+                //Invio della email
+                var key = new Buffer(recovery.checkKey).toString("base64");
+                var mail = new Buffer(email).toString("base64");
+
+                var body = common.getHeaderMailTemplate();
+                body += "Un saluto dal team di Debellum<br/>\
+                Non ricordi la tua password di accesso? Nessun problema!<br/>\
+                Clicca il link di seguito per reimpostare una nuova password!<br/>\
+                <a href='http://www.debellum.net/changeYourPWD?uid="+mail+"&s="+key+"'>http://www.debellum.net/changeYourPWD?uid="+mail+"&s="+key+"</a><br/>\
+                <br/>\
+                Se non hai richiesto il cambio password<br/>\
+                ti preghiamo di ignorare questa email.<br/>\
+                <br/>\
+                A presto!<br/>\
+                <a href='http://www.debellum.net'>Debellum</a>";
+                body += common.getFooterMailTemplate();
+
+                var headers = {
+                   text:    body,
+                   from:    "wargod@debellum.net",
+                   bcc:      email,
+                   subject: "Debellum: Recupero Password!"
+                };
+
+                common.sendEmail(headers);
+
                 res.render("login.html", {
                             token: req.session._csrf,
                             info: "L'email è stata inviata correttamente all'indirizzo da te indicato.", 
                         });
-                return;            
+                return;
                 
             });
 
         }
+
+    });
+
+  },
+
+  changePassword: function(req, res){
+    var email = new Buffer(req.param("uid"), "base64").toString("ascii");
+    var key   = new Buffer(req.param("s"), "base64").toString("ascii");
+
+    db.verifyRecoveryPwd(email, key, function(err, recoveries){
+
+        if ( err || recoveries == null || (recoveries != null && recoveries.length == 0) ){
+            res.render("recoveryPwd.html", {
+                token: req.session._csrf,
+                error: "Link di recupero password non valido!"
+            });
+            return;
+        }
+
+        var recovery = recoveries[0];
+        if ( new Date().getTime() > recovery.expire_at.getTime() ){
+            res.render("recoveryPwd.html", {
+                token: req.session._csrf,
+                error: "La sessione di recupero password è scaduta! Se necessiti cambiare la password, inserisci di nuovo la tua email"
+            });
+
+            recovery.remove();
+
+            return;
+        }
+
+        res.render("changePassword.html", {
+            token: req.session._csrf
+        });
 
     });
 
