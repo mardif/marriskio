@@ -1,7 +1,7 @@
 // Module dependencies
 var mongoStore = require('connect-mongodb');
 var mongoose = require('mongoose');
-var	Schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 var cryo = require("cryo");
 var zlib = require('zlib');
 var util = require("util");
@@ -45,8 +45,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
-//var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
+//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -275,11 +275,21 @@ var AccessDB = function(){
         doc.save(function(){
           callback(err, doc);
         });
-
     });
+  }
 
+  this.removePlayerFromMatch = function(matchId, playerId, callback){
+    Match.update({_id: matchId}, {$pull: { players: { player: playerId } } }, function(err, numberAffected, raw){
+      callback(err, numberAffected, raw);
+    });
   };
 
+  this.removeSlot = function (matchId, callback)
+  {
+    Match.update({_id: matchId}, {$inc: {num_players: -1 } }, function(err, numberAffected, raw){
+      callback(err, numberAffected, raw);
+    });
+  }
 }
 
 var saveEngineData = function(engine){
@@ -313,7 +323,7 @@ function errorHelper(err, cb) {
         'enum': "%s not an allowed value."
     };
 
-    //A validationerror can contain more than one error.
+    //A validation error can contain more than one error.
     var errors = [];
 
     //Loop over the errors object of the Validation Error

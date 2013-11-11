@@ -7,9 +7,10 @@ var common = require("../games/risiko/common"),
     db = require('../db/accessDB').getDBInstance,
     async = require("async")
     util = require("util"),
-    gsm = require(rootPath+"/routes/siteEvents").globalSessionManager,
+    siteEvents = require(rootPath+"/routes/siteEvents");
     sessionManager = require(rootPath+"/games/risiko/sessionManager");
 
+var gsm = siteEvents.globalSessionManager;
 var SSL = false;  //da impostare se l'url sarà HTTPS o no
 
 var PUBLIC_KEY = "6LdE-N0SAAAAAIj6cS-w4LJkZZo9Ayr_bOryJu5c";
@@ -666,6 +667,46 @@ module.exports = {
             });
 
         });
-    }
+    },
 
+    removeUserFromMatch: function(req, res)
+    {
+        var userId = req.body.userId;
+        var matchId = req.body.matchId;
+
+        db.removePlayerFromMatch(matchId, userId, function(err, rowAffected, raw){
+            if ( err ){
+                util.error("Error on removeUserFromMatch: "+err);
+                return;
+            }
+            util.log("users removed from match: "+rowAffected);
+            util.log("raw: "+raw);
+        });
+
+        siteEvents.sendRemovedUserNotification(req, res);
+    },
+
+    removeUserAndSlotFromMatch: function(req, res)
+    {
+        var userId = req.body.userId;
+        var matchId = req.body.matchId;
+
+        db.removePlayerFromMatch(matchId, userId, function(err, rowAffected, raw){
+            if ( err ){
+                util.error("Error on removeUserFromMatch: "+err);
+                return;
+            }
+            util.log("users removed from match: "+rowAffected);
+            util.log("raw: "+raw);             
+        });
+        
+        db.removeSlot(matchId, function (err, rowAffected, raw){
+            if ( err ){
+                util.error("Error on removeUserFromMatch: "+err);
+                return;
+            }
+            util.log("slot removed from match: "+matchId);            
+        });
+        siteEvents.sendRemovedUserNotification(req, res);   
+    },
 };

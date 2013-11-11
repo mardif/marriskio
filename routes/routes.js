@@ -95,6 +95,8 @@ module.exports = function(app, sio) {
     
     app.post("/sendReminder", ensureAuthenticated, siteEvents.sendReminder);
 
+    app.post("/sendRemovedUserNotification", ensureAuthenticated, siteEvents.sendRemovedUserNotification);
+
     app.post("/getColoursAvailable", ensureAuthenticated, start.getColoursAvailable);
 
     app.post("/startJoinMatch", ensureAuthenticated, function(req, res){
@@ -123,6 +125,10 @@ module.exports = function(app, sio) {
     });
     
     app.post("/feedback", ensureAuthenticated, start.sendFeedback);
+
+    app.post("/removeUserFromMatch", ensureAuthenticated, start.removeUserFromMatch);
+
+    app.post("/removeUserAndSlotFromMatch", ensureAuthenticated, start.removeUserAndSlotFromMatch);
 
     require("./resources")(app);
 

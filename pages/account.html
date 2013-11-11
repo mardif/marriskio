@@ -80,6 +80,12 @@
         }
     });
 
+    socket.on("notify-reminder", function(data){
+        if (data && data.msg){
+            show_note("info", "Notifica", data.msg, 10000);
+        }
+    });
+
     function isValidEmailAddress(emailAddress) {
         var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
         return pattern.test(emailAddress);
@@ -180,27 +186,30 @@
             
             $(document).on("click", "IMG.seatBusy", function(){
                 var matchCreator = $(this).parent().prev().html();
+                var status = $(this).parent().next().html();
                 var loggedUser = "{{user.nick}}";
                 var userToBeKicked = $(this).attr("data-original-title");
-                alert(matchCreator + " --> " + loggedUser + " --> " + userToBeKicked);
+                var userToBeKickedId = $(this).attr("id");
+                var matchId = $(this).attr("mid");
                 //l'utente loggato, se è proprietario della partita, può cacciare un altro utente
-                if (matchCreator == loggedUser && loggedUser!=userToBeKicked)
+                //occhio! si può fare solo se la partita non è cominciata!
+                if (status.indexOf("playMatchIcon") == -1 && matchCreator == loggedUser && loggedUser!=userToBeKicked)
                 {
-                    $( "#kick-user" ).dialog({
-                        resizable: false,
-                        height:140,
-                        modal: true,
-                        buttons: {
-                            "Rimuovi solo l'utente": function() {
-                                $( this ).dialog( "close" );
-                            },
-                            "Rimuovi l'utente e lo slot": function() {
-                                $( this ).dialog( "close" );
-                            },
-                            "Cancella": function() {
-                                $( this ).dialog( "close" );
-                            }
-                        }
+                    $("#kick-user DIV.modal-body p").html('{{__("Sei sicuro di voler eliminare il giocatore ")}}'+userToBeKicked);
+                    $("#kick-user").modal({
+                        show: true,
+                        backdrop: "static"
+                    });                    
+                    $("#kick-user A#removeOnlyPlayer").unbind("click").click(function(){
+                        removeUserFromMatch(matchId, userToBeKickedId, function(){
+                            $("#kick-user").modal("hide");
+                        });
+                    });
+                    //occhio! si può rimuovere lo slot solo se il numero dei giocatori è maggiore di 2
+                    $("#kick-user A#removePlayerAndSlot").unbind("click").click(function(){                       
+                        removeUserAndSlotFromMatch(matchId, userToBeKickedId, function(){
+                            $("#kick-user").modal("hide");
+                        });
                     });
                 }
             });
@@ -351,7 +360,8 @@
             for(var idx in data){
                 var mm = data[idx].match;
                 mm.free = data[idx].free;
-                mm.infos = data[idx].infos;                elements.push(mm._id);
+                mm.infos = data[idx].infos;                
+                elements.push(mm._id);
                 var trmatch = $("#myMatches tr#"+mm._id);
                 
                 if ( mm.winner ){
@@ -381,14 +391,19 @@
                 
                 var seats = trmatch.find("td.seats");
                 seats.children().each(function(idx){
-                    
+                    //setup degli slot occupate
                     if ( idx < mm.players.length ){
                         var p = mm.players[idx];
                         $("<li>"+p.player.nick+"</li>").appendTo(elenco);
-                        $(this).attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick);
+                        $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick).attr("mid", mm._id).attr("id", p.player._id);
                     }
-                    else{
+                    //setup degli slot liberi
+                    else if (idx < mm.players.length + mm.free) {
                         $(this).attr("src", "seatFree").removeClass("playerImage").removeAttr("data-toggle").removeAttr("data-placement").removeAttr("title").removeAttr("data-original-title");
+                    }
+                    //nascondi slot rimossi
+                    else {
+                        $(this).hide();
                     }
                     
                 });
@@ -506,6 +521,48 @@
             });
         }
         
+        var removeUserFromMatch = function(matchId, userId, callback){
+            makeAjaxCall("/removeUserFromMatch", "POST",
+                {
+                    matchId: matchId,
+                    userId: userId,
+                    _csrf: '{{token}}'
+                },
+                function(data){ //success
+                    if ( data ){
+                        getMatchUpdates();
+                        if ( callback ){
+                            callback();
+                        }
+                    }
+                },
+                function(err){ //failure
+                    //console.log("error: "+err.responseText);
+                }
+            );            
+        }
+
+        var removeUserAndSlotFromMatch = function(matchId, userId, callback){
+            makeAjaxCall("/removeUserAndSlotFromMatch", "POST",
+                {
+                    matchId: matchId,
+                    userId: userId,
+                    _csrf: '{{token}}'
+                },
+                function(data){ //success
+                    if ( data ){
+                        getMatchUpdates();
+                        if ( callback ){
+                            callback();
+                        }
+                    }
+                },
+                function(err){ //failure
+                    //console.log("error: "+err.responseText);
+                }
+            );            
+        }
+
         $(document).on("click", "li > a.sendReminder", function(){
             var $this = $(this);
 
@@ -699,7 +756,7 @@
                                         <td class="master">{{m.masterPlayer.nick}}</td>
                                         <td class="seats">
                                             {% for p in m.players %}
-                                                <img src='seatBusy' class='playerImage seatBusy' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                                <img src='seatBusy' id='{{p.player._id}}' mid='{{m._id}}' class='playerImage seatBusy' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
                                             {% endfor %}
                                             {% for idx in m.free|buildArray %}
                                                 <img src='seatFree' border='0'>
@@ -952,5 +1009,18 @@
         <a href="javascript:void(0);" class="btn btn-success btn-large" id="inputBoxYes">{{__("OK")}}</a>
     </div>
 </div>
-
+<div id="kick-user" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>{{__("Rimozione giocatori")}} </h3>
+    </div>
+    <div class="modal-body">
+        <p class="lead"></p>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-small btn-success" id="removeOnlyPlayer">{{__("Rimuovi solo il giocatore")}}</a>
+        <a href="javascript:void(0);" class="btn btn-small btn-success" id="removePlayerAndSlot">{{__("Rimuovi il giocatore &#10; riducendo i posti disponibili")}}</a>
+        <a href="javascript:void(0);" class="btn btn-small" data-dismiss="modal">{{__("Annulla")}}</a>
+    </div>
+</div>
 {%endblock%}

@@ -103,11 +103,48 @@ var sendReminder = function(req, res){
 
         common.sendEmail(headers);
         res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end("{}");            
-        
+        res.end("{}");              
+    });  
+};
+
+var sendRemovedUserNotification = function (req, res)
+{
+    var userId = req.body.userId;
+    var matchId = req.body.matchId;
+
+    var s = globalSessionManager.getUser(userId);
+    util.log("c'è il socket connesso? "+(s ? "SI" : "NO"));
+
+    s.emit("notify-reminder", {
+        msg: "Sei stato esplulso dalla partita #"+matchId+"!!"
     });
-    
-}
+
+    //send mail
+    var body = common.getHeaderMailTemplate();        
+    body += "Un saluto dal team di Debellum<br/><br/>\
+            Volevamo avvisarti che sei stato espulso da una partita alla quale partecipi<br/>\
+            Controlla la schermata 'Partite a cui partecipi' per maggiori informazioni. ";
+    body += common.getFooterMailTemplate();
+
+    db.getUserById(userId, "email", function(err, utente){
+        if ( err ){
+            util.log("user removed mail notification not sent!");
+            return;
+        }
+        var address = utente.email;
+        util.log("send removed mail notification to "+address);
+        var headers = {
+           text:    body,
+           from:    "debellum.invites@debellum.net",
+           bcc:      address,
+           subject: "Debellum: notifica espulsione da una partita"
+        };
+
+        common.sendEmail(headers);
+    });
+    res.writeHead(200, {'Content-Type': 'application/json'});        
+    res.end("{}");
+};
 
 var globalSio;
 
@@ -141,3 +178,4 @@ var initializeEvents =  function(sio, socket){
 exports.globalSessionManager = globalSessionManager;
 exports.initializeEvents = initializeEvents;
 exports.sendReminder = sendReminder;
+exports.sendRemovedUserNotification = sendRemovedUserNotification;
