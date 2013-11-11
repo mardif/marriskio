@@ -115,7 +115,7 @@ var sendRemovedUserNotification = function (req, res)
     var s = globalSessionManager.getUser(userId);
     util.log("c'è il socket connesso? "+(s ? "SI" : "NO"));
 
-    s.emit("account-received-reminder", {
+    s.emit("notify-reminder", {
         msg: "Sei stato esplulso dalla partita #"+matchId+"!!"
     });
 

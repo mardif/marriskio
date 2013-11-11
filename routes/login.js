@@ -102,7 +102,7 @@ module.exports = {
                 var headers = {
                    text:    body,
                    from:    "wargod@debellum.net",
-                   bcc:      "marshare@gmail.com",
+                   bcc:      "elmuneco83@hotmail.com",
                    subject: "Attiva il tuo account su Debellum"
                 };
 
@@ -540,33 +540,9 @@ module.exports = {
             }
             util.log("users removed from match: "+rowAffected);
             util.log("raw: "+raw);
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end("{}");              
         });
 
-        //send mail
-        var body = common.getHeaderMailTemplate();        
-        body += "Un saluto dal team di Debellum<br/><br/>\
-                Volevamo avvisarti che sei stato espulso da una partita alla quale partecipi<br/>\
-                Controlla la schermata 'Partite a cui partecipi' per maggiori informazioni. ";
-        body += common.getFooterMailTemplate();
-
-        db.getUserById(userId, "email", function(err, utente){
-            if ( err ){
-                util.log("user removed mail notification not sent!");
-                return;
-            }
-            var address = utente.email;
-            util.log("send removed mail notification to "+address);
-            var headers = {
-               text:    body,
-               from:    "debellum.invites@debellum.net",
-               bcc:      address,
-               subject: "Debellum: notifica espulsione da una partita"
-            };
-
-            common.sendEmail(headers);
-        });
+        siteEvents.sendRemovedUserNotification(req, res);
     },
 
     removeUserAndSlotFromMatch: function(req, res)
@@ -590,8 +566,6 @@ module.exports = {
             }
             util.log("slot removed from match: "+matchId);            
         });
-        siteEvents.sendRemovedUserNotification(req, res);
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end("{}");     
+        siteEvents.sendRemovedUserNotification(req, res);   
     },
 };
