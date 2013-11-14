@@ -196,10 +196,7 @@
                 if (status.indexOf("playMatchIcon") == -1 && matchCreator == loggedUser && loggedUser!=userToBeKicked)
                 {
                     $("#kick-user DIV.modal-body p").html('{{__("Sei sicuro di voler eliminare il giocatore ")}}'+userToBeKicked);
-                    $("#kick-user").modal({
-                        show: true,
-                        backdrop: "static"
-                    });                    
+                    $("#kick-user").modal("show");                    
                     $("#kick-user A#removeOnlyPlayer").unbind("click").click(function(){
                         removeUserFromMatch(matchId, userToBeKickedId, function(){
                             $("#kick-user").modal("hide");
@@ -681,9 +678,6 @@
     </script>
 {% endblock %}
 {%block content%}
-<div id="kick-user" title="Rimuovi l'utente">
-    <p>Cosa vuoi fare?</p>
-</div>
 <div class="hero-unit" style="position:relative;top:80px;padding:10px 60px;">
     <div class="row-fluid">
         <h2 style="float:left;" id='step1'>
