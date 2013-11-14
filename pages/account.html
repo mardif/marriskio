@@ -387,20 +387,26 @@
                 }
                 
                 var seats = trmatch.find("td.seats");
-                seats.children().each(function(idx){
+                seats.children("img").each(function(indice){
                     //setup degli slot occupate
-                    if ( idx < mm.players.length ){
-                        var p = mm.players[idx];
+                    if ( indice < mm.players.length ){
+                        var p = mm.players[indice];
                         $("<li>"+p.player.nick+"</li>").appendTo(elenco);
                         $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick).attr("mid", mm._id).attr("id", p.player._id);
                     }
                     //setup degli slot liberi
-                    else if (idx < mm.players.length + mm.free) {
+                    else if (indice < mm.players.length + mm.free) {
                         $(this).attr("src", "seatFree").removeClass("playerImage").removeAttr("data-toggle").removeAttr("data-placement").removeAttr("title").removeAttr("data-original-title");
                     }
                     //nascondi slot rimossi
                     else {
-                        $(this).hide();
+                        //$(this).hide();
+                        console.log("seats: "+seats);
+                        console.log("seats.children: "+seats.children().length);
+                        console.log("indice: "+indice);
+                        console.log("mm.players.length: "+mm.players.length);
+                        console.log("mm.free: "+mm.free);
+                        alert("cazzo");
                     }
                     
                 });
