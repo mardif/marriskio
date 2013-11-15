@@ -15,6 +15,7 @@ var util = require("util");
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
+  req.session.redirect_to = req.url || req.originalUrl;
   res.redirect('/loginAuth');
 }
 
@@ -61,13 +62,15 @@ module.exports = function(app, sio) {
 
   app.get('/activate', start.activateUser);
 
-  app.post('/loginAuth', passport.authenticate('local',
-    {
-      successRedirect: '/account',
-      failureRedirect: '/loginAuth',
-      failureFlash: "Invalid username/password, please try again!"
-    })
-  );
+  app.post('/loginAuth', function(req, res){
+     return passport.authenticate('local',
+      {
+        successRedirect: req.session.redirect_to ? req.session.redirect_to : "/account",
+        failureRedirect: '/loginAuth',
+        failureFlash: "Invalid username/password, please try again!"
+      })(req, res);
+  });
+
 
     app.post("/createNewMatch", ensureAuthenticated, start.createNewMatch);
 
