@@ -487,6 +487,15 @@ socket.on("broadcastChat", function(data){
 	}
 });
 
+socket.on("notifyUserTurn", function(data){
+	if ( data.nick == nick ) {
+	    $("title").html("E' il tuo turno!");
+    }
+    else{
+    	$("title").html("Attendi gli altri giocatori...");
+    }
+});
+
 socket.on("WeHaveAWinner", function(data){
     if ( data && data.winner ){
         show_note({type:"info", message:"VITTORIA!!!!<br/>Il generale "+data.nick+" è riuscito a vincere la partita... COMPLIMENTI!", delay:10000});
@@ -679,7 +688,7 @@ function checkTurn(turno){
 	truppeToAddPerTurno = turno.troupesToPlace;
 
 	$("#elenco li").css("font-size", "14px").css("font-weight", "normal");
-
+	
 	// Per prima cosa abilito/disabilito gli eventi delle mappe e delle azioni
 	if ( contatoreTurni > 0 ){
 		if ( turno.session.id === sessionId ){
@@ -693,7 +702,10 @@ function checkTurn(turno){
 	}
 
 	$("#elenco li[id='"+turno.session.id+"']").css("font-size", "24px").css("font-weight", "bold");
-
+	socket.emit("changeActivePlayer",{
+		sessionId: sessionId,
+		nick: turno.session.nick
+	});
 	var status = "";
 	if ( contatoreTurni == 0 && truppeRimanenti > 0 ){
 		status = "Rafforza i tuoi territori con "+truppeRimanenti+" armate";

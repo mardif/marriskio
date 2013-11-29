@@ -117,6 +117,15 @@ module.exports = function(sio, socket){
         sio.sockets.in(socket.store.data.matchId).emit("joinUser", { users: engine.getSessions(), num_players: match.getBean().num_players, engineLoaded: engine.isEngineLoaded() });
     });
 
+    socket.on("changeActivePlayer", function(data){
+        util.log("change active player:" + data.sessionId + "-->" + data.nick);
+        sio.sockets.in(socket.store.data.matchId).emit("notifyUserTurn", 
+            {
+                sessionId: data.sessionId,
+                nick: data.nick,
+            });
+    });
+
     socket.on("chatMessage", function(data){
         var session = sessionManager.getSession(data.from, data.matchId);
         if ( !session ){
