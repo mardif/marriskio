@@ -62,14 +62,6 @@ var myStates = [];
 
 /* SOCKET EVENTS */
 
-/* eventi di base */
-/*
-socket.on('connect', function () {
-	//first connect
-	socket.emit("firstConnect");
-});
-*/
-
 // matchId e sessionId vengono impostate dal framework nella map.html tramite swig
 
 socket.emit("firstConnect", {matchId: matchId});
@@ -838,6 +830,58 @@ function isStatoConfinante(statoId){
 }
 
 function show_infoWindow(offenderId, defenderId){
+
+	var old_zoom = gmap.getZoom();
+	var old_center = gmap.getCenter();
+
+	var MBR = new google.maps.LatLngBounds();
+	MBR.extend(getMarker(offenderId).getPosition());
+	MBR.extend(getMarker(defenderId).getPosition());
+
+	gmap.setCenter(MBR.getCenter());
+    gmap.fitBounds(MBR);
+
+	for(p in polygons){
+		var po = polygons[p];
+		po.originalColor = po.fillColor;
+		if ( po.id != offenderId && po.id != defenderId ){
+			po.setOptions(blackPolygonOption);
+		}
+	}
+
+	var footer = $("#moveTroupes .modal-footer");
+	footer.children().remove();
+	var back = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin:0 65px;' onClick='moveTroupToStateConquered("+defenderId+", "+offenderId+");' title='Ogni click riporti indietro una truppa dal territorio conquistato!'><img src='/user_remove' border='0'></a>");
+	back.appendTo(footer);
+
+	var move = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin-right:65px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");' title='Ogni click sposti una truppa nel territorio conquistato!'><img src='/user_add' border='0'></a>");
+	move.appendTo(footer);
+
+	$("<a href='javascript:void(0);' data-dismiss='modal' class='btn btn-success btn-large'>Termina spostamento</a>").appendTo(footer);
+
+	var d = $("#moveTroupes").modal({
+		show: true,
+		keyboard: false
+	});
+
+	d.unbind("hidden").bind("hidden", function(e){
+		e.preventDefault();
+
+		for(p in polygons){
+			var po = polygons[p];
+			var rpo = $.extend({}, resetPolygonOption);
+			rpo.fillColor = po.originalColor;
+			po.setOptions(rpo);		
+		}
+		setTimeout(function(){
+			gmap.setZoom(old_zoom);
+			gmap.setCenter(old_center);
+		}, 500);
+	});
+
+
+
+	/*
 	var content = "<div class='infoConquered'> \
 		<h4> \
 			<center>Territorio nemico<br/>Conquistato!</center>\
@@ -857,7 +901,7 @@ function show_infoWindow(offenderId, defenderId){
 	}
 	infowindow.setContent(content);
 	infowindow.open(gmap, getMarker(defenderId));
-
+	*/
 }
 
 $(document).on("click", "#makeWorld", function(){
@@ -1230,6 +1274,15 @@ var redPolygonOption = {
 	strokeColor: "#FF0000"
 };
 
+var blackPolygonOption = {
+	clickable:false,
+	fillOpacity: 1,
+	fillColor: "#000000",
+	fillOpacity: 1,
+	strokeWidth: 5,
+	strokeColor: "#000000"
+};
+
 function buildDefaultOptions() {
 
    var zoom = 2;
@@ -1328,7 +1381,7 @@ function retrievePolygons(){
                 google.maps.event.addListener(theMarker, 'click', function(event){
                 	/*DEBUG*/
                 	//showArrow(projection.fromLatLngToDivPixel(this.position));
-					//show_infoWindow(this.id, this.id);
+					//show_infoWindow(this.id, parseInt(this.id)+1);
 					/* FINE DEBUG*/
                     
                     if ( data.gameEnd === true || AIActivated === true ){

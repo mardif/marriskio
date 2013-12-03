@@ -607,6 +607,16 @@ var Engine = function(matchId){
 			return { statoFrom: data.statoFrom, statoTo: data.statoTo, error: "Non ci sono piu' truppe da spostare", sessionId: data.sessionId, closePopup: true };
 		}
 
+		if ( statoTo.troupes < 3  ){
+			return {
+				statoFrom: data.statoFrom,
+				statoTo: data.statoTo,
+				error: "Hai attaccato con 3 armate: non puoi occupare lo stato conquistato con meno di 3 truppe!",
+				sessionId: data.sessionId, 
+				closePopup: false
+			};
+		}
+
 		statoFrom.troupes -= 1;
 		statoTo.troupes += 1;
 

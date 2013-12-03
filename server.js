@@ -105,7 +105,7 @@ sio.set("transports", ["xhr-polling"]);
 // Routes
 require('./routes/routes')(app, sio);
 
-server.listen(process.env.PORT, process.env.IP);
-//server.listen(8000, process.env.IP);
+//server.listen(process.env.PORT, process.env.IP);
+server.listen(8000, process.env.IP);
 
 console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
