@@ -32,7 +32,7 @@ var db = accessDB.getDBInstance;
 i18n.configure({
     locales:['it', 'en'],
     register: global,
-    defaultLocale: 'it',
+    defaultLocale: 'en',
     cookie: 'langrisk',
     directory: __dirname+'/locales',
     updateFiles: true
@@ -43,6 +43,8 @@ swig.init({
     allowErrors: true, // allows errors to be thrown and caught by express instead of suppressed by Swig
     filters: require('./pages/myswigfilters')
 });
+
+i18n.setLocale('en');
 
 // Configuration
 app.configure(function(){
@@ -58,7 +60,7 @@ app.configure(function(){
   }));
   app.use(flash());
 
-  //app.use(i18n.init);   //se voglio che la lingua sia impostata in base alla lingua del browser, devo de-commentare questa riga
+  app.use(i18n.init);   //se voglio che la lingua sia impostata in base alla lingua del browser, devo de-commentare questa riga
   app.use(function(req, res, next) {
     res.locals.__ = res.__ = function() {
       return i18n.__.apply(req, arguments);
@@ -84,7 +86,6 @@ app.configure(function(){
   //app.use(express.static(__dirname + '/pages'));
 });
 
-i18n.setLocale('it');
 
 db.startup();
 
