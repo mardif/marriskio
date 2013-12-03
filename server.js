@@ -32,10 +32,10 @@ var db = accessDB.getDBInstance;
 i18n.configure({
     locales:['it', 'en'],
     register: global,
-    defaultLocale: 'it',
+    defaultLocale: 'en',
     cookie: 'langrisk',
     directory: __dirname+'/locales',
-    updateFiles: true
+    updateFiles: false
 });
 
 swig.init({
