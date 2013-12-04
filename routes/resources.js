@@ -125,7 +125,8 @@ module.exports = function(app) {
     app.get("/help", common.staticHandler("./images/glyphicons_195_circle_info.png"));
     app.get("/beta", common.staticHandler("./images/beta.png"));
     app.get("/thumbnails", common.staticHandler("./images/thumbnails.png"));
-
+    app.get("/lang-it", common.staticHandler("./images/lang-it.png"));
+    app.get("/lang-en", common.staticHandler("./images/lang-en.png"));
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
 };
