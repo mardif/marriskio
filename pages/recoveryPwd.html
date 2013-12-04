@@ -30,7 +30,7 @@
                             {% endif %}
                             <form method="POST" action="/recoveryPassword" class="form-horizontal">
                                 <input type="hidden" name="_csrf" value="{{token}}">
-                                <p class="help-block">Digita il tuo indirizzo email</p>
+                                <p class="help-block">{{__("Digita il tuo indirizzo email")}}</p>
                                 <div class="input-prepend">
                                     <span class="add-on">@</span><input autofocus class="prependedInput" name="email" placeholder="email@email.com" size="20" type="email" required>
                                 </div>

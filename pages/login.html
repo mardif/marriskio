@@ -30,11 +30,11 @@
                             {% endif %}
                             <form method="POST" action="/loginAuth" class="form-horizontal">
                                 <input type="hidden" name="_csrf" value="{{token}}">
-                                <p class="help-block">Email</p>
+                                <p class="help-block">{{__("Email")}}</p>
                                 <div class="input-prepend">
                                     <span class="add-on">@</span><input autofocus class="prependedInput" name="email" placeholder="email@email.com" size="20" type="email" required>
                                 </div>
-                                <p class="help-block">Password</p>
+                                <p class="help-block">{{__("Password")}}</p>
                                 <div class="input-prepend">
                                     <span class="add-on">*</span><input class="prependedInput" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required><br/>
                                     <p class="small"><a href='/recoveryPassword'>{{__("Password dimenticata")}}</a></p>

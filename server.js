@@ -35,7 +35,7 @@ i18n.configure({
     defaultLocale: 'en',
     cookie: 'langrisk',
     directory: __dirname+'/locales',
-    updateFiles: true
+    updateFiles: false
 });
 
 swig.init({
