@@ -107,7 +107,7 @@ sio.set("transports", ["xhr-polling"]);
 require('./routes/routes')(app, sio);
 
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    IP   = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+    ip   = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 server.listen(port, ip);
 
 //server.listen(process.env.PORT, process.env.IP);
