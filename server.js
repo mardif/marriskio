@@ -1,11 +1,10 @@
 // base dependencies for app
-
-//require('nodefly').profile(
+/*
 require('strong-agent').profile(
     '025e8804a158b72c325319aa8865a280',
     'risiko'
 );
-
+*/
 
 global.rootPath = __dirname;
 
@@ -106,11 +105,8 @@ sio.set("transports", ["xhr-polling"]);
 // Routes
 require('./routes/routes')(app, sio);
 
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8000,
+    ip   = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1";
 server.listen(port, ip);
-
-//server.listen(process.env.PORT, process.env.IP);
-//server.listen(8000, process.env.IP);
 
 console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
