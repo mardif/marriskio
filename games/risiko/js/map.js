@@ -62,14 +62,6 @@ var myStates = [];
 
 /* SOCKET EVENTS */
 
-/* eventi di base */
-/*
-socket.on('connect', function () {
-	//first connect
-	socket.emit("firstConnect");
-});
-*/
-
 // matchId e sessionId vengono impostate dal framework nella map.html tramite swig
 
 socket.emit("firstConnect", {matchId: matchId});
@@ -451,10 +443,9 @@ socket.on("attackResults", function(data){
 			socket.emit("getActualWorld", {nextStep: false, matchId: matchId, sessionId: sessionId});
 
 			if ( data.sessionId == sessionId && offenderTroupes > 1 ){
-
 				show_infoWindow(data.offender.statoId, data.defender.statoId);
-
 			}
+
 		}
 		else{
 
@@ -644,14 +635,15 @@ function hideLocker(){
 	$("#locker").hide();
 }
 
-function moveTroupToStateConquered(statoFrom, statoTo){
+function moveTroupToStateConquered(statoFrom, statoTo, revert){
 	//Sbianco tutti gli stati confinanti che ho reso attivi per visualizzare gli stati dove � possibile effettuare uno spostamento
 	//resetActiveStates();
 	socket.emit("moveTroupToStateConquered", {
 		statoFrom: statoFrom,
 		statoTo: statoTo,
 		sessionId: sessionId,
-		matchId: matchId
+		matchId: matchId,
+		revert: revert
 	});
 }
 
@@ -850,25 +842,36 @@ function isStatoConfinante(statoId){
 }
 
 function show_infoWindow(offenderId, defenderId){
-	var content = "<div class='infoConquered'> \
-		<h4> \
-			<center>Territorio nemico<br/>Conquistato!</center>\
-		</h4>\
-		<div style='text-align:center;'>\
-			<img src='/conquered_small' border='0'>\
-		</div>\
-		<p class='text-info' style='text-align:center;'>\
-            <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"moveTroupToStateConquered("+offenderId+", "+defenderId+");\" style=\"margin-bottom: 4px;\" title='Ogni click porti una truppa nel territorio conquistato!\
-            Attenzione: non puoi portare truppe indietro!'>Sposta <img src=\"/user_add\" border=\"0\" width=\"16\"> truppa</a> \
-            <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"infowindow.close();\" title='Chiudendo questa info, non potrai più spostare ulteriori truppe!'>Termina spostamento</a> \
-		</p>\
-	</div>";
-	//toggleMovement(content);
-	if ( !infowindow ){
-		infowindow = buildNewInfoBubble(gmap);
-	}
-	infowindow.setContent(content);
-	infowindow.open(gmap, getMarker(defenderId));
+
+	var old_zoom = gmap.getZoom();
+	var old_center = gmap.getCenter();
+
+	var MBR = new google.maps.LatLngBounds();
+	MBR.extend(getMarker(offenderId).getPosition());
+	MBR.extend(getMarker(defenderId).getPosition());
+
+	gmap.setCenter(MBR.getCenter());
+    gmap.fitBounds(MBR);
+
+	var footer = $("#moveTroupes .modal-footer");
+	footer.children().remove();
+	var back = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin:0 20px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+", true);' title='Ogni click riporti indietro una truppa dal territorio conquistato!'><img src='/user_remove' border='0'></a>");
+	back.appendTo(footer);
+
+	var move = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin-right:20px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");' title='Ogni click sposti una truppa nel territorio conquistato!'><img src='/user_add' border='0'></a>");
+	move.appendTo(footer);
+
+	$("<a href='javascript:void(0);' data-dismiss='modal' class='btn btn-success btn-large'>Termina spostamento</a>").appendTo(footer);
+
+	var d = $("#moveTroupes").modal({
+		show: true,
+		keyboard: false
+	});
+
+	d.unbind("hidden").bind("hidden", function(e){
+		gmap.setZoom(old_zoom);
+		gmap.setCenter(old_center);
+	});
 
 }
 
@@ -1242,6 +1245,15 @@ var redPolygonOption = {
 	strokeColor: "#FF0000"
 };
 
+var blackPolygonOption = {
+	clickable:false,
+	fillOpacity: 1,
+	fillColor: "#000000",
+	fillOpacity: 1,
+	strokeWidth: 5,
+	strokeColor: "#000000"
+};
+
 function buildDefaultOptions() {
 
    var zoom = 2;
@@ -1340,7 +1352,7 @@ function retrievePolygons(){
                 google.maps.event.addListener(theMarker, 'click', function(event){
                 	/*DEBUG*/
                 	//showArrow(projection.fromLatLngToDivPixel(this.position));
-					//show_infoWindow(this.id, this.id);
+					//show_infoWindow(this.id, parseInt(this.id)+1);
 					/* FINE DEBUG*/
                     
                     if ( data.gameEnd === true || AIActivated === true ){

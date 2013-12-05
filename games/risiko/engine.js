@@ -349,7 +349,7 @@ var Engine = function(matchId){
 
 			return {
 				offender: {dadi: dadiOffender, troupes: offender.troupes, statoId: offender.id, color: session.color},
-				defender: {dadi: dadiDefender, troupes: defender.troupes, member:defender.member, statoId: defender.id},
+				defender: {dadi: dadiDefender, troupes: defender.troupes, member:defender.member, statoId: defender.id, color: (isConquistato ? session.color : undefined ) },
 				isConquistato: isConquistato,
 				confini: confini,
 				sessionId: session.id,
@@ -598,17 +598,47 @@ var Engine = function(matchId){
 		var troupesMistakes = false;
 		var statoFrom = this.findStatoById(data.statoFrom);
 		var statoTo = this.findStatoById(data.statoTo);
+		var revert = data.revert;
 
 		if ( statoFrom === undefined || statoTo === undefined ){
 			return { statoFrom: false, statoTo: false, error: "Errore di riconoscimento stati", sessionId: data.sessionId };
 		}
 
-		if ( statoFrom.troupes < 2 ){
+		/* Può sembrare un giro ridondante... ma serve per capire se posso o meno trasferire le armate */
+		var troupControlTo = statoTo.troupes;
+		var troupControlFrom = statoFrom.troupes;
+		if ( data.revert ){
+			troupControlTo -= 1;
+			troupControlFrom += 1;
+		}
+		else{
+			troupControlTo += 1;
+			troupControlFrom -= 1;
+		}
+
+		if ( troupControlFrom < 1 || troupControlTo < 1 ){
 			return { statoFrom: data.statoFrom, statoTo: data.statoTo, error: "Non ci sono piu' truppe da spostare", sessionId: data.sessionId, closePopup: true };
 		}
 
-		statoFrom.troupes -= 1;
-		statoTo.troupes += 1;
+		if ( troupControlTo < 3 && !data.finalMove ){
+			return {
+				statoFrom: data.statoFrom,
+				statoTo: data.statoTo,
+				error: "Hai attaccato con 3 armate: non puoi occupare lo stato conquistato con meno di 3 truppe!",
+				sessionId: data.sessionId, 
+				closePopup: false
+			};
+		}
+
+		if ( data.revert ){
+			statoFrom.troupes += 1;
+			statoTo.troupes -= 1;
+		}
+		else{
+			statoFrom.troupes -= 1;
+			statoTo.troupes += 1;
+		}
+
 
 		if ( data.finalMove ){
 			this.spostamentoFinalEffettuato = true;
