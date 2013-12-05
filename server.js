@@ -109,4 +109,4 @@ var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8000,
     ip   = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1";
 server.listen(port, ip);
 
-console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
+console.log("Express server listening on port %d in %s mode", port, app.settings.env);
