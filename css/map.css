@@ -430,4 +430,7 @@ A.card:hover{
 	z-index:1040;
 	background-color:#bababa;
 }
-.modal-backdrop.fade.in{opacity:0.3;filter:alpha(opacity=30);}
+.modal-backdrop.fade.in{
+	opacity:0.3;
+	filter:alpha(opacity=30);
+}

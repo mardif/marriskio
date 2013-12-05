@@ -443,10 +443,9 @@ socket.on("attackResults", function(data){
 			socket.emit("getActualWorld", {nextStep: false, matchId: matchId, sessionId: sessionId});
 
 			if ( data.sessionId == sessionId && offenderTroupes > 1 ){
-
 				show_infoWindow(data.offender.statoId, data.defender.statoId);
-
 			}
+
 		}
 		else{
 
@@ -627,14 +626,15 @@ function hideLocker(){
 	$("#locker").hide();
 }
 
-function moveTroupToStateConquered(statoFrom, statoTo){
+function moveTroupToStateConquered(statoFrom, statoTo, revert){
 	//Sbianco tutti gli stati confinanti che ho reso attivi per visualizzare gli stati dove � possibile effettuare uno spostamento
 	//resetActiveStates();
 	socket.emit("moveTroupToStateConquered", {
 		statoFrom: statoFrom,
 		statoTo: statoTo,
 		sessionId: sessionId,
-		matchId: matchId
+		matchId: matchId,
+		revert: revert
 	});
 }
 
@@ -841,20 +841,12 @@ function show_infoWindow(offenderId, defenderId){
 	gmap.setCenter(MBR.getCenter());
     gmap.fitBounds(MBR);
 
-	for(p in polygons){
-		var po = polygons[p];
-		po.originalColor = po.fillColor;
-		if ( po.id != offenderId && po.id != defenderId ){
-			po.setOptions(blackPolygonOption);
-		}
-	}
-
 	var footer = $("#moveTroupes .modal-footer");
 	footer.children().remove();
-	var back = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin:0 65px;' onClick='moveTroupToStateConquered("+defenderId+", "+offenderId+");' title='Ogni click riporti indietro una truppa dal territorio conquistato!'><img src='/user_remove' border='0'></a>");
+	var back = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin:0 20px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+", true);' title='Ogni click riporti indietro una truppa dal territorio conquistato!'><img src='/user_remove' border='0'></a>");
 	back.appendTo(footer);
 
-	var move = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin-right:65px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");' title='Ogni click sposti una truppa nel territorio conquistato!'><img src='/user_add' border='0'></a>");
+	var move = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin-right:20px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");' title='Ogni click sposti una truppa nel territorio conquistato!'><img src='/user_add' border='0'></a>");
 	move.appendTo(footer);
 
 	$("<a href='javascript:void(0);' data-dismiss='modal' class='btn btn-success btn-large'>Termina spostamento</a>").appendTo(footer);
@@ -865,43 +857,10 @@ function show_infoWindow(offenderId, defenderId){
 	});
 
 	d.unbind("hidden").bind("hidden", function(e){
-		e.preventDefault();
-
-		for(p in polygons){
-			var po = polygons[p];
-			var rpo = $.extend({}, resetPolygonOption);
-			rpo.fillColor = po.originalColor;
-			po.setOptions(rpo);		
-		}
-		setTimeout(function(){
-			gmap.setZoom(old_zoom);
-			gmap.setCenter(old_center);
-		}, 500);
+		gmap.setZoom(old_zoom);
+		gmap.setCenter(old_center);
 	});
 
-
-
-	/*
-	var content = "<div class='infoConquered'> \
-		<h4> \
-			<center>Territorio nemico<br/>Conquistato!</center>\
-		</h4>\
-		<div style='text-align:center;'>\
-			<img src='/conquered_small' border='0'>\
-		</div>\
-		<p class='text-info' style='text-align:center;'>\
-            <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"moveTroupToStateConquered("+offenderId+", "+defenderId+");\" style=\"margin-bottom: 4px;\" title='Ogni click porti una truppa nel territorio conquistato!\
-            Attenzione: non puoi portare truppe indietro!'>Sposta <img src=\"/user_add\" border=\"0\" width=\"16\"> truppa</a> \
-            <a href=\"javascript:void(0);\" class=\"btn btn-mini\" onclick=\"infowindow.close();\" title='Chiudendo questa info, non potrai più spostare ulteriori truppe!'>Termina spostamento</a> \
-		</p>\
-	</div>";
-	//toggleMovement(content);
-	if ( !infowindow ){
-		infowindow = buildNewInfoBubble(gmap);
-	}
-	infowindow.setContent(content);
-	infowindow.open(gmap, getMarker(defenderId));
-	*/
 }
 
 $(document).on("click", "#makeWorld", function(){
