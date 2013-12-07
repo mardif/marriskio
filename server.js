@@ -86,8 +86,6 @@ app.configure(function(){
 });
 
 
-db.startup();
-
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -107,8 +105,12 @@ require('./routes/routes')(app, sio);
 
 //var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8000;
 //var ip   = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1";
-var port = process.env.OPENSHIFT_NODEJS_PORT;
-var ip   = process.env.OPENSHIFT_NODEJS_IP;
-server.listen(port, ip);
 
-console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+db.startup(function(){
+  var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT ||  process.env.OPENSHIFT_INTERNAL_PORT || 8000; 
+  var ip   = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.OPENSHIFT_INTERNAL_IP || 'localhost';
+  server.listen(port, ip);
+  console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+});
+
+
