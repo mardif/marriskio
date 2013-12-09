@@ -681,7 +681,7 @@
 <div class="hero-unit" style="position:relative;top:80px;padding:10px 60px;">
     <div class="row-fluid">
         <h2 style="float:left;" id='step1'>
-            Ciao {{user.name.first}} {{user.name.last}} ({{user.nick}})
+            {{__("Ciao")}} {{user.name.first}} {{user.name.last}} ({{user.nick}})
         </h2>
         <div class="well" style="float:right;margin:0px 4px;">
             <a id="step2" href='#newMatch' class='btn btn-large btn-primary' data-toggle="modal" role="button">{{__("Crea nuova partita")}}</a>
@@ -709,7 +709,7 @@
                     <table class="table table-striped table-condensed table-hover">
                         <thead>
                             <tr>
-                                <th><span id="step3a">Azioni</span></th>
+                                <th><span id="step3a">{{__("Azioni")}}</span></th>
                                 <th>#</th>
                                 <th><span id="step3b">{{__("Creata il")}}</span></th>
                                 <th><span id="step3c">{{__("Creatore")}}</span></th>
@@ -737,7 +737,7 @@
                                                         <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick="confirmLeaveMatch('{{m._id}}');">{{__("Abbandona partita")}}</a></li>
                                                     {% endif %}
                                                   <!--li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li-->
-                                                  <li role="presentation"><a role='menuitem' tabindex="-1" class="sendReminder" href="#">Sollecita</a></li>
+                                                  <li role="presentation"><a role='menuitem' tabindex="-1" class="sendReminder" href="#">{{__("Sollecita")}}</a></li>
                                                 </ul>
                                               </div>
                                         </td>
