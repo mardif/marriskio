@@ -940,6 +940,10 @@ module.exports = function(sio, socket){
         
     });
 
+    socket.on("sendMousePosition", function(data){
+        socket.broadcast.emit("sentMousePosition", data);
+    });
+
     //Eventi della mappa
     socket.on("zoom_changed", function(zoomLevel){
         sio.sockets.in(socket.store.data.matchId).emit("setZoom", {zoomLevel: zoomLevel});
