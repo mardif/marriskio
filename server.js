@@ -107,9 +107,8 @@ require('./routes/routes')(app, sio);
 //var ip   = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1";
 
 db.startup(function(){
-  var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT ||  process.env.OPENSHIFT_INTERNAL_PORT || 8000; 
-  var ip   = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.OPENSHIFT_INTERNAL_IP || 'localhost';
-  console.log("IP "+ip+" - port "+port);
+  var port = process.env.OPENSHIFT_NODEJS_PORT; 
+  var ip   = process.env.OPENSHIFT_NODEJS_IP;
   server.listen(port, ip);
   console.log("Express server listening on port %d in %s mode", port, app.settings.env);
 });
