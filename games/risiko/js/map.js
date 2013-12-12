@@ -1050,10 +1050,6 @@ $(document).ready(function(){
 	   projection = overlay.getProjection();
 	});
 
-	google.maps.event.addListener(gmap, "mousemove", function(event){
-		sendMousePosition(event);
-	});
-
 
     /* Evento pulsante di caricamento stati */
     $("#loadStates").click(function(){
