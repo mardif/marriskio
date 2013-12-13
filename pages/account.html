@@ -15,29 +15,27 @@
     <style>
     </style>
     <script>
-    
     fm_options = {
         bootstrap : true,
         show_email: false,
         show_name: false,
         name_label: "Nome",
-        name_placeholder:"Inserisci il tuo nome",
-        email_placeholder: "Digita il tuo indirizzo email (non verrà pubblicato nè reso pubblico)",
+        name_placeholder:"{{__('feedbackname')}}",
+        email_placeholder: "{{__('feedbackmail')}}",
         name_required : false,
         email_required: false,
         message_required: true,
         message_placeholder:"Go ahead, type your feedback here...",
         feedback_url : "/feedback",
         message_label: "Feedback",
-        message_placeholder: "Scrivi qui la tua opinione o i bugs rilevati: è importante per noi!",
-        submit_label: "Invia",
+        message_placeholder: "{{__('Scrivi qui la tua opinione o i bugs rilevati: è importante per noi!')}}",
+        submit_label: "{{__('Invia')}}",
         show_asterisk_for_required: true,
-        title_label: "Inviaci la tua opinione o segnalaci eventuali bugs",
+        title_label: "{{__('Inviaci la tua opinione o segnalaci eventuali bugs')}}",
         csrf: "{{token}}"
     };
     //init feedback_me plugin
     fm.init(fm_options);
-
     
     var mymatchInterval = undefined;
     var availableInterval = undefined;
@@ -177,6 +175,31 @@
             });
             
             $(document).on("click", "#account-intro", function(){
+                intro.setOptions({
+                    nextLabel: "{{__('prossimo >>')}}",
+                    prevLabel: "{{__('<< indietro')}}",
+                    skipLabel: "{{__('Esci dal tutorial')}}",
+                    doneLabel: "{{__('Terminato')}}"
+                });
+                var steps = new Array("{{__('account-step1')}}",
+                    "{{__('account-step2')}}",
+                    "{{__('account-step3')}}",
+                    "{{__('account-step3a')}}",
+                    "{{__('account-step3b')}}",
+                    "{{__('account-step3c')}}",
+                    "{{__('account-step3d')}}",
+                    "{{__('account-step3e')}}",
+                    "{{__('account-step4')}}",
+                    "{{__('account-step4a')}}",
+                    "{{__('account-step4b')}}",
+                    "{{__('account-step4c')}}",
+                    "{{__('account-step4d')}}",
+                    "{{__('account-step5')}}",
+                    "{{__('account-steplast')}}",
+                    "{{__('account-steplast2')}}"
+                );
+                intro.setSteps(steps);
+                
                 intro.start();
             });
             {% if inviteFromMail -%}
