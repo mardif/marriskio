@@ -37,6 +37,7 @@ var lastCenter = center;
 var nick;
 var mycolor;
 var AIActivated = false;
+var isItMyTurn = false;
 
 MyOverlay.prototype = new google.maps.OverlayView();
 MyOverlay.prototype.onAdd = function() { }
@@ -215,11 +216,13 @@ socket.on("showDices", function(data){
 
 socket.on("buildEntireMap", function(data){
     myStates = [];
+    $("#remoteMouse").hide();
     if ( data ){
 		var engineLoaded = data.engineLoaded;
 		var players = data.stati;
 		var turno = data.turno;
 		var amIMaster = false;
+		isItMyTurn = sessionId == turno.session.id;
         
     for(var prp in players){
       var color = players[prp].color;
@@ -578,6 +581,14 @@ socket.on('disconnect', function () {
 socket.on('connect_failed', function () {
     show_note({type:"error", message:"Connection to server failed... please check your internet connection!", delay:3000});
     $("#elenco li[id='"+sessionId+"']").removeClass("user-active").addClass("user-inactive");
+});
+
+socket.on("sentMousePosition", function(data){
+	if ( data && !isItMyTurn ){
+		$("#remoteMouse").show();
+		var position = projection.fromLatLngToContainerPixel(new google.maps.LatLng(data.lat, data.lng));
+		$("#remoteMouse").offset({top: position.y, left: position.x});
+	}
 });
 
 /* SOCKET EVENTS END */
@@ -1319,6 +1330,11 @@ function retrievePolygons(){
 				polygon.setMap(gmap);
                 polygons.push(polygon);
 
+            	google.maps.event.addListener(polygon, "mousemove", function(event){
+					sendMousePosition(event);
+				});
+
+
 			}
 			else if ( $(this).find("LineString").length > 0 ){
 				var line = new google.maps.Polyline({strokeColor: "#343434", strokeOpacity: 0.5, strokeWeight: 2, path: coordinates});
@@ -1339,6 +1355,11 @@ function retrievePolygons(){
                 theMarker.attackFrom = false;
 				theMarker.troupes = 2;
                 markers.push(theMarker);
+
+            	google.maps.event.addListener(theMarker, "mousemove", function(event){
+					sendMousePosition(event);
+				});
+
 
 				/*
 				google.maps.event.addListener(theMarker, 'dblclick', function(){
@@ -1635,4 +1656,15 @@ function buildNewInfoBubble(map) {
 		  opacity: 0.65
       });
 	  return ib;
+}
+
+function sendMousePosition(event){
+	if ( isItMyTurn ){
+		socket.emit("sendMousePosition", {
+			sessionId: sessionId,
+			matchId: matchId,
+			lat: event.latLng.lat(),
+			lng: event.latLng.lng()
+		});
+	}
 }
