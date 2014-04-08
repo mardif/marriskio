@@ -3,7 +3,8 @@ var common = require(rootPath+"/games/risiko/common"),
   util = require("util"),
 	MatchList = require(rootPath+"/games/risiko/MatchList").MatchList,
 	Session = require(rootPath+"/games/risiko/session").Session,
-	db = require('../db/accessDB').getDBInstance;
+	db = require('../db/accessDB').getDBInstance,
+    _ = require("underscore");
 
 var GlobalSessionManager = function(){
     
@@ -165,6 +166,7 @@ var initializeEvents =  function(sio, socket){
     socket.on("account-sent-chat", function(data){
         if ( data && data.msg ){
             data.user = socket.handshake.session.passport.user.nick;
+            data.msg = _.escape(data.msg); //escaping characters from chat
             util.log("user "+data.user+" wrote: "+data.msg);
             sio.sockets.emit("account-received-chat-message", data);
         }

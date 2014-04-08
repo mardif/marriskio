@@ -3,7 +3,8 @@ var util = require("util"),
     cards = require("./cards"),
     parseCookie = require('connect').utils.parseCookie,
     db = require(rootPath+'/db/accessDB').getDBInstance,
-    common = require("./common");
+    common = require("./common"),
+    _ = require("underscore");
 
 module.exports = function(sio, socket){
   
@@ -139,6 +140,7 @@ module.exports = function(sio, socket){
         }
         data.color = session.color;
         data.nick = session.nick;
+        data.msg = _.escape(data.msg);  //escaping characters from chat
         
         util.log(data.nick+" [match "+data.matchId+"] wrote: "+data.msg);
 
