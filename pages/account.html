@@ -147,7 +147,7 @@
             
             mymatchInterval = setInterval(function(){
                 getMatchUpdates();
-            }, 10000);
+            }, 20000);
             
             /*
             availableInterval = setInterval(function(){
@@ -156,7 +156,9 @@
             */
             
             if ( $("#message").is(":visible") ){
-                $("#message").fadeOut(5000);
+                setTimeout(function(){
+                    $("#message").fadeOut(3000);
+                }, 3000);
             }
             
             getMatchUpdates();
@@ -691,8 +693,8 @@
     </div>
     <div class="row-fluid">
         <div class="span8">
-            {% if msg_title -%}
-                <div id="message" style='display:none;' class="alert alert-block alert-{{msg_level}}">
+            {% if msg_title %}
+                <div id="message" class="alert alert-block alert-{{msg_level}}">
                   <button type="button" class="close" data-dismiss="alert">&times;</button>
                   <h4>{{msg_title}}</h4>
                   {{msg_body}}

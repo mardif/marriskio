@@ -385,9 +385,36 @@ module.exports = {
     },
     
     joinMatchFromInvite: function(req, res){
+
+        db.getMatchById(req.param('mid'), "players name", function(err, match){
+            if ( err ){
+                req.flash("msg_level", "error");
+                req.flash("msg_title", "Match non trovato!");
+                req.flash("msg_body", "Oooops... il match a cui volevi partecipare sembra scomparso!");
+                res.redirect("/account");
+                return;
+            }
+            var justExists = false;
+
+            for(var i=0; i < match.players.length; i++){
+                var p = match.players[i].player;
+                if ( p.id == req.session.passport.user._id ){
+                    justExists = true;
+                }
+            }
+
+            if ( justExists ){
+                req.flash("msg_level", "error");
+                req.flash("msg_title", "Azione non valida!");
+                req.flash("msg_body", "Hey! Sei gi&agrave; iscritto a questo match!!");
+            }
+            else{
+                req.flash("inviteFromMail", req.param('mid'));
+            }
+            res.redirect("/account");
+
+        });
         
-        req.flash("inviteFromMail", req.param('mid'));
-        res.redirect("/account");
         
     },
 
