@@ -133,6 +133,10 @@ module.exports = function(app, sio) {
 
     app.post("/removeUserAndSlotFromMatch", ensureAuthenticated, start.removeUserAndSlotFromMatch);
 
+    app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['read_stream', 'publish_actions', 'email'] }));
+
+    app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/loginAuth' }));
+
     require("./resources")(app);
 
     //sio.sockets.on("connection", function(socket){

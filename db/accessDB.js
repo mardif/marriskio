@@ -10,7 +10,8 @@ var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 
 // dependencies for authentication
 var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+  , LocalStrategy = require('passport-local').Strategy
+  , FacebookStrategy = require("passport-facebook").Strategy;
 
 var User = require('./models/user');
 var Match = require('./models/match');
@@ -33,6 +34,40 @@ passport.use(new LocalStrategy({
   }
 ));
 
+passport.use(new FacebookStrategy({
+    clientID: "246073382242593",
+    clientSecret: "82fecbb8c19a450ba5b896f48bf66449",
+    callbackURL: "http://2.226.32.121:8000/auth/facebook/callback"
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    //util.log("accessToken: "+accessToken+", refreshToken: "+refreshToken+", profile: "+util.inspect(profile, true));
+    util.log("ricerca dell'utente "+profile.email+" nel sistema");
+    User.find({email: profile._json.email}, {}, function(err, users) {
+      if ( users && users.length == 1 ){
+        util.log("utente trovato!: "+users[0].email);
+        done(err, users[0]); 
+      }
+      else if ( users && users.length > 1 ){
+        util.log("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
+        done(err, null);
+      }
+      else{
+        util.log("utente non presente nel sistema");
+        accessDB.saveUserAndSetInSession({
+          nome: profile._json.first_name,
+          cognome: profile._json.middle_name + " "+profile._json.last_name,
+          password: "__facebook_password__",
+          email: profile._json.email,
+          nick: profile._json.username,
+          fromSocial: true,
+          socialInfo: profile._raw
+        }, done);
+
+      }
+    });
+  }
+));
+
 // serialize user on login
 passport.serializeUser(function(user, done) {
   done(null, {_id: user._id, nick: user.nick, name: user.name, email: user.email});
@@ -45,8 +80,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
-//var conn = 'mongodb://risikodb:@localhost:27017/risikodb';
+//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+var conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -77,6 +112,8 @@ var AccessDB = function(){
     , email: userInfo.email
     , password: userInfo.password
     , nick: userInfo.nick
+    , fromSocial: userInfo.fromSocial
+    , socialInfo: userInfo.socialInfo
     });
 
     newUser.save(function(err) {
@@ -94,6 +131,30 @@ var AccessDB = function(){
 
     });
   },
+
+  this.saveUserAndSetInSession = function(userInfo, callback){
+    var newUser = new User ({
+      name : { first: userInfo.nome, last: userInfo.cognome }
+    , email: userInfo.email
+    , password: userInfo.password
+    , nick: userInfo.nick
+    , fromSocial: userInfo.fromSocial
+    , socialInfo: userInfo.socialInfo
+    });
+
+    newUser.save(function(err) {
+      if (err) return callback(err, userInfo);//return errorHelper(err, callback);
+
+      User.findById(newUser, function (err, doc) {
+
+        if (err) return errorHelper(err, callback);
+
+        callback(null, doc);
+
+      })
+
+    });
+  }
 
   this.getAllMatchesOpen = function(userId, callback){
       Match.find({running: false, "players.player": {$nin: [userId]}}, null, {sort: {started_at: -1}}).populate('masterPlayer').populate("players.player").exec(function(err, results){

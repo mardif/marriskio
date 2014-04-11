@@ -15,6 +15,12 @@
     <style>
     </style>
     <script>
+
+    var flashMessage = false;
+    var msg_title = "{{msg_title}}";
+    if ( $.trim(msg_title) != "" ){
+        flashMessage = true;
+    }
     
     fm_options = {
         bootstrap : true,
@@ -155,7 +161,7 @@
             }, 20000);
             */
             
-            if ( $("#message").is(":visible") ){
+            if ( flashMessage == true ){
                 setTimeout(function(){
                     $("#message").fadeOut(3000);
                 }, 3000);
@@ -212,6 +218,10 @@
                     });
                 }
             });
+
+            if( flashMessage == true ){
+                $("#message").show();
+            }
         });
 
         $(document).on("click", "IMG.playMatchIcon", function(){
@@ -693,13 +703,11 @@
     </div>
     <div class="row-fluid">
         <div class="span8">
-            {% if msg_title %}
-                <div id="message" class="alert alert-block alert-{{msg_level}}">
-                  <button type="button" class="close" data-dismiss="alert">&times;</button>
-                  <h4>{{msg_title}}</h4>
-                  {{msg_body}}
-                </div>
-            {% endif %}
+            <div id="message" class="alert alert-block alert-{{msg_level}}" style="display:none;">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <h4>{{msg_title}}</h4>
+              {{msg_body}}
+            </div>
             <ul class="nav nav-tabs" id="matches" style="margin:0px;margin-left:30px;">
                 <li id="step3" class="active"><a href="#myMatches" data-toggle="tab">{{__("Partite a cui partecipi")}}</a></li>
                 <li id="step4"><a href="#availableMatches" data-toggle="tab">{{__("Partite disponibili")}}</a></li>

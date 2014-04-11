@@ -19,6 +19,8 @@ var UserSchema = new Schema({
   , salt: { type: String, required: true }
   , hash: { type: String, required: true }
   , active: { type: Boolean, default: false }
+  , fromSocial: { type:Boolean, default: false }
+  , socialInfo: { type: String }
 });
 
 UserSchema

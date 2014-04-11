@@ -4,6 +4,17 @@
     {% block title %}Debellum - Login page{% endblock %}
 {% endblock %}
 {% block content%}
+<style>
+    #facebook_login{
+        display:block;
+        width: 202px;
+        height: 46px;
+        background: url(/facebook_login) no-repeat bottom; 
+    }
+    #facebook_login:active{
+        background: url(/facebook_login_p) no-repeat bottom; 
+    }
+</style>
     <div class="hero-unit" style="margin-top:70px;">
         <div id="betaModal">
             <div class="modal-header">
@@ -15,6 +26,10 @@
                         <div class="span4">
                             <div class="logowrapper">
                                 <img src='/main' border='0'>
+                                <p style="margin-top:10px;">
+                                    <a href="/auth/facebook" id="facebook_login"></a>
+                                </p>
+
                             </div>
                         </div>
                         <div class="span4">
@@ -43,15 +58,13 @@
                                 <div class="well-small">
                                     <button type="submit" class="btn btn-large btn-info">{{__("Fammi entrare!!")}}</button>&nbsp;
                                     <a href="/" class="btn btn-large btn-inverse">{{__("Annulla")}}</a>
-                                    <p style="margin-top: 9px;margin-bottom: 0px;"><a href='/register'>{{__("Non ancora registrato?")}}</a></p>
+                                    <p style="margin-top: 9px;margin-bottom: 0px;">
+                                        <a href='/register'>{{__("Non ancora registrato?")}}</a>
+                                    </p>
                                 </div>
                             </form>
                         </div>
                         <div class="span4">
-                            <script type="text/javascript">
-                                var uri = 'http://impit.tradedoubler.com/imp?type(js)pool(505979)a(2320835)' + new String (Math.random()).substring (2, 11);
-                                document.write('<sc'+'ript type="text/javascript" src="'+uri+'" charset="ISO-8859-1"></sc'+'ript>');
-                            </script>
                         </div>
                     </div>
                 </div>

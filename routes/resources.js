@@ -126,6 +126,9 @@ module.exports = function(app) {
     app.get("/help", common.staticHandler("./images/glyphicons_195_circle_info.png"));
     app.get("/beta", common.staticHandler("./images/beta.png"));
     app.get("/thumbnails", common.staticHandler("./images/thumbnails.png"));
+    app.get("/facebook_login", common.staticHandler("./images/facebook_login.png"));
+    app.get("/facebook_login_p", common.staticHandler("./images/facebook_login_p.png"));
+    app.get("/sprites", common.staticHandler("./images/sprites.png"));
 
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
