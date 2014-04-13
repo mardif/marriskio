@@ -33,7 +33,7 @@
     "cryo": "0.0.5",
     "strong-agent": "~0.2.13",
     "nodefly": "~0.1.46",
-    "passport-facebook": "^1.0.3",
+    "passport-facebook": "1.0.3",
     "passport-google-oauth": "^0.1.5"
   },
   "description": "There are a couple of things you should do first, before you can use all of Git's power:",
