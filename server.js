@@ -18,7 +18,6 @@ var express = require('express')
   , io = require("socket.io")
   , ioSession = require('socket.io-session')
   , i18n = require("i18n")
-  , raven = require("raven")
   , config = require("./Configuration");
 
 
@@ -60,7 +59,6 @@ app.configure(function(){
   , cookie:{ path: '/', httpOnly: true, maxAge: (1000*3600*12)}
   }));
   app.use(flash());
-  app.use(raven.middleware.express('https://8e1bbc61f8834f6dbff6f550de7f4ddf:2a4d7cb7cae24a26bfa47de374402511@app.getsentry.com/22491'));
   app.enable('verbose errors');
   app.use(i18n.init);   //se voglio che la lingua sia impostata in base alla lingua del browser, devo de-commentare questa riga
   app.use(function(req, res, next) {
