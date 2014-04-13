@@ -135,11 +135,39 @@ module.exports = function(app, sio) {
 
     app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['read_stream', 'publish_actions', 'email'] }));
 
-    app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/loginAuth' }));
+    app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/loginAuth' }), 
+      function(err, req, res, callback){
+        if ( err ){
+          req.flash("error", "Ooops, si è verificato il seguente errore: "+err.message.split(":")[0]+". Prova ad accedere con Google oppure registrati!");
+          res.redirect("/account");
+          return;
+        }
+      }
+    );
+
+    app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
+                                            'https://www.googleapis.com/auth/userinfo.email'] }));
+    
+    app.get('/auth/google/oauth2callback', passport.authenticate('google', { successRedirect: '/account', failureRedirect: '/loginAuth' }), 
+      function(err, req, res, callback){
+        if ( err ){
+          req.flash("error", "Ooops, si è verificato il seguente errore: "+err.message.split(":")[0]+". Prova ad accedere con Facebook oppure registrati!");
+          res.redirect("/account");
+          return;
+        }
+      }
+    );
 
     require("./resources")(app);
 
-    //sio.sockets.on("connection", function(socket){
+    //sio.sockets.on("connection", function(socket){app.get('/auth/google', passport.authenticate('google'));
+
+// Google will redirect the user to this URL after authentication.  Finish
+// the process by verifying the assertion.  If valid, the user will be
+// logged in.  Otherwise, authentication has failed.
+app.get('/auth/google/return', 
+  passport.authenticate('google', { successRedirect: '/',
+                                    failureRedirect: '/login' }));
     sio.sockets.on("connection", function(socket){
       
       //util.log("sio.sockets.on[connection] -> session: "+util.inspect(socket.handshake, true));

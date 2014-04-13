@@ -7,11 +7,13 @@ var zlib = require('zlib');
 var util = require("util");
 var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
+var config = require(rootPath+"/Configuration");
 
 // dependencies for authentication
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy
-  , FacebookStrategy = require("passport-facebook").Strategy;
+  , FacebookStrategy = require("passport-facebook").Strategy
+  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 var User = require('./models/user');
 var Match = require('./models/match');
@@ -37,33 +39,77 @@ passport.use(new LocalStrategy({
 passport.use(new FacebookStrategy({
     clientID: "246073382242593",
     clientSecret: "82fecbb8c19a450ba5b896f48bf66449",
-    callbackURL: "http://2.226.32.121:8000/auth/facebook/callback"
+    callbackURL: "http://"+config[process.env.NODE_ENV].host+"/auth/facebook/callback"
   },
-  function(req, accessToken, refreshToken, profile, done) {
+  function(accessToken, refreshToken, profile, done) {
     //util.log("accessToken: "+accessToken+", refreshToken: "+refreshToken+", profile: "+util.inspect(profile, true));
-    util.log("ricerca dell'utente "+profile.email+" nel sistema");
-    User.find({email: profile._json.email}, {}, function(err, users) {
-      if ( users && users.length == 1 ){
-        util.log("utente trovato!: "+users[0].email);
-        done(err, users[0]); 
-      }
-      else if ( users && users.length > 1 ){
-        util.log("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
-        done(err, null);
-      }
-      else{
-        util.log("utente non presente nel sistema");
-        accessDB.saveUserAndSetInSession({
-          nome: profile._json.first_name,
-          cognome: profile._json.middle_name + " "+profile._json.last_name,
-          password: "__facebook_password__",
-          email: profile._json.email,
-          nick: profile._json.username,
-          fromSocial: true,
-          socialInfo: profile._raw
-        }, done);
 
-      }
+    process.nextTick(function() {
+      util.log("ricerca dell'utente "+profile.email+" nel sistema");
+      User.find({email: profile._json.email, socialName: "facebook"}, {}, function(err, users) {
+        if ( users && users.length == 1 ){
+          util.log("utente trovato!: "+users[0].email);
+          users[0].socialToken = accessToken;
+          done(err, users[0]); 
+        }
+        else if ( users && users.length > 1 ){
+          util.log("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
+          done(err, null);
+        }
+        else{
+          util.log("utente non presente nel sistema");
+          accessDB.saveUserAndSetInSession({
+            nome: profile._json.first_name,
+            cognome: profile._json.middle_name + " "+profile._json.last_name,
+            password: "__facebook_password__",
+            email: profile._json.email,
+            nick: profile._json.username,
+            fromSocial: true,
+            socialInfo: profile._raw,
+            socialToken: accessToken,
+            socialName: "facebook"
+          }, done);
+
+        }
+      });
+    });
+  }
+));
+
+passport.use(new GoogleStrategy({
+    clientID: "781347053598-o02dmj2qdsnk178khd3i0abtrc4edvns.apps.googleusercontent.com",
+    clientSecret: "4j-0LN1D68H_nyrXqej8YNFN",
+    callbackURL: "http://"+config[process.env.NODE_ENV].host+"/auth/google/oauth2callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function() {
+      //util.log("trovato google user: "+util.inspect(profile, true));
+      User.find({email: profile._json.email, socialName: "google"}, {}, function(err, users) {
+        if ( users && users.length == 1 ){
+          util.log("utente trovato!: "+users[0].email);
+          users[0].socialToken = accessToken;
+          done(err, users[0]); 
+        }
+        else if ( users && users.length > 1 ){
+          util.log("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
+          done(err, null);
+        }
+        else{
+          util.log("utente non presente nel sistema");
+          accessDB.saveUserAndSetInSession({
+            nome: profile._json.given_name,
+            cognome: profile._json.family_name,
+            password: "__facebook_password__",
+            email: profile._json.email,
+            nick: profile._json.email.split("@")[0],
+            fromSocial: true,
+            socialInfo: profile._raw,
+            socialToken: accessToken,
+            socialName: "google"
+          }, done);
+
+        }
+      });      
     });
   }
 ));
@@ -80,8 +126,10 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
-var conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
+var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+if ( process.env.NODE_ENV == "development" ){
+  conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
+}
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -140,6 +188,8 @@ var AccessDB = function(){
     , nick: userInfo.nick
     , fromSocial: userInfo.fromSocial
     , socialInfo: userInfo.socialInfo
+    , socialName: userInfo.socialName
+    , active: true
     });
 
     newUser.save(function(err) {
@@ -149,6 +199,7 @@ var AccessDB = function(){
 
         if (err) return errorHelper(err, callback);
 
+        doc.socialToken = userInfo.socialToken;
         callback(null, doc);
 
       })

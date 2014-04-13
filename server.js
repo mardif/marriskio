@@ -17,7 +17,9 @@ var express = require('express')
   , flash = require("connect-flash")
   , io = require("socket.io")
   , ioSession = require('socket.io-session')
-  , i18n = require("i18n");
+  , i18n = require("i18n")
+  , raven = require("raven")
+  , config = require("./Configuration");
 
 
 var app = module.exports = express();
@@ -58,7 +60,8 @@ app.configure(function(){
   , cookie:{ path: '/', httpOnly: true, maxAge: (1000*3600*12)}
   }));
   app.use(flash());
-
+  app.use(raven.middleware.express('https://8e1bbc61f8834f6dbff6f550de7f4ddf:2a4d7cb7cae24a26bfa47de374402511@app.getsentry.com/22491'));
+  app.enable('verbose errors');
   app.use(i18n.init);   //se voglio che la lingua sia impostata in base alla lingua del browser, devo de-commentare questa riga
   app.use(function(req, res, next) {
     res.locals.__ = res.__ = function() {
@@ -85,7 +88,9 @@ app.configure(function(){
   //app.use(express.static(__dirname + '/pages'));
 });
 
-
+if ('production' == app.settings.env) {
+  app.disable('verbose errors');
+}
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
@@ -106,15 +111,11 @@ require('./routes/routes')(app, sio);
 //var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8000;
 //var ip   = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1";
 
+console.log("env "+process.env.NODE_ENV);
+
 db.startup(function(){
-  var port = 8000; 
-  var ip   = "192.168.0.10";
-  //var port = process.env.OPENSHIFT_NODEJS_PORT;  //openshift
-  //var ip   = process.env.OPENSHIFT_NODEJS_IP;    //openshift
-  //var port = process.env.PORT; //heroku
-  //var ip   = process.env.IP;   //heroku
-  server.listen(port, ip);
-  console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+  server.listen(config[process.env.NODE_ENV].port, config[process.env.NODE_ENV].ip);
+  console.log("Express server listening on %s port %d in %s mode", config[process.env.NODE_ENV].ip, config[process.env.NODE_ENV].port, process.env.NODE_ENV);
 });
 
 

@@ -14,6 +14,18 @@
     #facebook_login:active{
         background: url(/facebook_login_p) no-repeat bottom; 
     }
+    #google_login{
+        display:block;
+        width: 202px;
+        height: 44px;
+        background: url(/google_login) no-repeat bottom; 
+    }
+    #google_login:hover{
+        background: url(/google_login_h) no-repeat bottom; 
+    }
+    #google_login:active{
+        background: url(/google_login_p) no-repeat bottom; 
+    }
 </style>
     <div class="hero-unit" style="margin-top:70px;">
         <div id="betaModal">
@@ -29,7 +41,9 @@
                                 <p style="margin-top:10px;">
                                     <a href="/auth/facebook" id="facebook_login"></a>
                                 </p>
-
+                                <p style="margin-top:10px;">
+                                    <a href="/auth/google" id="google_login"></a>
+                                </p>
                             </div>
                         </div>
                         <div class="span4">

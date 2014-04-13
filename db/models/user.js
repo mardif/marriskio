@@ -13,15 +13,18 @@ var UserSchema = new Schema({
         first: { type: String, required: true }
       , last: { type: String, required: true }
     }
-  , email: { type: String, required: true, unique: true }
-  , nick: { type: String, required: true, unique: true }
+  , email: { type: String, required: true }//, unique: true }
+  , nick: { type: String, required: true , unique: true }
 
   , salt: { type: String, required: true }
   , hash: { type: String, required: true }
   , active: { type: Boolean, default: false }
   , fromSocial: { type:Boolean, default: false }
+  , socialName: { type:String, default: "" }
   , socialInfo: { type: String }
 });
+
+UserSchema.index({email:1, socialName:1}, {unique: true});
 
 UserSchema
 .virtual('password')
