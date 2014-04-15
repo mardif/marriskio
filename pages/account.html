@@ -16,15 +16,17 @@
     <script type="text/javascript" src="pnotify.js"></script>
 
     <style>
-        .fb-like{
-            /*
-            margin-top: 8px;
-            margin-left: 8px;
-            */
-        }
         #___plusone_0 {
             margin-top: 8px !important;
             margin-left: 8px !important;
+        }
+        .social-share{
+            margin-top:-5px;
+        }
+        img.desaturate { 
+            -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            filter: grayscale(100%);
         }
     </style>
     <script>
@@ -259,6 +261,39 @@
     	        socket.emit("account-sent-chat", { msg: $(this).val() });
                 $(this).val("");
 	        }
+        });
+
+        $(document).on("click", ".shareMatchFacebook", function(){
+            var $this = $(this);
+            var $img = $(this).children(":first");
+            if ( $img.hasClass("desaturate") ){
+                return;
+            }
+
+            $img.addClass("desaturate");
+
+            FB.login(function(response) {
+               if (response.authResponse) {
+                    FB.api('/me/feed', 'post', { 
+                        message: "Pronto alla battaglia!!!",
+                        name: "Partita "+$this.attr("match_name"),
+                        description: "Sto partecipando a questa partita, se vuoi partecipare anche tu, clicca sul link!",
+                        link: "http://www.debellum.net/joinToMatch?mid="+$this.attr("match_id")
+                    }, function(response) {
+                      if (!response || response.error) {
+                        showAlertBox("error", '{{__("Si e\' verificato un problema inatteso")}}: '+response.error);
+                      } else {
+                        showAlertBox("info", '{{__("Post pubblicato correttamente nella tua bacheca")}}');
+                      }
+                      $img.removeClass("desaturate");
+                    });
+               } else {
+                    
+               }
+               $img.removeClass("desaturate");
+            });
+            
+            
         });
 
         //--------------------------------------------
@@ -754,6 +789,7 @@
                                 <th><span id="step3c">{{__("Creatore")}}</span></th>
                                 <th><span id="step3d">{{__("Giocatori")}}</span></th>
                                 <th><span id="step3e">{{__("Stato")}}</span></th>
+                                <th><span id="step3Share">{{__("Social")}}</span></th>
                             </tr>
                         </thead>
                         <tbody class='match'>
@@ -776,7 +812,8 @@
                                                         <li role="presentation"><a role='menuitem' tabindex="-1" class="exitFromMatch" href="javascript:void(0);" onClick="confirmLeaveMatch('{{m._id}}');">{{__("Abbandona partita")}}</a></li>
                                                     {% endif %}
                                                   <!--li role="presentation"><a role='menuitem' tabindex="-1" class="playMatch" href="#">{{__("Play")}}</a></li-->
-                                                  <li role="presentation"><a role='menuitem' tabindex="-1" class="sendReminder" href="#">Sollecita</a></li>
+                                                    <li role="presentation"><a role='menuitem' tabindex="-1" class="sendReminder" href="#">Sollecita</a></li>
+
                                                 </ul>
                                               </div>
                                         </td>
@@ -801,6 +838,9 @@
                                             {% else if m.free == 0 %}
                                                 {{__("Avvia la partita")}} <img mid='{{m._id}}' class='playMatchIcon' src='/play' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Entra nella partita e dai il via alle ostilità!")}}'>
                                             {% endif %}
+                                        </td>
+                                        <td class="social">
+                                            <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchFacebook" title="Condivi questa partita su Facebook"><img class="social-share" src="/facebook_share" border="0"></a>
                                         </td>
                                     </tr>
                                 {% endif %}
