@@ -63,7 +63,7 @@ MatchSchema.virtual("infos")
         "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];
-              info += "<li>"+p.player.nick+"</li>";
+              info += "<li>"+(p.player ? p.player.nick : "")+"</li>";
           }
          info += "</ul></p></div>";
     }
@@ -80,7 +80,7 @@ MatchSchema.virtual("infos")
              "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];
-              info += "<li id='"+p.id+"'>"+p.player.nick+"</li>";
+              info += "<li id='"+p.id+"'>"+(p.player ? p.player.nick : "")+"</li>";
           }
           info += "</ul></p></div>";
     }

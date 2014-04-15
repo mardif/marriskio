@@ -10,11 +10,33 @@
     <link rel="stylesheet" href="/token-input-fb.css" type="text/css" />
     <link href="pnotify.css" media="screen" rel="stylesheet" type="text/css">
     <link href="pnotify.icons.css" media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://apis.google.com/js/platform.js">
+      {lang: 'it'}
+    </script>
     <script type="text/javascript" src="pnotify.js"></script>
 
     <style>
+        .fb-like{
+            /*
+            margin-top: 8px;
+            margin-left: 8px;
+            */
+        }
+        #___plusone_0 {
+            margin-top: 8px !important;
+            margin-left: 8px !important;
+        }
     </style>
     <script>
+    window.___gcfg = {lang: 'it'};
+
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/it_IT/all.js#xfbml=1&appId=246073382242593";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
 
     var flashMessage = false;
     var msg_title = "{{msg_title}}";
@@ -712,7 +734,14 @@
                 <li id="step3" class="active"><a href="#myMatches" data-toggle="tab">{{__("Partite a cui partecipi")}}</a></li>
                 <li id="step4"><a href="#availableMatches" data-toggle="tab">{{__("Partite disponibili")}}</a></li>
                 <li id="step5"><a href="#storico" data-toggle="tab">{{__("Storico")}}</a></li>
+                <div style="float: left;margin-top: 8px;margin-left: 8px;">
+                    <div class="fb-like" data-href="https://www.facebook.com/Debellum" data-width="100" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+                </div>
+                <div style="float: left;">
+                    <div class="g-plusone" data-size="tall" data-annotation="inline" data-width="200" data-href="https://www.google.com/+DebellumNet"></div>
+                </div>
             </ul>
+
             <div class="tab-content" style="min-height:250px;">
                 <div class="tab-pane active matches" id="myMatches">
                     <h3>{{__("Partite a cui partecipi")}} <img src="/loading-small" title='Caricamento dati dal server...' class="loading" border="0"></h3>
