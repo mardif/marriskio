@@ -362,7 +362,9 @@ module.exports = {
 
   // app.get('/logout'...)
   logout: function(req, res){
-    gsm.removeUser(req.session.passport.user._id);
+    if ( req.session.passport.user ){
+        gsm.removeUser(req.session.passport.user._id);
+    }
     req.logout();
     res.redirect('/');
   },

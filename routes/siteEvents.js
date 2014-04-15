@@ -16,7 +16,10 @@ var GlobalSessionManager = function(){
 
     this.addUser = function(socket){
         var user = socket.handshake.session.passport.user;
-        sessions[""+user._id] = socket;
+        util.log("user: "+user+" - socket: "+socket);
+        if ( user ){
+            sessions[""+user._id] = socket;
+        }
     }
 
     this.removeUser = function(userId){
@@ -158,7 +161,6 @@ var initializeEvents =  function(sio, socket){
     /*
     Inserisco lo user nella mia sessione così da avere un elenco di utenti attualmente online
     */
-    util.log("user session: "+socket.handshake.session.passport.user);
     globalSessionManager.addUser(socket);
 
     sio.sockets.emit("userOnlineResponse", {users: globalSessionManager.getUsersOnLine()});

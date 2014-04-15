@@ -16,6 +16,9 @@ var util = require("util");
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   req.session.redirect_to = req.url || req.originalUrl;
+  if ( req.session.redirect_to == "/getMatchUpdates" ){  //non devo beccare la chiamata ajax di aggiornamento partite
+    req.session.redirect_to = "/account";
+  }
   res.redirect('/loginAuth');
 }
 

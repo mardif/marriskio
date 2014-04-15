@@ -134,6 +134,9 @@ module.exports = function(app) {
     app.get("/google_login_h", common.staticHandler("./images/google_login_h.png"));
     app.get("/google_login_p", common.staticHandler("./images/google_login_p.png"));
 
+    app.get("/facebook_share", common.staticHandler("./images/facebook_share.png"));
+    app.get("/google_share", common.staticHandler("./images/google_share.png"));
+
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
 };

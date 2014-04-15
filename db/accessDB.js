@@ -131,6 +131,8 @@ if ( process.env.NODE_ENV == "development" ){
   conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
 }
 
+util.log("CONNECTION URL: "+conn);
+
 var sessionStore = new mongoStore({url: conn});
 
 // connect to database
