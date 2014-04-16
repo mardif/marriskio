@@ -403,6 +403,11 @@ module.exports = {
             }
             var justExists = false;
 
+            if ( match ){
+                res.redirect("/account");
+                return;
+            }
+
             for(var i=0; i < match.players.length; i++){
                 var p = match.players[i].player;
                 if ( p.id == req.session.passport.user._id ){
