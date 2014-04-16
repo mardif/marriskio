@@ -28,7 +28,7 @@
             -moz-filter: grayscale(100%);
             filter: grayscale(100%);
         }
-        A.shareMatchFacebook img{
+        A.shareMatchFacebook img, A.shareMatchGoogle img{
             cursor: pointer;
         }
     </style>
@@ -42,6 +42,12 @@
       js.src = "//connect.facebook.net/it_IT/all.js#xfbml=1&appId=246073382242593";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
+    (function() {
+       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+       po.src = 'https://apis.google.com/js/client:plusone.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
 
     var flashMessage = false;
     var msg_title = "{{msg_title}}";
@@ -172,7 +178,7 @@
                 $("#text-invitation").tokenInput("clear");//$("ul.token-input-list-facebook li.token-input-token-facebook").remove();
             });
 
-            $("IMG.playerImage, IMG.playMatchIcon, IMG.restoreMatchIcon, A.shareMatchFacebook").tooltip();
+            $("IMG.playerImage, IMG.playMatchIcon, IMG.restoreMatchIcon, A.shareMatchFacebook, A.shareMatchGoogle").tooltip();
             
             /*
             Chiamate di aggiornamento delle partite
@@ -844,6 +850,15 @@
                                         </td>
                                         <td class="social">
                                             <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchFacebook" data-toggle="tooltip" data-placement="top" data-original-title="Condividi questa partita su Facebook"><img class="social-share" src="/facebook_share" border="0"></a>
+                                            <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchGoogle g-interactivepost" data-toggle="tooltip" data-placement="top" data-original-title="Condividi questa partita su Google+"
+                                               data-contenturl="http://{{googleCookiePolicy}}/"
+                                               data-clientid="{{googleClientId}}"
+                                               data-cookiepolicy="single_host_origin"
+                                               data-prefilltext="Sto partecipando a questa partita su #Debellum. Unisciti a me!!!"
+                                               data-calltoactionlabel="OPEN"
+                                               data-calltoactionurl="http://{{googleCookiePolicy}}/joinToMatch?mid={{m._id}}">
+                                               <img class="social-share" src="/google_share" border="0">
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endif %}
