@@ -37,8 +37,8 @@ passport.use(new LocalStrategy({
 ));
 
 passport.use(new FacebookStrategy({
-    clientID: "246073382242593",
-    clientSecret: "82fecbb8c19a450ba5b896f48bf66449",
+    clientID: config[process.env.NODE_ENV].facebook.clientID,
+    clientSecret: config[process.env.NODE_ENV].facebook.clientSecret,
     callbackURL: "http://"+config[process.env.NODE_ENV].host+"/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
@@ -77,8 +77,8 @@ passport.use(new FacebookStrategy({
 ));
 
 passport.use(new GoogleStrategy({
-    clientID: "781347053598-o02dmj2qdsnk178khd3i0abtrc4edvns.apps.googleusercontent.com",
-    clientSecret: "4j-0LN1D68H_nyrXqej8YNFN",
+    clientID: config[process.env.NODE_ENV].google.clientID,
+    clientSecret: config[process.env.NODE_ENV].google.clientSecret,
     callbackURL: "http://"+config[process.env.NODE_ENV].host+"/auth/google/oauth2callback"
   },
   function(accessToken, refreshToken, profile, done) {

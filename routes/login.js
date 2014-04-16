@@ -7,8 +7,9 @@ var common = require("../games/risiko/common"),
     db = require('../db/accessDB').getDBInstance,
     async = require("async")
     util = require("util"),
-    siteEvents = require(rootPath+"/routes/siteEvents");
-    sessionManager = require(rootPath+"/games/risiko/sessionManager");
+    siteEvents = require(rootPath+"/routes/siteEvents"),
+    sessionManager = require(rootPath+"/games/risiko/sessionManager"),
+    config = require(rootPath+"/Configuration");
 
 var gsm = siteEvents.globalSessionManager;
 var SSL = false;  //da impostare se l'url sarà HTTPS o no
@@ -303,6 +304,10 @@ module.exports = {
             if ( invite && invite != "" ){
                 results.inviteFromMail = invite;
             }
+
+            results.googleClientId = config[process.env.NODE_ENV].google.clientID;
+            results.googleCookiePolicy = config[process.env.NODE_ENV].host;
+
             res.render('account.html', results);
         }
     );
