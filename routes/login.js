@@ -403,7 +403,7 @@ module.exports = {
             }
             var justExists = false;
 
-            if ( match ){
+            if ( !match || ( match && !match.players ) ){
                 res.redirect("/account");
                 return;
             }
