@@ -313,7 +313,7 @@ module.exports = {
     );
 
   },
-  
+
   getMatchUpdates: function(req, res){
       
       async.parallel({
@@ -356,9 +356,20 @@ module.exports = {
 
     db.createNewMatch(req, function(err, match){
       if ( err ) throw err;
-      /*
-      Una volta creato il match sul db, provvedo a caricare anche il bean
-      */
+
+        if ( req.session && req.session.passport && req.session.passport.user && req.session.passport.user.fromSocial == true && req.session.passport.user.socialName == "facebook" ){
+            var formData = {
+                form: {
+                    access_token: req.session.passport.user.socialToken,
+                    message: "Ho appena creato la partita "+match.name+" su http://www.debellum.net e "+(match.num_players-1 == 1 ? "c'è ancora 1 posto libero!" : "ci sono ancora "+(match.num_players-1)+" posti liberi!")+" Chi si unisce?",
+                    link: "http://www.debellum.net"
+                }
+            };
+            require("request").post("https://graph.facebook.com/me/feed", formData, function(error, response, body){
+                util.log("CREATION MATCH POSTED ON FACEBOOK WALL WITH ERROR: "+util.inspect(error, true)+" - POSTID: "+body);
+            });
+        }
+
       res.redirect("/account");
     });
 
@@ -590,14 +601,14 @@ module.exports = {
             var result = {};
             if (err) {
                 req.flash("msg_level", "error");
-                req.flash("msg_title", "What the hell!!");
-                req.flash("msg_body", "Oooops... your match was not deleted, shit!!");
+                req.flash("msg_title", "Cribbio...");
+                req.flash("msg_body", "Oooops... la partita non è stata cancellata!!");
 
             }
             else{
                 req.flash("msg_level", "info");
-                req.flash("msg_title", "Confirmed!!");
-                req.flash("msg_body", "Ok, your match was deleted!");
+                req.flash("msg_title", "Confermato!!");
+                req.flash("msg_body", "Ok, la tua partita è stata cancellata!");
             }
             res.redirect("/account");
         });

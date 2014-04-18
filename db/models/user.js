@@ -22,6 +22,7 @@ var UserSchema = new Schema({
   , fromSocial: { type:Boolean, default: false }
   , socialName: { type:String, default: "" }
   , socialInfo: { type: String }
+  , created_at: { type: Date, default: Date.now }
 });
 
 UserSchema.index({email:1, socialName:1}, {unique: true});
