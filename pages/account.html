@@ -280,28 +280,32 @@
             }
 
             $img.addClass("desaturate");
-
-            FB.login(function(response) {
-               if (response.authResponse) {
-                    FB.api('/me/feed', 'post', { 
-                        message: "Pronto alla battaglia!!!",
-                        name: "Partita "+$this.attr("match_name"),
-                        description: "Sto partecipando a questa partita, se vuoi partecipare anche tu, clicca sul link!",
-                        link: "http://www.debellum.net/joinToMatch?mid="+$this.attr("match_id")
-                    }, function(response) {
-                      if (!response || response.error) {
-                        showAlertBox("error", '{{__("Si e\' verificato un problema inatteso")}}: '+response.error);
-                      } else {
-                        showAlertBox("info", '{{__("Post pubblicato correttamente nella tua bacheca")}}');
-                      }
-                      $img.removeClass("desaturate");
-                    });
-               } else {
-                    
-               }
-               $img.removeClass("desaturate");
-            });
+            $(this).find("span").html("Pubblicazione in corso...").show();
             
+            setTimeout(function(){
+                FB.login(function(response) {
+                   if (response.authResponse) {
+                        var name = $this.attr("match_name");
+                        var id = $this.attr("match_id")
+                        FB.api('/me/feed', 'post', { 
+                            message: "Pronto alla battaglia su http://www.debellum.net !!!",
+                            name: (name == "" ? "Nuova Partita" : "Partita "+name),
+                            description: "Sto partecipando a questa partita, se vuoi partecipare anche tu, clicca sul link!",
+                            link: (id == "" ? "http://www.debellum.net" : "http://www.debellum.net/joinToMatch?mid="+id)
+                        }, function(response) {
+                          if (!response || response.error) {
+                            showAlertBox("error", '{{__("Si e\' verificato un problema inatteso")}}: '+response.error);
+                          } else {
+                            showAlertBox("info", '{{__("Post pubblicato correttamente nella tua bacheca")}}');
+                          }
+                          $img.removeClass("desaturate");
+                          $this.find("span").html("").hide();
+                        });
+                   }
+                   $img.removeClass("desaturate");
+                   $this.find("span").html("").hide();
+                });
+            },100);
             
         });
 
@@ -851,7 +855,7 @@
                                         <td class="social">
                                             <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchFacebook" data-toggle="tooltip" data-placement="top" data-original-title="Condividi questa partita su Facebook"><img class="social-share" src="/facebook_share" border="0"></a>
                                             <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchGoogle g-interactivepost" data-toggle="tooltip" data-placement="top" data-original-title="Condividi questa partita su Google+"
-                                               data-contenturl="http://{{googleCookiePolicy}}/"
+                                               data-contenturl="http://{{googleCookiePolicy}}"
                                                data-clientid="{{googleClientId}}"
                                                data-cookiepolicy="single_host_origin"
                                                data-prefilltext="Sto partecipando a questa partita su #Debellum. Unisciti a me!!!"
@@ -1016,6 +1020,22 @@
               <label class="control-label"  for="player_color">{{__("Colore")}}</label>
               <select name="player_color" id="player_color">
               </select>
+            </div>
+            <div class="control-group">
+                {% if user.socialName != "facebook" %}
+                <label class="control-label">Condividi questa partita su Facebook <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchFacebook" data-toggle="tooltip" data-placement="top" data-original-title="Condividi questa partita su Facebook"><img class="social-share" src="/facebook_share" border="0"><span></span></a></label>
+                {% endif %}
+                <label class="control-label">Condividi questa partita su Google+
+                    <a match_name='{{m.name}}' match_id='{{m._id}}' class="shareMatchGoogle g-interactivepost" data-toggle="tooltip" data-placement="top" data-original-title="Condividi questa partita su Google+"
+                                               data-contenturl="http://{{googleCookiePolicy}}"
+                                               data-clientid="{{googleClientId}}"
+                                               data-cookiepolicy="single_host_origin"
+                                               data-prefilltext="Ho appena creato una partita su #Debellum. Unisciti a me!!!"
+                                               data-calltoactionlabel="OPEN"
+                                               data-calltoactionurl="http://{{googleCookiePolicy}}/joinToMatch?mid={{m._id}}">
+                                               <img class="social-share" src="/google_share" border="0">
+                    </a>
+                </label>
             </div>
             <p class="text-warning">{{__("La partita inizierà quando tutti gli slot saranno occupati")}}</p>
             <input type="hidden" name="_csrf" value="{{token}}">
