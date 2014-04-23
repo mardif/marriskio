@@ -1,54 +1,77 @@
 <!doctype html>
 <html>
-  <head>
-    <!-- TradeDoubler site verification 2320835 -->
+  <head lang="en">
     <title>{% block title %}Debellum{% endblock %}</title>
-  {% block head %}
-    <script src="jquery.js" type="text/javascript"></script>
-    <script src="jquery-ui.js" type="text/javascript"></script>
-    <script src="bootstrap.js" type="text/javascript"></script>
-    <script src="bootstrap-acknowledgeinput" type="text/javascript"></script>
-    <!--script src="easing" type="text/javascript"></script-->
-    <script src="intro" type="text/javascript"></script>
-    <script src="feedback.js" type="text/javascript"></script>
+    {% block head %}
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      
+      <meta name="description" content="War game online free risk's style" />     
+      <meta name="keywords" content="war game, war, game, online, free, realtime, real-time, nodejs, html5, risk">
+      <meta property="og:title" content="">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <link rel="stylesheet" href="bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="bootstrap-responsive.min.css" type="text/css"/>
-    <link rel="stylesheet" href="index.css" type="text/css"/>
-    <link rel="stylesheet" href="intro.css" type="text/css"/>
-    <link rel="stylesheet" href="feedback.css" type="text/css"/>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
+      <link rel="stylesheet" href="/jquery.fancybox-v=2.1.5.css" type="text/css" media="screen">
+      <link rel="stylesheet" href="/font-awesome.min.css" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="/style.css">  
+      <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600,300,200&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+      <link rel="prefetch" href="images/zoom.png">
 
-      ga('create', 'UA-2128820-2', 'debellum.net');
-      ga('send', 'pageview');
+      <script src="/html5shiv.js"></script>
+      <script src="/jquery-1.10.2.min.js"></script>
+      <script src="/jquery-migrate-1.2.1.min.js"></script>
+      <script src="/bootstrap.min.js"></script>
+      <script src="/jquery.easing.1.3.js"></script>
+      <script type="text/javascript" src="/jquery.fancybox.pack-v=2.1.5.js"></script>
+      <script src="/script.js"></script>
 
-    </script>    
-  {% endblock %}
+      <script type="text/javascript">
+        $(document).ready(function(e) {
+            var lis = $('.nav > li');
+            menu_focus( lis[0], 1 );
+            
+            $(".fancybox").fancybox({
+              padding: 10,
+              helpers: {
+                overlay: {
+                  locked: false
+                }
+              }
+            });
+          
+          });
+
+        function showAlertBox(title, message){
+          $("#alertBox DIV.modal-header h3").html(title);
+          $("#alertBox DIV.modal-body p").html(message);
+          $("#alertBox").modal("show");
+        }
+
+      </script>
+
+    {% endblock %}
   </head>
 
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="/"><img src='/logo_small' border='0'></a>
-          <!--a href='/it'>IT</a>
-          <a href='/en'>EN</a-->
-          <div class="navbar-content">
-            <ul class="nav " style=""></ul>
+    {% block content %}
+    {% endblock %}
+    <div class="modal fade bs-example-modal-lg" id="alertBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3></h3>
           </div>
-          <p class="head-logo"><span id="beta"><img src="/beta" width="10" border="0"></span>D E B E L L U M</p>
-          <p class="chrome">{{__("Compatibile con")}} <a href='https://www.google.com/intl/it/chrome/browser/' target="_CHROME"><img src="/chrome"></a></p>
+          <div class="modal-body">
+            <p class="lead"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{__("Chiudi")}}</button>
+          </div>
         </div>
       </div>
     </div>
-    {% block content %}
-    {% endblock %}
+
   </body>
   {% block footer %}
   {% endblock %}

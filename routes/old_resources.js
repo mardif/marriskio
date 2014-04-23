@@ -4,20 +4,28 @@ module.exports = function(app) {
     /* Risorse */
     // JAVASCRIPT
     app.get("/jquery.js", common.staticHandler("./games/risiko/js/jquery-1.9.1.min.js"));
-    app.get("/html5shiv.js", common.staticHandler("./games/risiko/js/html5shiv.js"));
-    app.get("/jquery-1.10.2.min.js", common.staticHandler("./games/risiko/js/jquery-1.10.2.min.js"));
-    app.get("/jquery-migrate-1.2.1.min.js", common.staticHandler("./games/risiko/js/jquery-migrate-1.2.1.min.js"));
-    app.get("/jquery.easing.1.3.js", common.staticHandler("./games/risiko/js/jquery.easing.1.3.js"));
-    app.get("/jquery.fancybox.pack-v=2.1.5.js", common.staticHandler("./games/risiko/js/jquery.fancybox.pack-v=2.1.5.js"));
-    app.get("/script.js", common.staticHandler("./games/risiko/js/script.js"));
-    app.get("/bootstrap.min.js", common.staticHandler("./games/risiko/js/bootstrap.min.js"));
-    app.get("/bootstrap-acknowledgeinput.min.js", common.staticHandler("./games/risiko/js/bootstrap-acknowledgeinput.min.js"));
+    app.get("/jquery-ui.js", common.staticHandler("./games/risiko/js/jquery-ui-1.9.2.custom.min.js"));
+    //app.get("/login", common.staticHandler("./js/login.js"));
+    app.get("/mapiconmaker.js", common.staticHandler("./games/risiko/js/mapiconmaker.js"));
+    app.get("/confini", common.staticHandler("./games/risiko/confiniRisiko.kml"));
+    app.get("/map", common.staticHandler("./games/risiko/js/map.js"));
+    app.get("/infobubble", common.staticHandler("./games/risiko/js/infobubble.js"));
+    app.get("/mousewheel", common.staticHandler("./games/risiko/js/jquery.mousewheel.min.js"));
+    app.get("/scrollbar", common.staticHandler("./games/risiko/js/jquery.contentcarousel.js"));
+    app.get("/sound-effect-manager.js", common.staticHandler("./games/risiko/js/sound-effect-manager.js"));
+    app.get("/bootstrap.js", common.staticHandler("./games/risiko/js/bootstrap.min.js"));
+    app.get("/pnotify.js", common.staticHandler("./games/risiko/js/jquery.pnotify.js"));
+    app.get("/bootstrap-acknowledgeinput", common.staticHandler("./games/risiko/js/bootstrap-acknowledgeinput.min.js"));
+    app.get("/tokeninput.js", common.staticHandler("./games/risiko/js/jquery.tokeninput.js"));
+    app.get("/date.js", common.staticHandler("./games/risiko/js/date-it-IT.js"));
+    app.get("/cufon", common.staticHandler("./games/risiko/js/cufon-yui.js"));
+    //app.get("/easing", common.staticHandler("./games/risiko/js/jquery.easing.1.3.js"));
+    app.get("/intro", common.staticHandler("./games/risiko/js/intro.min.js"));
+    app.get("/account-intro.js", common.staticHandler("./games/risiko/js/account-intro.js"));
+    app.get("/debellum-intro.js", common.staticHandler("./games/risiko/js/debellum-intro.js"));
+    app.get("/feedback.js", common.staticHandler("./games/risiko/js/jquery.feedback_me.js"));
+    //app.get("/socket.io", common.staticHandler("/socket.io/socket.io.js"));
 
-    // CSS
-    app.get("/bootstrap.min.css", common.staticHandler("./css/bootstrap.min.css"));
-    app.get("/font-awesome.min.css", common.staticHandler("./css/font-awesome.min.css"));
-    app.get("/style.css", common.staticHandler("./css/style.css"));
-    app.get("/jquery.fancybox-v=2.1.5.css", common.staticHandler("./css/jquery.fancybox-v=2.1.5.css"));
 
     // SUONI
     app.get("/bell", common.staticHandler("./games/risiko/sounds/small-bell-ring-01.mp3"));
@@ -33,26 +41,22 @@ module.exports = function(app) {
     app.get("/sabotage", common.staticHandler("./games/risiko/sounds/sabotage.mp3"));
     app.get("/allianceSound", common.staticHandler("./games/risiko/sounds/alliance.mp3"));
 
-    //FONTS
-    app.get("/fontawesome-webfont-.eot", common.staticHandler("./font/fontawesome-webfont-.eot"));
-    app.get("/fontawesome-webfont-v=3.2.1.eot", common.staticHandler("./font/fontawesome-webfont-v=3.2.1.eot"));
-    app.get("/fontawesome-webfont-v=3.2.1.ttf", common.staticHandler("./font/fontawesome-webfont-v=3.2.1.ttf"));
-    app.get("/fontawesome-webfont-v=3.2.1.woff", common.staticHandler("./font/fontawesome-webfont-v=3.2.1.woff"));
-    app.get("/fontawesome-webfont.svg", common.staticHandler("./font/fontawesome-webfont.svg"));
+    // CSS
+    app.get("/map.css", common.staticHandler("./css/map.css"));
+    app.get("/scrollbar.css", common.staticHandler("./css/jquery.jscrollpane.css"));
+    app.get("/style.css", common.staticHandler("./css/style.css"));
+    app.get("/bootstrap.min.css", common.staticHandler("./css/bootstrap.min.css"));
+    app.get("/bootstrap-responsive.min.css", common.staticHandler("./css/bootstrap-responsive.css"));
+    app.get("/pnotify.css", common.staticHandler("./css/jquery.pnotify.default.css"));
+    app.get("/pnotify.icons.css", common.staticHandler("./css/jquery.pnotify.default.icons.css"));
+    app.get("/index.css", common.staticHandler("./css/index.css"));
+    app.get("/token-input.css", common.staticHandler("./css/token-input.css"))
+    app.get("/token-input-fb.css", common.staticHandler("./css/token-input-facebook.css"));
+    app.get("/index.css", common.staticHandler("./css/index.css"));
+    app.get("/intro.css", common.staticHandler("./css/introjs.min.css"));
+    app.get("/feedback.css", common.staticHandler("./css/jquery.feedback_me.css"));
 
-    //NEW IMMAGINI
-    app.get("/bg3.png", common.staticHandler("./images/bg3.png"));
-    app.get("/s01.png", common.staticHandler("./images/s01.png"));
-    app.get("/s02.png", common.staticHandler("./images/s02.png"));
-    app.get("/s03.png", common.staticHandler("./images/s03.png"));
-    app.get("/client01.png", common.staticHandler("./images/client01.png"));
-    app.get("/client02.png", common.staticHandler("./images/client02.png"));
-    app.get("/client03.png", common.staticHandler("./images/client03.png"));
-    app.get("/client04.png", common.staticHandler("./images/client04.png"));
-    app.get("/client05.png", common.staticHandler("./images/client05.png"));
-    app.get("/website-arrows.png", common.staticHandler("./images/website-arrows.png"));
 
-    // IMMAGINI
     app.get("/left", common.staticHandler("./images/leftB.png"));
     app.get("/right", common.staticHandler("./images/rightB.png"));
     app.get("/up", common.staticHandler("./images/up.png"));
@@ -82,6 +86,7 @@ module.exports = function(app) {
     app.get("/arrow2",  common.staticHandler("./images/arrow_rev.gif"));
     app.get("/arrow3",  common.staticHandler("./images/arrow_rev_up.gif"));
     app.get("/arrow4",  common.staticHandler("./images/arrow_up.gif"));
+    //app.get("/cards", common.staticHandler("./images/cards.png"));
     app.get("/cards", common.staticHandler("./images/glyphicons_319_sort.png"));
     app.get("/carousel_btns.png", common.staticHandler("./images/carousel_btns.png"));
     app.get("/shadow.png", common.staticHandler("./images/shadow.png"));
@@ -99,6 +104,7 @@ module.exports = function(app) {
     app.get("/attaccoCard", common.staticHandler("./images/attaccoCard.png"));
     app.get("/epidemia", common.staticHandler("./images/epidemia.jpg"));
     app.get("/close.png", common.staticHandler("./images/close.png"));
+    //app.get("/scudo", common.staticHandler("./images/scudo.png"));
     app.get("/scudo", common.staticHandler("./images/glyphicons_270_shield.png"));
     app.get("/conquered_small", common.staticHandler("./images/conquered_small.png"));
     app.get("/plus1", common.staticHandler("./images/piu1.png"));
@@ -123,11 +129,14 @@ module.exports = function(app) {
     app.get("/facebook_login", common.staticHandler("./images/facebook_login.png"));
     app.get("/facebook_login_p", common.staticHandler("./images/facebook_login_p.png"));
     app.get("/sprites", common.staticHandler("./images/sprites.png"));
+
     app.get("/google_login", common.staticHandler("./images/google_login.png"));
     app.get("/google_login_h", common.staticHandler("./images/google_login_h.png"));
     app.get("/google_login_p", common.staticHandler("./images/google_login_p.png"));
+
     app.get("/facebook_share", common.staticHandler("./images/facebook_share.png"));
     app.get("/google_share", common.staticHandler("./images/google_share.png"));
+
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
 };

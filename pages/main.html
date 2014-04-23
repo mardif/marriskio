@@ -6,15 +6,19 @@
       var ischromeMobile = /CriOS/.test(navigator.userAgent);
       var ischrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
       var isfirefox = /firefox/.test(navigator.userAgent.toLowerCase());
-      console.log("firefox: "+isfirefox);
-      console.log("chrome: "+ischrome);
       $(document).ready(function(){
         if ( isfirefox ){
-          showAlertBox("Attenzione", "Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>CHROME</a>");
+          showAlertBox("Attenzione", "Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>Chrome</a>");
         }
         else if ( !ischrome && !ischromeMobile ){
-          showAlertBox("Attenzione", "Spiacente, Debellum è compatibile solo con <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>CHROME</a> (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
+          showAlertBox("Attenzione", "Spiacente, Debellum è compatibile solo con <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>Chrome</a> (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
         }
+
+        $("#loginForm input.form-control").tooltip({'trigger':'focus'});
+
+        var lis = $('.nav > li');
+        menu_focus( lis[0], 1 );
+
       });
 
       function showAlertBox(title, message){
@@ -23,66 +27,268 @@
         $("#alertBox").modal("show");
       }
 
+      function send(url){
+        document.location.href = url;
+      }
+
     </script>
+    <style type="text/css">
+
+      .modal-dialog {
+        left:0px;
+      }
+
+    </style>
 {% endblock %}
 {% block content %}
-    <div class="container" style="margin-top:80px;">
-        <div class="row-fluid">
-            <div class="span12">
-                <div class="span1">
-                </div>
-                <div class="span3">
-                  <div class="well">
-                    <h4>{{__("Di cosa si tratta?")}}</h4>
-                    <p>{{__("E' un gioco strategico di guerra real-time multi-giocatore")}}<br/>
-                        <a href="/register">{{__("Registrati")}}</a> {{__("e gioca <b>gratis</b>!<br/>Una volta entrato, ricordati di dare un'occhiata al tutorial!")}} </a>
-                    </p>
-                  </div>
-                  <div class="well">
-                    <h4>{{__("Come funziona?")}}</h4>
-                    <p>{{__("Nessun programma da scaricare o installare, tutto via web e tutto rigorosamente in real-time, grazie al motore NodeJS ed allo standard HTML5")}}</p>
-                    <!--a class="btn btn-info" href="/tutorial"><span class="btn-label">Tutorial</span></a-->
-                  </div>
-                  <div class="well">
-                    <h4>{{__("Sei già registrato?")}}</h4>
-                    <p>{{__("Non perdere altro tempo ed entra!")}}</p>
-                    <a href="/loginAuth" role="button" class="btn btn-primary" data-toggle="modal">{{__("Fammi entrare ORA!")}}<br></a>
-                  </div>
-                  <div class="well visible-phone">
-                    <h3>{{__("Registrati per giocare SUBITO e GRATIS")}}</h3>
-                    <p>{{__("Cosa aspetti?")}}</p>
-                    <a class="btn btn-large btn-inverse" href="/register"><span class="btn-label">{{__("Registrati ed inizia a giocare!")}}</span></a>
-                  </div>
-                </div>
-                <div class="span8">
-                      <div class="hero-unit hidden-phone" style="position:absolute;padding-bottom:0px;">
-                        <div style='text-align:center;'>
-                            <img src='/main' border='0' style="height:410px;">
-                            <p style="position:relative;">
-                                <span class='ca-quote'>&ldquo;</span>
-                                <i>{{__("Attacca i nemici, difendi i territori, gioca le tue carte, ed infine... conquista il mondo!")}}</i>
-                                <span class='ca-quote-r'>&rdquo;</span>
-                            </p>
-                            <p>
-                              <a class="btn btn-large btn-inverse" href="/register"><span class="btn-label">{{__("Registrati ed inizia a giocare!")}}</span></a>
-                            </p>
-                        </div>
-                      </div>
-                </div>
+
+  <div class="navbar navbar-fixed-top" data-activeslide="1">
+    <div class="container">
+    
+      <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      
+      <div class="nav-collapse collapse navbar-responsive-collapse">
+        <ul class="nav row">
+          <li data-slide="1" class="col-12 col-sm-2"><a id="menu-link-1" href="#slide-1" title="Home page"><span class="icon icon-home"></span> <span class="text">HOME</span></a></li>
+          <li data-slide="2" class="col-12 col-sm-2"><a id="menu-link-3" href="#slide-3" title="Login user"><span class="icon icon-user"></span> <span class="text">LOGIN</span></a></li>
+          <li data-slide="3" class="col-12 col-sm-2"><a id="menu-link-2" href="#slide-2" title="Game description"><span class="icon icon-briefcase"></span> <span class="text">WHAT IS IT?</span></a></li>
+          <li data-slide="4" class="col-12 col-sm-2"><a id="menu-link-4" href="#slide-4" title="How to play"><span class="icon icon-gears"></span> <span class="text">HOW TO PLAY</span></a></li>
+          <li data-slide="5" class="col-12 col-sm-2"><a id="menu-link-5" href="#slide-5" title="What people say about us"><span class="icon icon-heart"></span> <span class="text">SAY ABOUT US</span></a></li>
+          <li data-slide="6" class="col-12 col-sm-2"><a id="menu-link-6" href="#slide-6" title="Next Section"><span class="icon icon-envelope"></span> <span class="text">CONTACT</span></a></li>
+        </ul>
+        <div class="row">
+          <div class="col-sm-2 active-menu"></div>
+        </div>
+      </div><!-- /.nav-collapse -->
+    </div><!-- /.container -->
+  </div><!-- /.navbar -->
+  
+  <!-- === Arrows === -->
+  <div id="arrows">
+    <div id="arrow-up" class="disabled"></div>
+    <div id="arrow-down"></div>
+    <div id="arrow-left" class="disabled visible-lg"></div>
+    <div id="arrow-right" class="disabled visible-lg"></div>
+  </div><!-- /.arrows -->
+  
+  
+  <!-- === MAIN Background === -->
+  <div class="slide story" id="slide-1" data-slide="1">
+    <div class="container">
+      <div id="home-row-1" class="row clearfix">
+        <div class="col-12">
+          <h1 class="font-semibold" style="margin-top:25px;padding-top:90px !important;">DEBELLUM</h1>
+          <h4 class="font-thin"><span class="font-semibold">F R E E</span> Strategy Real Time War Game.</h4>
+          <br>
+          <br>
+        </div><!-- /col-12 -->
+      </div><!-- /row -->
+      <div id="home-row-2" class="row clearfix">
+        <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="4"><img src="/s02.png"></div><span class="font-semibold" style="background-color:#ce2127;padding:2px 4px;">PRICELESS</span></div>
+        <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="3"><img src="/s01.png"></div><span class="font-semibold" style="background-color:#cdb320;padding:2px 4px;">FUNNY</span></div>
+        <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="5"><img src="/s03.png"></div><span class="font-semibold" style="background-color:#2196cc;padding:2px 4px;">STRATEGIC</span></div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /slide1 -->
+  
+  <!-- === Slide 2 === -->
+  <div class="slide story" id="slide-2" data-slide="2">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-thin">Please, enter your email and password <br/><span class="font-semibold">TO START PLAYING</span></div>
+      </div><!-- /row -->
+      <div class="row content-row">
+        <div class="col-12 col-lg-12 col-sm-12">
+          <div class="message-error">ERRORE</div>
+          <form method="POST" action="/loginAuth" id="loginForm">
+            <input type="hidden" name="_csrf" value="{{token}}">
+          <div class="row content-row">
+
+            <div class="col-12 col-lg-3 col-sm-6" style="text-align:right;">
+              <span style="font-size:25px;">
+                <span class="icon icon-envelope"></span>
+                <span class="font-thin">Your email</span>
+              </span>
             </div>
+            <div class="col-12 col-lg-3 col-sm-6">
+                <input data-toggle="tooltip" data-placement="top" data-original-title="Enter your email address" autofocus  class="form-control" name="email" placeholder="email@email.com" size="20" type="email" required>
+            </div>
+            <div class="col-12 col-lg-1 col-sm-6"></div>
+            <div class="col-12 col-lg-5 col-sm-6" style="text-align:left;">
+              <i onClick='send("/auth/facebook");' class="icon-social icon-facebook-sign"> <span>{{__("Login with Facebook")}}</span></i>
+            </div><!-- /col12 -->
+
+          </div>
+          <div class="row content-row">
+              <div class="col-12 col-lg-3 col-sm-6" style="text-align:right;">
+                  <span style="font-size:25px;">
+                    <span class="icon icon-asterisk"></span>
+                    <span class="font-thin">Your password</span>
+                  </span>
+              </div>
+              <div class="col-12 col-lg-3 col-sm-6">
+                  <input data-toggle="tooltip" data-placement="bottom" data-original-title="Enter your password (min 4 chars)" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
+              </div>
+              <div class="col-12 col-lg-1 col-sm-6"></div>
+              <div class="col-12 col-lg-5 col-sm-6" style="text-align:left;">
+                <i onClick='send("/auth/google");' class="icon-social icon-google-plus-sign"> <span>{{__("Login with Google")}}</span></i>
+              </div><!-- /col12 -->
+          </div><!-- /row -->
+
+          <div class="row content-row">
+            <div class="col-12 col-lg-3 col-sm-6" style="text-align:right;">
+              <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password recovery")}}</i>
+            </div>
+            <div class="col-12 col-lg-3 col-sm-6">
+              <button class="btn btn-large btn-danger form-control">{{__("Play!")}}</button>
+            </div>
+          </div>  
+
+          </form>
+
+          <div style="height:100px;"></div>
         </div>
+      </div>
+    </div><!-- /container -->
+  </div><!-- /slide2 -->
+  
+  <!-- === SLide 3 - Portfolio -->
+  <div class="slide story" id="slide-3" data-slide="3">
+    <div class="row">
+      
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p01-large.jpg"><img class="thumb" src="images/portfolio/p01-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p02-large.jpg"><img class="thumb" src="images/portfolio/p02-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p09-large.jpg"><img class="thumb" src="images/portfolio/p09-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p010-large.jpg"><img class="thumb" src="images/portfolio/p10-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p05-large.jpg"><img class="thumb" src="images/portfolio/p05-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p06-large.jpg"><img class="thumb" src="images/portfolio/p06-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p07-large.jpg"><img class="thumb" src="images/portfolio/p07-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p08-large.jpg"><img class="thumb" src="images/portfolio/p08-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p03-large.jpg"><img class="thumb" src="images/portfolio/p03-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p04-large.jpg"><img class="thumb" src="images/portfolio/p04-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p11-large.jpg"><img class="thumb" src="images/portfolio/p11-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p12-large.jpg"><img class="thumb" src="images/portfolio/p12-small.jpg" alt=""></a></div>
     </div>
-    <div id="alertBox" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3></h3>
-        </div>
-        <div class="modal-body">
-            <p class="lead"></p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">{{__("Chiudi")}}</a>
-        </div>
-    </div>
+    <!-- /row -->
+  </div><!-- /slide3 -->
+  
+  <!-- === Slide 4 - Process === -->
+  <div class="slide story" id="slide-4" data-slide="4">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-thin">See us <span class="font-semibold">at work</span></div>
+      </div><!-- /row -->
+      <div class="row line-row">
+        <div class="hr">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row subtitle-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-10 font-light">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</div>
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row content-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-bolt"></i></p>
+          <h2 class="font-thin">Listening to<br><span class="font-semibold" >your needs</span></h2>
+          <h4 class="font-thin">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-cog"></i></p>
+          <h2 class="font-thin">Project<br><span class="font-semibold">discovery</span></h2>
+          <h4 class="font-thin">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-cloud"></i></p>
+          <h2 class="font-thin">Storming<br><span class="font-semibold">our brains</span></h2>
+          <h4 class="font-thin">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-map-marker"></i></p>
+          <h2 class="font-thin">Getting<br><span class="font-semibold">there</span></h2>
+          <h4 class="font-thin">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-gift"></i></p>
+          <h2 class="font-thin">Delivering<br><span class="font-semibold">the product</span></h2>
+          <h4 class="font-thin">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
+        </div><!-- /col12 -->
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /slide4 -->
+  
+  <!-- === Slide 5 === -->
+  <div class="slide story" id="slide-5" data-slide="5">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-thin"><span class="font-semibold">Clients</span> we’ve worked with</div>
+      </div><!-- /row -->
+      <div class="row line-row">
+        <div class="hr">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row subtitle-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-10 font-light">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. <br/><br/> The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero.</div>
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row content-row">
+        <div class="col-1 col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-2"><img src="/client01.png" alt=""></div>
+        <div class="col-12 col-sm-2"><img src="/client02.png" alt=""></div>
+        <div class="col-12 col-sm-2"><img src="/client03.png" alt=""></div>
+        <div class="col-12 col-sm-2"><img src="/client04.png" alt=""></div>
+        <div class="col-12 col-sm-2"><img src="/client05.png" alt=""></div>
+        <div class="col-1 col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /slide5 -->
+  
+  <!-- === Slide 6 / Contact === -->
+  <div class="slide story" id="slide-6" data-slide="6">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-light">Leave us a <span class="font-semibold">message</span></div>
+      </div><!-- /row -->
+      <div class="row line-row">
+        <div class="hr">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row subtitle-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-10 font-light">You can find us literally anywhere, just push a button and we’re there</div>
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+      <div id="contact-row-4" class="row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-2 with-hover-text">
+          <p><a target="_blank" href="#"><i class="icon icon-phone"></i></a></p>
+          <span class="hover-text font-light ">+44 4839-4343</span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2 with-hover-text">
+          <p><a target="_blank" href="#"><i class="icon icon-envelope"></i></a></p>
+          <span class="hover-text font-light ">munter@blacktie.co</span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2 with-hover-text">
+          <p><a target="_blank" href="#"><i class="icon icon-home"></i></a></p>
+          <span class="hover-text font-light ">London, England<br>zip code 98443</span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2 with-hover-text">
+          <p><a target="_blank" href="#"><i class="icon icon-facebook"></i></a></p>
+          <span class="hover-text font-light ">facebook/blacktie_co</span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2 with-hover-text">
+          <p><a target="_blank" href="#"><i class="icon icon-twitter"></i></a></p>
+          <span class="hover-text font-light ">@BlackTie_co</span></a>
+        </div><!-- /col12 -->
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /Slide 6 -->
 
 {% endblock %}
