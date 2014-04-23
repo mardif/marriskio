@@ -304,7 +304,7 @@ body {
 #slide-2 {
 	background-color: #1abc9c;
 	color: #e4e6e5;
-	padding-top: 90px;
+	padding-top: 50px;
 }
 
 	.title-row {
@@ -617,28 +617,38 @@ i.icon-recovery {
 }
 
 i.icon-social{
-	font-size: 33px;
+	font-size: 60px;
 	cursor: pointer;
+	margin: 3px;
 }
 
-i.icon-facebook-sign{
-	color: #3B5998;
-}
 i.icon-social span{
 	font-size: 25px;
 	color: white;
 }
 
-i.icon-google-plus-sign{
-	color: #DD4B39;
-}
-
-.message-error{
+.message-error, .register-message-error{
 	background-color:#D43F3A;
 	opacity:0.8;
 	color:white;
 	padding:10px 30px;
 	margin:auto;
 	width: 50%;
-	visibility: hidden;
+	display: none;
+}
+
+#slide-2 DIV.hr{
+	width: 66%;
+}
+
+i.icon-facebook-sign:hover{
+	color: #3B5998;
+}
+
+i.icon-google-plus-sign:hover{
+	color: #DD4B39;
+}
+
+#registerForm div.controls.col-sm-9{
+	text-align: left;
 }

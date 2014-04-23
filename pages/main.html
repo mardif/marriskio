@@ -14,7 +14,7 @@
           showAlertBox("Attenzione", "Spiacente, Debellum è compatibile solo con <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>Chrome</a> (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
         }
 
-        $("#loginForm input.form-control").tooltip({'trigger':'focus'});
+        $("#loginForm input.form-control, #registerForm input.form-control").tooltip({'trigger':'focus'});
 
         var lis = $('.nav > li');
         menu_focus( lis[0], 1 );
@@ -101,58 +101,137 @@
   <div class="slide story" id="slide-2" data-slide="2">
     <div class="container">
       <div class="row title-row">
-        <div class="col-12 font-thin">Please, enter your email and password <br/><span class="font-semibold">TO START PLAYING</span></div>
+        <div class="col-12 col-lg-6 col-sm-6 font-thin">Already signed?<br/><span class="font-semibold">LOGIN AND<BR/>START PLAYING</span></div>
+        <div class="col-12 col-lg-6 col-sm-6 font-thin">Not yet our friend?<br/><span class="font-semibold">Sign up</span><br/><span class="lead">or login via social network</span></div>
       </div><!-- /row -->
       <div class="row content-row">
-        <div class="col-12 col-lg-12 col-sm-12">
+        <div class="col-12 col-lg-6 col-sm-6">
           <div class="message-error">ERRORE</div>
           <form method="POST" action="/loginAuth" id="loginForm">
             <input type="hidden" name="_csrf" value="{{token}}">
-          <div class="row content-row">
+            <div class="row content-row">
 
-            <div class="col-12 col-lg-3 col-sm-6" style="text-align:right;">
+            <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
               <span style="font-size:25px;">
                 <span class="icon icon-envelope"></span>
                 <span class="font-thin">Your email</span>
               </span>
             </div>
-            <div class="col-12 col-lg-3 col-sm-6">
+            <div class="col-12 col-lg-6 col-sm-6">
                 <input data-toggle="tooltip" data-placement="top" data-original-title="Enter your email address" autofocus  class="form-control" name="email" placeholder="email@email.com" size="20" type="email" required>
             </div>
-            <div class="col-12 col-lg-1 col-sm-6"></div>
-            <div class="col-12 col-lg-5 col-sm-6" style="text-align:left;">
-              <i onClick='send("/auth/facebook");' class="icon-social icon-facebook-sign"> <span>{{__("Login with Facebook")}}</span></i>
-            </div><!-- /col12 -->
-
-          </div>
-          <div class="row content-row">
-              <div class="col-12 col-lg-3 col-sm-6" style="text-align:right;">
+            </div>
+            <div class="row content-row">
+              <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
                   <span style="font-size:25px;">
                     <span class="icon icon-asterisk"></span>
                     <span class="font-thin">Your password</span>
                   </span>
               </div>
-              <div class="col-12 col-lg-3 col-sm-6">
+              <div class="col-12 col-lg-6 col-sm-6">
                   <input data-toggle="tooltip" data-placement="bottom" data-original-title="Enter your password (min 4 chars)" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
               </div>
-              <div class="col-12 col-lg-1 col-sm-6"></div>
-              <div class="col-12 col-lg-5 col-sm-6" style="text-align:left;">
-                <i onClick='send("/auth/google");' class="icon-social icon-google-plus-sign"> <span>{{__("Login with Google")}}</span></i>
-              </div><!-- /col12 -->
-          </div><!-- /row -->
-
-          <div class="row content-row">
-            <div class="col-12 col-lg-3 col-sm-6" style="text-align:right;">
-              <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password recovery")}}</i>
+            </div><!-- /row -->
+            <div class="row content-row">
+              <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
+                <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password recovery")}}</i>
+              </div>
+              <div class="col-12 col-lg-6 col-sm-6">
+                <button class="btn btn-large btn-danger form-control">{{__("Play!")}}</button>
+              </div>
+            </div>  
+            <div class="row line-row" style="margin-top:20px;">
+              <div class="hr">&nbsp;</div>
             </div>
-            <div class="col-12 col-lg-3 col-sm-6">
-              <button class="btn btn-large btn-danger form-control">{{__("Play!")}}</button>
+            <div class="row subtitle-row" style="padding:10px;">
+              <div class="col-12 col-lg-12 col-sm-6 font-thin">Access from Social Network?<br/><span class="font-semibold">No problem!</span></div>
             </div>
-          </div>  
-
+            <div class="row content-row">
+              <div class="col-12 col-lg-6 col-sm-6 with-hover-text">
+                <i onClick='send("/auth/facebook");' class="icon-social icon-facebook-sign"></i>
+                 <span class="hover-text font-light ">{{__("Login with Facebook")}}</span>
+              </div>
+              <div class="col-12 col-lg-6 col-sm-6 with-hover-text">
+                <i onClick='send("/auth/google");' class="icon-social icon-google-plus-sign"></i>
+                <span class="hover-text font-light ">{{__("Login with Google")}}</span>
+              </div>
+            </div>  
           </form>
+        </div>
+        <div class="col-12 col-lg-1 col-sm-1">
+        </div>
+        <div class="col-12 col-lg-5 col-sm-6">
+          <div class="register-message-error">ERRORE</div>
+            <form method="POST" action="/loginAuth" id="registerForm" class="form-horizontal" role="form">
+              <div class="row content-row">
+                <fieldset>
+                  <div class="form-group">
+                    <!-- Username -->
+                    <label class="control-label col-sm-2"  for="cognome">{{__("Surname")}}</label>
+                    <div class="controls col-sm-8">
+                      <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("Your last name")}}' value="{{newuser.cognome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Your last name, min 2, max 15 chars")}}'>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <!-- Username -->
+                    <label class="control-label col-sm-2"  for="nome">{{__("Nome")}}</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("Your first name")}}' value="{{newuser.nome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Your first name, min 2, max 15 chars")}}'>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <!-- Username -->
+                    <label class="control-label col-sm-2"  for="nick">{{__("Nick")}}</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Choose a nickname")}}' value="{{newuser.nick}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Nickname will be used for identify yourself, min 4, max 10 chars")}}'>
+                    </div>
+                  </div>
 
-          <div style="height:100px;"></div>
+                  <div class="form-group">
+                    <!-- E-mail -->
+                    <label class="control-label col-sm-2" for="email">{{__("E-mail")}}</label>
+                    <div class="controls col-sm-8">
+                      <input type="email" id="email" name="email" placeholder='{{__("Your email address")}}' value="{{newuser.email}}" required class="input-xlarge form-control" data-toggle="tooltip" data-placement="top" data-original-title='{{__("Enter a valid mail: you will receive activation link, match reminder and invites")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Password-->
+                    <label class="control-label col-sm-2" for="password">{{__("Password")}}</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{4,}" type="password" id="pass" name="pass" placeholder="password" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Password should be at least 4 chars")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Password -->
+                    <label class="control-label col-sm-2"  for="password_confirm">Password ({{__("Confirm")}})</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{4,}" type="password" id="password_confirm" name="password_confirm" placeholder="confirm password" class="input-xlarge form-control" required onfocus="validatePass(document.getElementById('pass'), this);" oninput="validatePass(document.getElementById('pass'), this);"  data-placement="top" data-original-title='{{__("Re-enter password choosen")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="control-label col-sm-2"></label>
+                      <div class="controls col-sm-8">
+                          {% autoescape false %}
+                              {{recaptcha_form}}
+                          {% endautoescape %}
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Button -->
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-inverse" onClick="javascript:history.go(-1);">{{__("Indietro")}}</a>
+                      <button class="btn btn-danger">{{__("Registrati")}}</button>
+                    </div>
+                  </div>
+                </fieldset>
+                <input type="hidden" name="_csrf" value="{{token}}">
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div><!-- /container -->

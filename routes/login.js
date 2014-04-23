@@ -25,7 +25,7 @@ module.exports = {
 
   // app.get('/'...)
   index: function(req, res){
-      res.render('main.html', {token: req.session._csrf});
+      res.render('main.html', {token: req.session._csrf, recaptcha_form: recaptcha.toHTML()});
   },
 
   //login: common.staticHandler("./pages/login.html"),

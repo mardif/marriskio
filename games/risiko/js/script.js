@@ -44,11 +44,39 @@ $(document).ready(function(e) {
 	
 	var img_loaded = 0;
 	var j_images = [];
+
+	$(function() {
+		var pause = 10;
+		$(document).scroll(function(e) {
+			delay(function() {
+				
+				var tops = [];
+				
+				$('.story').each(function(index, element) {
+					tops.push( $(element).offset().top - 200 );
+				});
+
+				var scroll_top = $(this).scrollTop();
+				
+				var lis = $('.nav > li');
+				
+				for ( var i=tops.length-1; i>=0; i-- ) {
+					if ( scroll_top >= tops[i] ) {
+						menu_focus( lis[i], i+1 );
+						break;
+					}
+				}
+			},
+			pause);
+		});
+		$(document).scroll();
+	});	
 	
 	/*************************
 	* = Controls active menu *
 	* Hover text for the last slide
 	*************************/
+	/*
 	$('#slide-3 img').each(function(index, element) {
 		var time = new Date().getTime();
 		var oldHref = $(this).attr('src');
@@ -86,6 +114,7 @@ $(document).ready(function(e) {
 			}
 		});
 	});
+	*/
 	
 });
 
