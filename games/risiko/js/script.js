@@ -367,3 +367,16 @@ jQuery(document).ready(function ($) {
 		}
 	});
 });
+
+function makeAjaxCall(url, type, data, successFn, errorFn, beforeFn, completeFn){
+    $.ajax({ cache: false
+               , dataType: "json"
+               , data: data
+               , url: url
+               , type: type
+               , error: errorFn
+               , success: successFn
+               , beforeSend: beforeFn
+               , complete: completeFn
+               });
+}

@@ -28,8 +28,60 @@
       }
 
       function send(url){
-        document.location.href = url;
+        //document.location.href = url;
+        alert("todo in ajax");
       }
+
+      function validatePass(p1, p2) {
+            if (p1.value != p2.value || p1.value == '' || p2.value == '') {
+                p2.setCustomValidity('{{__("Password errata")}}');
+            } else {
+                p2.setCustomValidity('');
+            }
+      }
+
+      $(document).on('submit', "#loginForm", function(event){
+
+        event.preventDefault();
+
+        var data = $("#loginForm").serialize();
+        makeAjaxCall("/loginAuth", "POST", data, 
+          function(data){
+            if ( data && data.success == true ){
+              document.location.href = "/account";
+            }
+            else{
+              showAlertBox("Authentication failed", data.error);
+            }
+          },
+          function(err){
+            showAlertBox("Authentication failed");
+          }
+        );
+
+      });
+
+      $(document).on("submit", "#registerForm", function(event){
+        event.preventDefault();
+        var data = $("#registerForm").serialize();
+        makeAjaxCall("/register", "POST", data, 
+          function(data){
+            if ( data && data.success == true ){
+              showAlertBox("Registration completed", data.message);
+              document.location.href = "/#slide-2";
+              $("#registerForm input").each(function(idx){ $(this).val("") });
+            }
+            else{
+              showAlertBox("Registration failed", data.error);
+            }
+          },
+          function(err){
+            showAlertBox("Registration failed");
+          }
+        );
+
+      });
+
 
     </script>
     <style type="text/css">
@@ -107,7 +159,7 @@
       <div class="row content-row">
         <div class="col-12 col-lg-6 col-sm-6">
           <div class="message-error">ERRORE</div>
-          <form method="POST" action="/loginAuth" id="loginForm">
+          <form method="POST" id="loginForm">
             <input type="hidden" name="_csrf" value="{{token}}">
             <div class="row content-row">
 
@@ -129,7 +181,7 @@
                   </span>
               </div>
               <div class="col-12 col-lg-6 col-sm-6">
-                  <input data-toggle="tooltip" data-placement="bottom" data-original-title="Enter your password (min 4 chars)" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
+                  <input data-toggle="tooltip" data-placement="top" data-original-title="Enter your password (min 4 chars)" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
               </div>
             </div><!-- /row -->
             <div class="row content-row">
@@ -137,7 +189,7 @@
                 <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password recovery")}}</i>
               </div>
               <div class="col-12 col-lg-6 col-sm-6">
-                <button class="btn btn-large btn-danger form-control">{{__("Play!")}}</button>
+                <button class="btn btn-large btn-danger form-control" id="loginFormBtn">{{__("Play!")}}</button>
               </div>
             </div>  
             <div class="row line-row" style="margin-top:20px;">
@@ -162,7 +214,7 @@
         </div>
         <div class="col-12 col-lg-5 col-sm-6">
           <div class="register-message-error">ERRORE</div>
-            <form method="POST" action="/loginAuth" id="registerForm" class="form-horizontal" role="form">
+            <form method="POST" id="registerForm" class="form-horizontal" role="form">
               <div class="row content-row">
                 <fieldset>
                   <div class="form-group">
@@ -212,8 +264,7 @@
                   </div>
 
                   <div class="form-group">
-                      <label class="control-label col-sm-2"></label>
-                      <div class="controls col-sm-8">
+                      <div class="controls col-sm-offset-1 col-sm-10">
                           {% autoescape false %}
                               {{recaptcha_form}}
                           {% endautoescape %}
@@ -222,8 +273,8 @@
 
                   <div class="form-group">
                     <!-- Button -->
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-inverse" onClick="javascript:history.go(-1);">{{__("Indietro")}}</a>
+                    <div class="col-sm-offset-2 col-sm-8">
+                      <button class="btn btn-inverse" onClick="javascript:history.go(-1);">{{__("Indietro")}}</button>&nbsp;
                       <button class="btn btn-danger">{{__("Registrati")}}</button>
                     </div>
                   </div>

@@ -652,3 +652,13 @@ i.icon-google-plus-sign:hover{
 #registerForm div.controls.col-sm-9{
 	text-align: left;
 }
+
+.modal-header.error, .modal-footer.error{
+	background-color: #CD2027;
+    color: #E4E6E5;
+}
+
+.modal-header.info, .modal-footer.info{
+	background-color: #1ABC9C;
+    color: #000000;
+}

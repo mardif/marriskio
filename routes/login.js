@@ -217,15 +217,7 @@ module.exports = {
                             action = '$("input[name=\\\'nick\\\']").parents(".control-group").addClass("error")';
                         }
                     }
-                    res.render("newUser.html", {
-                        recaptcha_form: recaptcha.toHTML(),
-                        token: req.session._csrf,
-                        error: message, 
-                        newuser: newUser,
-                        action: action
-                    });
-                    return;
-                    //callback(newUser);
+                    return res.json({error: message});
                 }
 
                 //invio della email
@@ -251,13 +243,12 @@ module.exports = {
                 common.sendEmail(headers);
 
 
-                res.render("login.html", {token: req.session._csrf, info: "Salve "+docs.cognome+" "+docs.nome +", un'email di attivazione è stata inviata all'indirizzo da te fornito. Accedi e clicca sul link per attivare il tuou account ed iniziare a giocare!"});
-                //callback(docs);
+                return res.json({success: true, message: "Salve "+docs.cognome+" "+docs.nome +", un'email di attivazione è stata inviata all'indirizzo da te fornito. Accedi e clicca sul link per attivare il tuou account ed iniziare a giocare!"});
             });
         }
         else {
-            res.render("newUser.html", { recaptcha_form: recaptcha.toHTML(), token: req.session._csrf, error: "Captcha code non valido!", newuser:newUser});
-            //callback(null);
+            //res.render("newUser.html", { recaptcha_form: recaptcha.toHTML(), token: req.session._csrf, error: "Captcha code non valido!", newuser:newUser});
+            return res.json({error: "Captcha code non valido!"});
         }
     });
 
