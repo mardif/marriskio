@@ -305,8 +305,8 @@ module.exports = {
                 results.inviteFromMail = invite;
             }
 
-            results.googleClientId = config[process.env.NODE_ENV].google.clientID;
-            results.googleCookiePolicy = config[process.env.NODE_ENV].host;
+            results.googleClientId = config.getOAuthClientId("google");
+            results.googleCookiePolicy = config.getHost();
 
             res.render('account.html', results);
         }
