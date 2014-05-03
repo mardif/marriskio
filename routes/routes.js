@@ -180,6 +180,10 @@ module.exports = function(app, sio) {
       }
     );
 
+    app.get("/webmail", function(req, res){
+      res.redirect("http://217.64.195.245/webmail/");
+    });
+
     require("./resources")(app);
 
     //sio.sockets.on("connection", function(socket){app.get('/auth/google', passport.authenticate('google'));

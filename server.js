@@ -18,7 +18,7 @@ var express = require('express')
   , io = require("socket.io")
   , ioSession = require('socket.io-session')
   , i18n = require("i18n")
-  , config = require("./Configuration");
+  , config = require("./Configuration").Configuration;
 
 
 var app = module.exports = express();
@@ -112,8 +112,8 @@ require('./routes/routes')(app, sio);
 console.log("env "+process.env.NODE_ENV);
 
 db.startup(function(){
-  server.listen(config[process.env.NODE_ENV].port, config[process.env.NODE_ENV].ip);
-  console.log("Express server listening on %s port %d in %s mode", config[process.env.NODE_ENV].ip, config[process.env.NODE_ENV].port, process.env.NODE_ENV);
+  server.listen(config.getPort(), config.getIP());
+  console.log("Express server listening on %s port %d in %s mode", config.getIP(), config.getPort(), config.getEnvironment());
 });
 
 

@@ -7,7 +7,7 @@ var zlib = require('zlib');
 var util = require("util");
 var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
-var config = require(rootPath+"/Configuration");
+var config = require(rootPath+"/Configuration").Configuration;
 
 // dependencies for authentication
 var passport = require('passport')
@@ -37,9 +37,9 @@ passport.use(new LocalStrategy({
 ));
 
 passport.use(new FacebookStrategy({
-    clientID: config[process.env.NODE_ENV].facebook.clientID,
-    clientSecret: config[process.env.NODE_ENV].facebook.clientSecret,
-    callbackURL: "http://"+config[process.env.NODE_ENV].host+"/auth/facebook/callback"
+    clientID: config.getOAuthClientId("facebook"),
+    clientSecret: config.getOAuthClientSecret("facebook"),
+    callbackURL: "http://"+config.getHost()+"/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     //util.log("accessToken: "+accessToken+", refreshToken: "+refreshToken+", profile: "+util.inspect(profile, true));
@@ -77,9 +77,9 @@ passport.use(new FacebookStrategy({
 ));
 
 passport.use(new GoogleStrategy({
-    clientID: config[process.env.NODE_ENV].google.clientID,
-    clientSecret: config[process.env.NODE_ENV].google.clientSecret,
-    callbackURL: "http://"+config[process.env.NODE_ENV].host+"/auth/google/oauth2callback"
+    clientID: config.getOAuthClientId("google"),
+    clientSecret: config.getOAuthClientSecret("google"),
+    callbackURL: "http://"+config.getHost()+"/auth/google/oauth2callback"
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function() {
