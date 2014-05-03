@@ -37,7 +37,7 @@ var Configuration = function(){
 			}
 		},
 		development:{
-			host: getLocalip+":8000",
+			host: getLocalip()+":8000",
 			ip: getLocalip(),
 			port: 8000,
 			google:{
