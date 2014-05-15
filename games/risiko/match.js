@@ -2,6 +2,7 @@ var engine = require("./engine");
 var util = require("util");
 var Session = require("./session").Session;
 var common = require("./common");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var Match = function(bean){
   var bean = bean
@@ -33,7 +34,7 @@ var Match = function(bean){
     for (var name in engineData) {
         if (engineData.hasOwnProperty(name) ) {
             if ( name !== "sessionsMap" ){
-                util.log("restore engine data "+name+" with value "+engineData[name]);
+                logger.debug("restore engine data "+name+" with value "+engineData[name]);
                 motore[name] = engineData[name];
             }
             else if (name === "sessionsMap" ){

@@ -1,4 +1,5 @@
 var _ = require("underscore");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var EPIDEMIA = "EPIDEMIA";
 var ATOMIC_BOMB_CARD = "ATOMIC_BOMB_CARD";
@@ -199,7 +200,7 @@ var Card = Class.extend({
 		this.description = description;
 		this.id = new Date().getTime() - diff;
 		diff -= 10;
-		util.log(title+": "+this.id);
+		logger.debug(title+": "+this.id);
 	},
 
 	getTemplate: function(){

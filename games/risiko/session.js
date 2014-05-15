@@ -1,11 +1,12 @@
 var util = require("util");
 var c = require("./cards");
 var common = require("./common");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var Session = function(user){
 
   this.init = function(){
-    util.log("user [id="+this.id+"][nick="+this.nick+"][color="+this.color+"]");
+    logger.debug("user [id="+this.id+"][nick="+this.nick+"][color="+this.color+"]");
   }
 
   this.statusActive = true;
@@ -105,15 +106,15 @@ var Session = function(user){
 	};
 
 	this.addCard = function(card){
-		util.log("aggiungo la carta "+card+" a quelle disponibili per il giocatore "+this.nick);
+		logger.debug("aggiungo la carta "+card+" a quelle disponibili per il giocatore "+this.nick);
 		this.cards.push( card );
 	};
 
 	this.removeCard = function(cardId){
-		util.log("cards dell'utente "+this.nick+": "+this.cards);
+		logger.debug("cards dell'utente "+this.nick+": "+this.cards);
 		for(var i in this.cards){
 			if ( this.cards[i].id == cardId ){
-				util.log("l'utente "+this.nick+" ha giocato la carta "+this.cards[i]);
+				logger.debug("l'utente "+this.nick+" ha giocato la carta "+this.cards[i]);
 				this.cards.splice(i,1);
 				break;
 			}

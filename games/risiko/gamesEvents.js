@@ -5,10 +5,11 @@ var util = require("util"),
     db = require(rootPath+'/db/accessDB').getDBInstance,
     common = require("./common"),
     _ = require("underscore");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-socket.log');
 
 module.exports = function(sio, socket){
   
-    util.log("INZIALIZZAZIONE SOCKET!!!!!");
+    logger.debug("INZIALIZZAZIONE SOCKET!!!!!");
 
     //var sessionManager = new session.SessionManager();
     socket.on("firstConnect", function(data){
@@ -20,15 +21,15 @@ module.exports = function(sio, socket){
           return;
       }
         
-      util.log("first connect called");
+      logger.debug("first connect called");
       /*
       if ( sessionManager.checkUserExists(user.nick) === false ){
-        util.log("user "+user.nick+" not exists in match!");
+        logger.debug("user "+user.nick+" not exists in match!");
         sessionManager.addSession(user, data.matchId);
       }
       */
 
-        util.log("rilevato l'utente "+user.nick+" in partita!");
+        logger.debug("rilevato l'utente "+user.nick+" in partita!");
         var session = sessionManager.getSession(user._id, data.matchId);
         
         if ( session && session.matchId ){
@@ -49,21 +50,21 @@ module.exports = function(sio, socket){
             }
           
           
-          util.log("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
-          util.log("         match winner "+match.getBean().winner);
-          socket.set('matchId', engine.getMatchId(), function() { util.log(session.nick+' join on match ' + engine.getMatchId()); } );
-          socket.set("sessionId", session.id, function(){ util.log("sessionId ["+session.id+"] legato al socket!"); });
+          logger.debug("         "+session.nick+" first connect sessionId: "+user._id+" - matchId: "+session.matchId);
+          logger.debug("         match winner "+match.getBean().winner);
+          socket.set('matchId', engine.getMatchId(), function() { logger.debug(session.nick+' join on match ' + engine.getMatchId()); } );
+          socket.set("sessionId", session.id, function(){ logger.debug("sessionId ["+session.id+"] legato al socket!"); });
           socket.set('active', true);
           socket.join(socket.store.data.matchId);
           
-          util.log("          total rooms: "+util.inspect(sio.sockets.manager.rooms));
-          util.log("          specific clients on room "+engine.getMatchId()+": ");
+          logger.debug("          total rooms: "+util.inspect(sio.sockets.manager.rooms));
+          logger.debug("          specific clients on room "+engine.getMatchId()+": ");
           var clients = sio.sockets.clients(engine.getMatchId());
           for (var s in clients){
-              util.log("          "+clients[s].id);
+              logger.debug("          "+clients[s].id);
           }
-          util.log("notify on "+socket.store.data.matchId+" room");
-          util.log("notifying... "+sio.sockets.in(socket.store.data.matchId));
+          logger.debug("notify on "+socket.store.data.matchId+" room");
+          logger.debug("notifying... "+sio.sockets.in(socket.store.data.matchId));
           sio.sockets.in(socket.store.data.matchId).emit("joinUser", { 
             users: engine.getSessions(), 
             num_players: match.getBean().num_players,
@@ -74,11 +75,11 @@ module.exports = function(sio, socket){
     });
 
     socket.on("disconnect", function(){
-        util.log("disconnecting");
+        logger.debug("disconnecting");
         
         if ( socket.handshake.session && socket.handshake.session.passport ){
-            util.log("socket dell'utente "+socket.handshake.session.passport.user.nick+" disconnesso!");
-            util.log("passport? "+socket.handshake.session.passport);
+            logger.debug("socket dell'utente "+socket.handshake.session.passport.user.nick+" disconnesso!");
+            logger.debug("passport? "+socket.handshake.session.passport);
         }
         else{
             //significa che la sessione è ormai compromessa
@@ -103,7 +104,7 @@ module.exports = function(sio, socket){
             }
         }
         if ( maintainSession === true ){
-            util.log("rimozione del socket, ma non della sessione dell'utente "+(socket.handshake.session ? socket.handshake.session.passport.user.nick : "")+"!")
+            logger.debug("rimozione del socket, ma non della sessione dell'utente "+(socket.handshake.session ? socket.handshake.session.passport.user.nick : "")+"!")
             return;
         }
         //------------------------------------------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("changeActivePlayer", function(data){
-        util.log("change active player:" + data.sessionId + "-->" + data.nick);
+        logger.debug("change active player:" + data.sessionId + "-->" + data.nick);
         sio.sockets.in(socket.store.data.matchId).emit("notifyUserTurn", 
             {
                 sessionId: data.sessionId,
@@ -130,26 +131,26 @@ module.exports = function(sio, socket){
     socket.on("chatMessage", function(data){
         var session = sessionManager.getSession(data.from, data.matchId);
         if ( !session ){
-            util.log("ricevuto messaggio di chat da sconosciuto");
+            logger.debug("ricevuto messaggio di chat da sconosciuto");
             return;
         }
         var engine = getEngine(data.matchId);
         if ( !engine ){
-            util.log("ricevuto messaggio di chat non appartenente ad alcun match");
+            logger.debug("ricevuto messaggio di chat non appartenente ad alcun match");
             return;
         }
         data.color = session.color;
         data.nick = session.nick;
         data.msg = _.escape(data.msg);  //escaping characters from chat
         
-        util.log(data.nick+" [match "+data.matchId+"] wrote: "+data.msg);
+        logger.debug(data.nick+" [match "+data.matchId+"] wrote: "+data.msg);
 
         sio.sockets.in(socket.store.data.matchId).emit("broadcastChat", data);
     });
 
     socket.on("getConfini", function(data){
 
-        util.log("getConfini: "+util.inspect(data)+" -> highlightStatiConfinanti");
+        logger.debug("getConfini: "+util.inspect(data)+" -> highlightStatiConfinanti");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
@@ -173,7 +174,7 @@ module.exports = function(sio, socket){
 
     socket.on("getMyConfini", function(data){
 
-        util.log("getMyConfini: "+util.inspect(data)+" -> highlightStatiConfinanti");
+        logger.debug("getMyConfini: "+util.inspect(data)+" -> highlightStatiConfinanti");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
@@ -194,7 +195,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("attack", function(data){
-        util.log("attack: "+util.inspect(data)+" -> showDices && attackResults");
+        logger.debug("attack: "+util.inspect(data)+" -> showDices && attackResults");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
@@ -221,7 +222,7 @@ module.exports = function(sio, socket){
             engine.winner = data.sessionId;
             saveMatch(match);
             var session = engine.getSession(data.sessionId);
-            util.log("AND THE WINNER IS "+session.nick);
+            logger.debug("AND THE WINNER IS "+session.nick);
             sio.sockets.in(socket.store.data.matchId).emit("WeHaveAWinner", {
                 winner: engine.winner,
                 nick: session.nick
@@ -238,7 +239,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("caricaStati", function(data){
-        util.log("caricaStati: "+util.inspect(data)+" -> buildEntireMap");
+        logger.debug("caricaStati: "+util.inspect(data)+" -> buildEntireMap");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
@@ -252,7 +253,7 @@ module.exports = function(sio, socket){
         db.setStatusMatch(true, match.getBean(), function(err, dbMatch){
             
             if ( err ){
-                util.log("impostazione dello stato del match "+data.matchId+" non riuscito!");
+                logger.debug("impostazione dello stato del match "+data.matchId+" non riuscito!");
                 return;
             }
             
@@ -274,7 +275,7 @@ module.exports = function(sio, socket){
 
     socket.on("getActualWorld", function(data){
         //torna la situazione globale aggiornata degli stati
-        util.log("getActualWorld: "+util.inspect(data)+" -> buildEntireMap");
+        logger.debug("getActualWorld: "+util.inspect(data)+" -> buildEntireMap");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, true) === false ){
             return;
@@ -332,10 +333,10 @@ module.exports = function(sio, socket){
                         delay: 10000
                 });
             }
-            util.log("clicco sul prevStep: result: "+canBack);
+            logger.debug("clicco sul prevStep: result: "+canBack);
         }
         else if ( data && data.nextStep === false ){
-            util.log("salvataggio dei rinforzi initiali effettuato: ora si iniziano i turni preliminari");
+            logger.debug("salvataggio dei rinforzi initiali effettuato: ora si iniziano i turni preliminari");
             saveMatch(match);
             var turnSession = engine.getSession(engine.getSessioneDiTurno());
             if ( turnSession && turnSession.statusActive === false ){
@@ -375,7 +376,7 @@ module.exports = function(sio, socket){
 
     socket.on("addInitialTroups", function(data){
 
-        util.log("addInitialTroups: "+util.inspect(data)+" -> initialTroupAdded");
+        logger.debug("addInitialTroups: "+util.inspect(data)+" -> initialTroupAdded");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, true) === false ){
             return;
@@ -402,7 +403,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("addTroup", function(data){
-        util.log("addTroup: "+util.inspect(data)+" -> troupAddedOnTurn");
+        logger.debug("addTroup: "+util.inspect(data)+" -> troupAddedOnTurn");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
@@ -437,7 +438,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("moveTroupToStateConquered", function(data){
-        util.log("moveTroupToStateConquered: "+util.inspect(data)+" -> resultMoveTroupesTo");
+        logger.debug("moveTroupToStateConquered: "+util.inspect(data)+" -> resultMoveTroupesTo");
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
@@ -451,7 +452,7 @@ module.exports = function(sio, socket){
 
     socket.on("moveTroupTo", function(data){
 
-        util.log("moveTroupTo: "+util.inspect(data)+" -> resultMoveTroupesTo");
+        logger.debug("moveTroupTo: "+util.inspect(data)+" -> resultMoveTroupesTo");
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
         }
@@ -491,7 +492,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("getStatesOfContinent", function(data){
-        util.log("getStatesOfContinent: "+util.inspect(data)+" -> returnStatesMap");
+        logger.debug("getStatesOfContinent: "+util.inspect(data)+" -> returnStatesMap");
 
         /*
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
@@ -510,7 +511,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("getMyBonusCard", function(data){
-        util.log("getMyBonusCard: "+util.inspect(data));
+        logger.debug("getMyBonusCard: "+util.inspect(data));
 
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, true) === false ){
             return;
@@ -519,7 +520,7 @@ module.exports = function(sio, socket){
         var engine = getEngine(data.matchId);
         var player = engine.getSession(data.sessionId);
         if ( !player ){
-            util.log("player "+data.sessionId+" not found with matchId "+data.matchId);
+            logger.debug("player "+data.sessionId+" not found with matchId "+data.matchId);
             return;
         }
         socket.emit("receiveMyBonyusCard", { cards: player.getCards() });
@@ -533,7 +534,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("useCardBonus", function(data){
-        util.log("useCardBonus: "+util.inspect(data));
+        logger.debug("useCardBonus: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
         }
@@ -543,7 +544,7 @@ module.exports = function(sio, socket){
         var card = player.getCard(data.cardId);
         if ( card === undefined ){
             //questo utente sta barando....
-            util.log("l'utente "+player.nick+" sta barando: vuole utilizzare una carta che non ha: "+data.cardId);
+            logger.debug("l'utente "+player.nick+" sta barando: vuole utilizzare una carta che non ha: "+data.cardId);
         }
 
         player.applyCard(card);
@@ -558,7 +559,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("getCardHelp", function(data){
-        util.log("getCardHelp: "+util.inspect(data)+" --> receiveCardHelp");
+        logger.debug("getCardHelp: "+util.inspect(data)+" --> receiveCardHelp");
 
         var engine = getEngine(data.matchId);
         var card = engine.getCard4Help(data.cardId);
@@ -567,7 +568,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("cancelBonusCardAction", function(data){
-        util.log("cancelBonusCardAction: "+util.inspect(data));
+        logger.debug("cancelBonusCardAction: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket) === false ){
             return;
         }
@@ -594,7 +595,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("epidemia", function(data){
-        util.log("epidemia: "+util.inspect(data));
+        logger.debug("epidemia: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
             return;
         }
@@ -638,7 +639,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("sendAttack", function(data){
-        util.log("sendAttack: "+util.inspect(data));
+        logger.debug("sendAttack: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
             return;
         }
@@ -715,7 +716,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("getReinforcements", function(data){
-        util.log("getReinforcements: "+util.inspect(data));
+        logger.debug("getReinforcements: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
             return;
         }
@@ -751,7 +752,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("Alliance", function(data){
-        util.log("Alliance: "+util.inspect(data));
+        logger.debug("Alliance: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
             return;
         }
@@ -782,7 +783,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("sabotage", function(data){
-        util.log("sabotage: "+util.inspect(data));
+        logger.debug("sabotage: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
             return;
         }
@@ -823,7 +824,7 @@ module.exports = function(sio, socket){
     });
 
     socket.on("spy", function(data){
-        util.log("spy: "+util.inspect(data));
+        logger.debug("spy: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, false) === false ){
             return;
         }
@@ -847,8 +848,8 @@ module.exports = function(sio, socket){
         }
 
 
-        util.log("giocatore "+player.nick+" possiede "+player.cards.length+" carte: "+player.cards);
-        util.log("nemico "+enemy.nick+" possiede "+enemy.cards.length+" carte: "+enemy.cards);
+        logger.debug("giocatore "+player.nick+" possiede "+player.cards.length+" carte: "+player.cards);
+        logger.debug("nemico "+enemy.nick+" possiede "+enemy.cards.length+" carte: "+enemy.cards);
         if ( enemy.cards.length === 0 ){
             socket.emit("errorOnAction", {
             message: "Il giocatore "+enemy.nick+" non possiede carte da ciulare....!",
@@ -862,9 +863,9 @@ module.exports = function(sio, socket){
         var card = enemy.stealCard();
         var sound = player.interactiveCard.sound;
         player.addCard(card);
-        util.log("carta rubata: "+card);
-        util.log("ora giocatore "+player.nick+" possiede "+player.cards.length+" carte: "+player.cards);
-        util.log("ora nemico "+enemy.nick+" possiede "+enemy.cards.length+" carte: "+enemy.cards);
+        logger.debug("carta rubata: "+card);
+        logger.debug("ora giocatore "+player.nick+" possiede "+player.cards.length+" carte: "+player.cards);
+        logger.debug("ora nemico "+enemy.nick+" possiede "+enemy.cards.length+" carte: "+enemy.cards);
 
         player.invalidateInteractCard();
 
@@ -883,7 +884,7 @@ module.exports = function(sio, socket){
     });
     
     socket.on("abandonMatch", function(data){
-        util.log("abandonMatch: "+util.inspect(data));
+        logger.debug("abandonMatch: "+util.inspect(data));
         if ( checkSessionTurn(data.matchId, data.sessionId, socket, true) === false ){
             return;
         }
@@ -951,7 +952,7 @@ module.exports = function(sio, socket){
         sio.sockets.in(socket.store.data.matchId).emit("setZoom", {zoomLevel: zoomLevel});
     });
     socket.on("center_changed", function(center){
-        //util.log("sockets emit new center position: "+center.lat+";"+center.lng);
+        //logger.debug("sockets emit new center position: "+center.lat+";"+center.lng);
         sio.sockets.in(socket.store.data.matchId).emit("impostaCentroMappa", {center: center});
     });
     // Fine eventi della mappa
@@ -1002,7 +1003,7 @@ module.exports = function(sio, socket){
     var checkSessionTurn = function(matchId, sessionId, socket, noTurnControl){
         var engine = getEngine(matchId);
         if ( !engine ){
-            util.log("Match "+matchId+" non risconosciuto");
+            logger.debug("Match "+matchId+" non risconosciuto");
 
             sio.sockets.in(socket.store.data.matchId).emit("errorOnAction", { 
                 message: "Si e' verificato un problema! Il match verrà ricaricato automaticamente entro 10 secondi. Se dovessero esserci ulteriori problemi, chiudi la pagina della partita e riaprila dalla tua pagina di account oppure mandare un feedback dalla pagina di account segnalando l'accaduto!",
@@ -1022,11 +1023,11 @@ module.exports = function(sio, socket){
                 return true;
             }
             else if ( sessionId != session.user._id ){
-                util.log("Sessione non corrispondente: sessionId client ["+sessionId+"] <-> sessionId socket ["+session.user._id+"]");
+                logger.debug("Sessione non corrispondente: sessionId client ["+sessionId+"] <-> sessionId socket ["+session.user._id+"]");
                 return false;
             }
             else if ( engine.getSessioneDiTurno() != session.user._id ){
-                util.log("Il giocatore "+session.user.nick+" sta effettuando un'operazione che non può seguire in quanto non è il suo turno!");
+                logger.debug("Il giocatore "+session.user.nick+" sta effettuando un'operazione che non può seguire in quanto non è il suo turno!");
                 socket.emit("errorOnAction", {
                     delay: 10000,
                     message: "Stai effettuando un'operazione che non puoi eseguire in quanto non è il tuo turno!"
@@ -1042,14 +1043,14 @@ module.exports = function(sio, socket){
     };
     
     var sendBuildEntireMap = function(sio, socket, match, turno){
-        util.log("users abandoned: "+match.getEngine().usersAbandoned);
-        util.log("users needed online: "+ (match.getBean().num_players - match.getEngine().usersAbandoned) );
+        logger.debug("users abandoned: "+match.getEngine().usersAbandoned);
+        logger.debug("users needed online: "+ (match.getBean().num_players - match.getEngine().usersAbandoned) );
         var winner = match.getBean().winner;
         var nickWinner;
         if ( winner ){
             nickWinner = match.getEngine().getSession(winner.id).nick;
         }
-        util.log("user winner: "+winner);
+        logger.debug("user winner: "+winner);
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
             stati:  match.getEngine().getActualWorld(),
             engineLoaded: match.getEngine().isEngineLoaded(),
@@ -1064,14 +1065,14 @@ module.exports = function(sio, socket){
     var saveMatch = function(match, populateWinner){
         db.saveMatchStatus(match.getEngine(), match.getBean(), function(err, dbMatch){
             if ( err ){
-                util.log("Error saving match "+match.id);
+                logger.debug("Error saving match "+match.id);
                 return;
             }
-            util.log("Match "+match.getId()+" was saved correctly");
+            logger.debug("Match "+match.getId()+" was saved correctly");
             if ( populateWinner === true ){
                 db.getMatchById(match.getId(), null, function(err, remoteDbMatch){
                     if ( err ){ 
-                        util.log("error on sync db: "+err); return; 
+                        logger.debug("error on sync db: "+err); return; 
                     }
                     match.setBean(remoteDbMatch);
                 });
@@ -1118,11 +1119,11 @@ module.exports = function(sio, socket){
         } else {
            // if there isn't, turn down the connection with a message
            // and leave the function.
-           util.log("Cookie non trasmesso!");
+           logger.debug("Cookie non trasmesso!");
            return accept('No cookie transmitted.', false);
         }
         // accept the incoming connection
-        //util.log("Autorizzazione concessa al cookie "+data.sessionID);
+        //logger.debug("Autorizzazione concessa al cookie "+data.sessionID);
         accept(null, true);
     });
     */

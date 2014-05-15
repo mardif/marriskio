@@ -8,6 +8,7 @@ var util = require("util");
 var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 var config = require(rootPath+"/Configuration").Configuration;
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 // dependencies for authentication
 var passport = require('passport')
@@ -42,22 +43,22 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://"+config.getHost()+"/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    //util.log("accessToken: "+accessToken+", refreshToken: "+refreshToken+", profile: "+util.inspect(profile, true));
+    //logger.debug("accessToken: "+accessToken+", refreshToken: "+refreshToken+", profile: "+util.inspect(profile, true));
 
     process.nextTick(function() {
-      util.log("ricerca dell'utente "+profile.email+" nel sistema");
+      logger.debug("ricerca dell'utente "+profile.email+" nel sistema");
       User.find({email: profile._json.email, socialName: "facebook"}, {}, function(err, users) {
         if ( users && users.length == 1 ){
-          util.log("utente trovato!: "+users[0].email);
+          logger.info("utente trovato!: "+users[0].email);
           users[0].socialToken = accessToken;
           done(err, users[0]); 
         }
         else if ( users && users.length > 1 ){
-          util.log("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
+          logger.warn("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
           done(err, null);
         }
         else{
-          util.log("utente non presente nel sistema");
+          logger.warn("utente non presente nel sistema");
           accessDB.saveUserAndSetInSession({
             nome: profile._json.first_name,
             cognome: profile._json.middle_name + " "+profile._json.last_name,
@@ -86,16 +87,16 @@ passport.use(new GoogleStrategy({
       //util.log("trovato google user: "+util.inspect(profile, true));
       User.find({email: profile._json.email, socialName: "google"}, {}, function(err, users) {
         if ( users && users.length == 1 ){
-          util.log("utente trovato!: "+users[0].email);
+          logger.info("utente trovato!: "+users[0].email);
           users[0].socialToken = accessToken;
           done(err, users[0]); 
         }
         else if ( users && users.length > 1 ){
-          util.log("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
+          logger.warn("rilevati troppi utenti con la seguente email! : "+util.inspect(users, true));
           done(err, null);
         }
         else{
-          util.log("utente non presente nel sistema");
+          logger.warn("utente non presente nel sistema");
           accessDB.saveUserAndSetInSession({
             nome: profile._json.given_name,
             cognome: profile._json.family_name,
@@ -131,7 +132,7 @@ if ( process.env.NODE_ENV == "development" ){
   conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
 }
 
-util.log("CONNECTION URL: "+conn);
+logger.debug("CONNECTION URL: "+conn);
 
 var sessionStore = new mongoStore({url: conn});
 
@@ -146,7 +147,7 @@ var AccessDB = function(){
     mongoose.connect(conn);
     // Check connection to mongoDB
     mongoose.connection.on('open', function() {
-      console.log('We have connected to mongodb');
+      logger.log('We have connected to mongodb');
       if ( callback ){
         callback();
       }
@@ -174,7 +175,7 @@ var AccessDB = function(){
         if (err) return errorHelper(err, callback);
 
         userInfo.id = doc._id;
-        console.log("id: "+doc._id);
+        logger.debug("id: "+doc._id);
         callback(null, userInfo);
 
       })
@@ -305,14 +306,14 @@ var AccessDB = function(){
         
     //Trovato il match, provvedo a salvare lo stato serializzato
     var serializedEngineData = saveEngineData(engine);
-    util.log("match serializedEngineData size: "+serializedEngineData.length);
+    logger.debug("match serializedEngineData size: "+serializedEngineData.length);
     zlib.deflate(serializedEngineData, function(error, buffer){
         
         if ( error ){
             return errorHelper(error, callback);
         }
         
-        util.log("match serializedEngineData compressed size: "+buffer.length);
+        logger.debug("match serializedEngineData compressed size: "+buffer.length);
         matchBean.frozen.created_at = new Date();
         //matchBean.frozen.engine = buffer;  //partita salvata zippata
         matchBean.frozen.engine = serializedEngineData; //partita salvata non zippata
@@ -411,7 +412,7 @@ var saveEngineData = function(engine){
     for (var name in ed) {
       if (ed.hasOwnProperty(name)) {
         if ( name !== "sessionsMap" ){
-            util.log("saving "+name+" data: "+engine[name]);
+            logger.debug("saving "+name+" data: "+engine[name]);
             ed[name] = engine[name];
         }
         else if( name === "sessionsMap" ){
@@ -452,7 +453,7 @@ function errorHelper(err, cb) {
         //Otherwise, use util.format to format the message, and passing the path
         else{
             var errMsg = require('util').format(messages[eObj.type], eObj.path);
-            console.log(errMsg)
+            logger.warn(errMsg)
             errors.push(errMsg);
         }
     });
