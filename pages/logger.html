@@ -215,7 +215,7 @@
                     });
                 }
 
-                var newItem = $('<li style="'+colors[data.level]+'"><span>'+data.timestamp+'</span>' + nl2br(data.value) + '</li>');
+                var newItem = $('<li style="'+colors[data.level]+'"><span>'+data.timestamp+'</span> - ' + nl2br(data.value) + '</li>');
                 var maxScrollPosition = $(document).height() - $(window).height();
                 var mustAutoScroll = maxScrollPosition == monitors[data.fileSlug].scrollPos;
 
