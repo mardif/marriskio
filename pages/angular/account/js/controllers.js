@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('account.controllers', [])	
-  .controller('MyMatchCtrl', ['$scope', function($scope) {
-
+  .controller('MyMatchCtrl', ['$scope', 'fakeMatchProvider', function($scope, fakeMatchProvider) {
+  	$scope.users = fakeMatchProvider.getMatches();
   }])
   .controller('AvailableMatchCtrl', ['$scope', function($scope) {
 
