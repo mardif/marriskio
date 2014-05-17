@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', [])	
+angular.module('account.controllers', [])	
   .controller('MyMatchCtrl', ['$scope', function($scope) {
 
   }])

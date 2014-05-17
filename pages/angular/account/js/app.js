@@ -2,12 +2,12 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', [
+angular.module('account', [
   'ngRoute',
-  'myApp.filters',
-  'myApp.services',
-  'myApp.directives',
-  'myApp.controllers'
+  'account.filters',
+  'account.services',
+  'account.directives',
+  'account.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/myMatches', {templateUrl: 'partials/partial1.html', controller: 'MyMatchCtrl'});
