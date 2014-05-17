@@ -76,11 +76,23 @@ module.exports = function(app, sio) {
   });
 
     app.get("/logs", ensureAuthenticated, function(req, res){
-      if ( req.user && req.user.nick == "mardif" ){
+      if ( req.user && req.user.isAdmin == true ){
         res.render("logger.html", {});
         return;
       }
       res.end(403);
+    });
+
+    app.get('/download/:file(*)', function(req, res, next){
+        if ( req.user && req.user.isAdmin == true ){
+            var file = req.params.file
+            , path = rootPath + '/logs/' + file;
+
+            res.download(path);
+        }
+        else{
+            res.end("Permission Denied!");
+        }
     });
 
     app.post("/createNewMatch", ensureAuthenticated, start.createNewMatch);

@@ -117,7 +117,7 @@ passport.use(new GoogleStrategy({
 
 // serialize user on login
 passport.serializeUser(function(user, done) {
-  done(null, {_id: user._id, nick: user.nick, name: user.name, email: user.email, fromSocial: user.fromSocial, socialToken: user.socialToken, socialName:user.socialName});
+  done(null, {_id: user._id, nick: user.nick, name: user.name, email: user.email, fromSocial: user.fromSocial, socialToken: user.socialToken, socialName:user.socialName, isAdmin: user.isAdmin});
 });
 
 // deserialize user on logout

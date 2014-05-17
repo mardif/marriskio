@@ -1,65 +1,3 @@
-<!--
-<!DOCTYPE html>
-<html lang="it">
-    <head>
-        <title>Logger</title>
-        <meta charset="utf-8" />
-        <style type="text/css">
-			.tab-content {
-			    margin-top: 50px;
-			}
-
-			.new {
-			    opacity: 0.3;
-			}
-
-			.old {
-			    opacity: 0.5;
-			}
-
-			.separator {
-			    font-weight: bold;
-			}
-
-			ul {
-			    list-style-type: none;
-			}
-
-			li.old, li.new  {
-			    word-wrap: break-word;
-			}
-        </style>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/jquery.js"></script>
-	    <link rel="stylesheet" href="/bootstrap.min.css" type="text/css"/>
-	    <link rel="stylesheet" href="/bootstrap-responsive.min.css" type="text/css"/>
-
-        <script type="text/javascript">
-        	$(document).ready(function() {
-    			var socket = io.connect('http://192.168.0.10:8000');
-    			var container = $('#container');
-    			var colors = {
-    				"debug": "background-color:#908eff;color:white;",
-    				"info": "background-color:#79fc7f;color:black;",
-    				"warn": "background-color:#e29924;color:black;",
-    				"error":"background-color:#ce5454;color:white;"
-    			};
-
-				socket.on('new-data', function(data) {
-			        var newItem = $('<div class="data" style="'+colors[data.level]+'"><span class=".time">'+data.timestamp+'</span> - ' + data.message + '</div>');
-			        container.prepend(newItem);
-			    });    			
-    		});
-        </script>
-	</head>
-    <body>
-        <div id="container">
-        </div>
-    </body>
-</html>        
--->
-
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -156,6 +94,10 @@
             });
         }
 
+        $(document).on("click", ".downloadable", function(){
+            window.open("/download/"+$(this).attr("id"));
+        });
+
         $(document).ready(function() {
 
             checkGoBottomButton();
@@ -190,7 +132,7 @@
 
                     var newMonitorTitleLink = $('<a data-toggle="tab"></a>');
                     newMonitorTitleLink.attr('href', '#' + data.fileSlug);
-                    newMonitorTitleLink.html(data.fileName + ' ');
+                    newMonitorTitleLink.html(data.fileName + ' <a class="downloadable" style="border:1px solid white;border-radius:3px;padding:0 3px;margin:0 3px;" id="'+data.fileName+'">download</a> ');
                     newMonitorTitleLink.append($('<span class="badge badge-important"></span>'));
                     newMonitorTitleLink.appendTo(newMonitorTitle);
 
@@ -260,8 +202,11 @@
     <div id="menu" class="navbar navbar-inner navbar-fixed-top container-fluid">
         <ul class="nav nav-tabs">
             <li id="to-bottom">
-            <a href="#go-to-bottom">
-                Go to bottom <i class="icon-arrow-down"></i></a></li>
+                <a href="#go-to-bottom">
+                    Go to bottom
+                    <i class="icon-arrow-down"></i>
+                </a>
+            </li>
         </ul>
     </div>
     <div class="tab-content">
