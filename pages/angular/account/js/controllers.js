@@ -2,10 +2,13 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', function($scope) {
+angular.module('myApp.controllers', [])	
+  .controller('MyMatchCtrl', ['$scope', function($scope) {
 
   }])
-  .controller('MyCtrl2', ['$scope', function($scope) {
+  .controller('AvailableMatchCtrl', ['$scope', function($scope) {
+
+  }])
+  .controller('HistoryCtl', ['$scope', function($scope) {
 
   }]);
