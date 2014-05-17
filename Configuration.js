@@ -29,7 +29,7 @@ var Configuration = function(){
 			}
 		},
 		development:{
-			host: "mardif.noip.me:8000",
+            host: "192.168.0.10:8000",
 			ip: "192.168.0.10",
 			port: 8000,
 			google:{

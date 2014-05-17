@@ -13,6 +13,7 @@ var zlib = require("zlib");
 var cryo = require("cryo");
 var util = require("util");
 var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var config = require(rootPath+"/Configuration").Configuration
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -77,7 +78,7 @@ module.exports = function(app, sio) {
 
     app.get("/logs", ensureAuthenticated, function(req, res){
       if ( req.user && req.user.isAdmin == true ){
-        res.render("logger.html", {});
+        res.render("logger.html", {host: config.getHost()});
         return;
       }
       res.end(403);
