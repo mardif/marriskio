@@ -1,13 +1,18 @@
 var intro;
 $(document).ready(function(){
     intro = introJs();
-              intro.setOptions({
-                nextLabel: 'prossimo->',
-                prevLabel: '<-indietro',
-                skipLabel: 'Esci',
-                doneLabel: 'Terminato',
-                exitOnOverlayClick: false,
-                showStepNumbers: false,
+    intro.setOptions({
+        nextLabel: 'prossimo >>',
+        prevLabel: '<< indietro',
+        skipLabel: 'Esci',
+        doneLabel: 'Terminato',
+        exitOnOverlayClick: false,
+        showStepNumbers: false
+    });
+/*   
+    intro.setSteps = function(steps){
+        if(steps.length == 11){
+            intro.setOptions({
                 steps: [
                     {
                         element: '#actions',
@@ -80,5 +85,7 @@ $(document).ready(function(){
                         <strong>Buona Fortuna!</strong>"
                     },
                 ]
-              });
+            });
+        }
+    }*/   
 });

@@ -489,6 +489,7 @@ socket.on("broadcastChat", function(data){
 
 socket.on("notifyUserTurn", function(data){
 	if ( data.nick == nick ) {
+		console.log(i18n.__('Ciao'));
 	    $("title").html("E' il tuo turno!");
     }
     else{

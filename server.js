@@ -72,7 +72,7 @@ app.configure(function(){
     res.locals.setLocaleLang = res.setLocaleLang = function(locale){
       i18n.setLocale(locale);
     };
-    res.locals.messages = req.session.messages
+    res.locals.messages = req.session.messages;
     next();
   });
 
@@ -85,7 +85,6 @@ app.configure(function(){
   app.use(passport.session());
   //app.use(express.static(__dirname + '/pages'));
 });
-
 
 db.startup();
 
@@ -106,7 +105,7 @@ sio.set("transports", ["xhr-polling"]);
 // Routes
 require('./routes/routes')(app, sio);
 
-server.listen(process.env.PORT, process.env.IP);
-//server.listen(8000, process.env.IP);
+//server.listen(process.env.PORT, process.env.IP);
+server.listen(8000, process.env.IP);
 
 console.log("Express server listening on port %d in %s mode", process.env.PORT, app.settings.env);
