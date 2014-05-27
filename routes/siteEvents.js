@@ -4,7 +4,10 @@ var common = require(rootPath+"/games/risiko/common"),
 	MatchList = require(rootPath+"/games/risiko/MatchList").MatchList,
 	Session = require(rootPath+"/games/risiko/session").Session,
 	db = require('../db/accessDB').getDBInstance,
-    _ = require("underscore");
+    _ = require("underscore"),
+    Tail = require("tail").Tail;
+
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var GlobalSessionManager = function(){
     
@@ -16,7 +19,7 @@ var GlobalSessionManager = function(){
 
     this.addUser = function(socket){
         var user = socket.handshake.session.passport.user;
-        util.log("user: "+user+" - socket: "+socket);
+        logger.debug("user: "+user+" - socket: "+socket);
         if ( user ){
             sessions[""+user._id] = socket;
         }
@@ -37,7 +40,7 @@ var GlobalSessionManager = function(){
                 ss[id] = sessions[id].handshake.session.passport.user;
             }
             catch(e){
-                util.log("error on getUsersOnLine about session expired: "+e);
+                logger.warn("error on getUsersOnLine about session expired: "+e);
             }
         }
         return ss;
@@ -57,27 +60,27 @@ var sendReminder = function(req, res){
     var user = req.user;
     var socket = globalSessionManager.getUser(user.id);
     socket.emit("account-received-reminder", {msg: "I solleciti ai partecipanti della partita sono stati inviati!"});
-    util.log("user mandante: "+user.id);
+    logger.debug("user mandante: "+user.id);
     
     db.getMatchById(matchId, {name:1, players:1}, function(err, match){
         
-        if ( err ){ util.log("**** error: "+err) };
+        if ( err ){ logger.warn("**** error: "+err) };
 
         var addresses = [];
         
         for(var i=0; i < match.players.length; i++){
             var player = match.players[i].player;
             var id = player.id;
-            util.log("utente a cui inviare: "+id);
+            logger.debug("utente a cui inviare: "+id);
             var s = globalSessionManager.getUser(id);
-            util.log("c'è il socket connesso? "+(s ? "SI" : "NO"));
+            logger.debug("c'è il socket connesso? "+(s ? "SI" : "NO"));
 
             if ( id != user.id ){
                 addresses.push( player.email );
             }
 
             if ( s && id != user.id ){
-                util.log("il socket è il mandate? "+(id != user.id ? "NO" : "SI"));
+                logger.debug("il socket è il mandate? "+(id != user.id ? "NO" : "SI"));
                 
                 //s.emit("account-received-chat-message", {user: "system", msg: "hai ricevuto un reminder da "+user.nick+"!"});
                 s.emit("account-received-reminder", {
@@ -117,7 +120,7 @@ var sendRemovedUserNotification = function (req, res)
     var matchId = req.body.matchId;
 
     var s = globalSessionManager.getUser(userId);
-    util.log("c'è il socket connesso? "+(s ? "SI" : "NO"));
+    logger.debug("c'è il socket connesso? "+(s ? "SI" : "NO"));
 
     if ( s ){
         s.emit("notify-reminder", {
@@ -134,11 +137,11 @@ var sendRemovedUserNotification = function (req, res)
 
     db.getUserById(userId, "email", function(err, utente){
         if ( err ){
-            util.log("user removed mail notification not sent!");
+            logger.warn("user removed mail notification not sent!");
             return;
         }
         var address = utente.email;
-        util.log("send removed mail notification to "+address);
+        logger.debug("send removed mail notification to "+address);
         var headers = {
            text:    body,
            from:    "debellum.invites@debellum.net",
@@ -153,6 +156,8 @@ var sendRemovedUserNotification = function (req, res)
 };
 
 var globalSio;
+var tailDebug = new Tail(rootPath+"/logs/project-debug.log");
+var tailSocket = new Tail(rootPath+"/logs/project-socket.log");
 
 var initializeEvents =  function(sio, socket){
 
@@ -169,15 +174,34 @@ var initializeEvents =  function(sio, socket){
         if ( data && data.msg ){
             data.user = socket.handshake.session.passport.user.nick;
             data.msg = _.escape(data.msg); //escaping characters from chat
-            util.log("user "+data.user+" wrote: "+data.msg);
+            logger.debug("user "+data.user+" wrote: "+data.msg);
             sio.sockets.emit("account-received-chat-message", data);
         }
     });
 
     socket.on('disconnect', function() {
-        util.log(" ***************+ DISCONNECTED **************** ");
+        logger.debug(" ***************+ DISCONNECTED **************** ");
         sio.sockets.emit("userOnlineResponse", {users: globalSessionManager.getUsersOnLine()});
     });
+
+    tailDebug.on("line", function(data) {
+        var data = JSON.parse(data);
+        data.fileSlug = "all-site";
+        data.fileName = "project-debug.log";
+        data.channel = "01";
+        data.value = data.message.replace("/(\[[0-9]+m)*/g"),
+        socket.emit("new-data", data);
+    });
+    tailSocket.on("line", function(data) {
+        var data = JSON.parse(data);
+        data.fileSlug = "game";
+        data.fileName = "project-socket.log";
+        data.channel = "02";
+        data.value = data.message.replace("/(\[[0-9]+m)*/g"),
+        socket.emit("new-data", data);
+    });
+
+
 
 };
 

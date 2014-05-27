@@ -18,8 +18,8 @@ var express = require('express')
   , io = require("socket.io")
   , ioSession = require('socket.io-session')
   , i18n = require("i18n")
-  , config = require("./Configuration").Configuration;
-
+  , config = require("./Configuration").Configuration
+  , logger = require("./Logger.js").Logger.getLogger('project-debug.log');
 
 var app = module.exports = express();
 global.app = app;
@@ -103,17 +103,18 @@ sio.set("log level", 1); //0:error, 1-warn, 2-info, 3-debug
 sio.set("polling duration", 10);
 sio.set("transports", ["xhr-polling"]);
 
+
 // Routes
 require('./routes/routes')(app, sio);
 
 //var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8000;
 //var ip   = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "127.0.0.1";
 
-console.log("env "+process.env.NODE_ENV);
+logger.info("env "+process.env.NODE_ENV);
 
 db.startup(function(){
   server.listen(config.getPort(), config.getIP());
-  console.log("Express server listening on %s port %d in %s mode", config.getIP(), config.getPort(), config.getEnvironment());
+  logger.info("Express server listening on %s port %d in %s mode", config.getIP(), config.getPort(), config.getEnvironment());
 });
 
 

@@ -11,6 +11,8 @@ var common = require("../games/risiko/common"),
     sessionManager = require(rootPath+"/games/risiko/sessionManager"),
     config = require(rootPath+"/Configuration").Configuration;
 
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+
 var gsm = siteEvents.globalSessionManager;
 var SSL = false;  //da impostare se l'url sarà HTTPS o no
 
@@ -199,7 +201,7 @@ module.exports = {
     };
 
     recaptcha.verify(function(success, error_code) {
-        util.log("error_code: "+error_code);
+        logger.warn("error_code: "+error_code);
         //success = true;    //@TODO: da togliere, bypassa il controllo del captcha!!!!
         if (success) {
             db.saveUser(newUser, function(err,docs) {
@@ -357,7 +359,7 @@ module.exports = {
                 }
             };
             require("request").post("https://graph.facebook.com/me/feed", formData, function(error, response, body){
-                util.log("CREATION MATCH POSTED ON FACEBOOK WALL WITH ERROR: "+util.inspect(error, true)+" - POSTID: "+body);
+                logger.error("CREATION MATCH POSTED ON FACEBOOK WALL WITH ERROR: "+util.inspect(error, true)+" - POSTID: "+body);
             });
         }
 
@@ -549,7 +551,7 @@ module.exports = {
                 body += common.getFooterMailTemplate();
 
 
-                util.log("send mail to "+addresses.join(","));
+                logger.debug("send mail to "+addresses.join(","));
 
                 var headers = {
                    text:    body,
@@ -576,10 +578,10 @@ module.exports = {
 
                         db.saveMatchStatus(engine, m.getBean(), function(err, dbMatch){
                             if ( err ){
-                                util.log("Error saving match "+result.id);
+                                logger.error("Error saving match "+result.id);
                                 return;
                             }
-                            util.log("Match "+m.getId()+" was saved correctly");
+                            logger.info("Match "+m.getId()+" was saved correctly");
                         });
                     });
                 }
@@ -720,8 +722,8 @@ module.exports = {
                 util.error("Error on removeUserFromMatch: "+err);
                 return;
             }
-            util.log("users removed from match: "+rowAffected);
-            util.log("raw: "+raw);
+            logger.debug("users removed from match: "+rowAffected);
+            logger.debug("raw: "+raw);
         });
 
         siteEvents.sendRemovedUserNotification(req, res);
@@ -737,8 +739,8 @@ module.exports = {
                 util.error("Error on removeUserFromMatch: "+err);
                 return;
             }
-            util.log("users removed from match: "+rowAffected);
-            util.log("raw: "+raw);             
+            logger.debug("users removed from match: "+rowAffected);
+            logger.debug("raw: "+raw);             
         });
         
         db.removeSlot(matchId, function (err, rowAffected, raw){
@@ -746,7 +748,7 @@ module.exports = {
                 util.error("Error on removeUserFromMatch: "+err);
                 return;
             }
-            util.log("slot removed from match: "+matchId);            
+            logger.debug("slot removed from match: "+matchId);            
         });
         siteEvents.sendRemovedUserNotification(req, res);   
     },

@@ -1,6 +1,7 @@
 var common = require("./common");
 var util = require("util");
 var cards = require("./cards");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var Engine = function(matchId){
 	this.states = {};
@@ -230,7 +231,7 @@ var Engine = function(matchId){
 		this.spostamentoFinalEffettuato = false;
 
 
-		util.log("il giocatore "+session.nick+" ha nel suo mazzo queste carte: "+session.getCards());
+		logger.debug("il giocatore "+session.nick+" ha nel suo mazzo queste carte: "+session.getCards());
 
 	};
 

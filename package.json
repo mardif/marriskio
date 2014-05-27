@@ -35,7 +35,9 @@
     "nodefly": "~0.1.46",
     "passport-facebook": ">=1.0.3",
     "passport-google-oauth": ">=0.1.5",
-    "request": ">=2.34.0"
+    "request": ">=2.34.0",
+    "tail": "^0.3.5",
+    "winston": "^0.7.3"
   },
   "description": "There are a couple of things you should do first, before you can use all of Git's power:",
   "main": "server.js",

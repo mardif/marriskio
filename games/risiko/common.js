@@ -3,6 +3,7 @@ var readFile = require("fs").readFile;
 var engine = require("./engine");
 var email = require("emailjs");
 var cryo = require("cryo");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var common = exports;
 
@@ -29,17 +30,17 @@ common.staticHandler = function (filename) {
       return;
     }
 
-    util.puts("loading " + filename + "...");
+    logger.debug("loading " + filename + "...");
     readFile(filename, function (err, data) {
       if (err) {
-        util.puts(" -+-+-+-+-+-+-+- Error loading " + filename);
+        logger.error(" -+-+-+-+-+-+-+- Error loading " + filename);
       } else {
         body = data;
         headers = { "Content-Type": content_type,
                     "Content-Length": body.length
                   };
         //if (!DEBUG) headers["Cache-Control"] = "public";
-        util.puts("static file " + filename + " loaded");
+        logger.debug("static file " + filename + " loaded");
         callback();
       }
     });
@@ -272,14 +273,14 @@ var mailServer = email.server.connect({
 
 common.sendEmail = function(headers){
     var message = email.message.create(headers);
-    util.log("invio della email in corso...");
+    logger.info("invio della email in corso...");
     message.attach_alternative(headers.text);
     mailServer.send(message, function(err, message) {
         if (err) {
-            console.log("error sending email: "+err);
+            logger.error("error sending email: "+err);
             return;
         };
-        console.log("mail sending OK: "+util.inspect(message, true));
+        logger.info("mail sending OK: "+util.inspect(message, true));
     });
 }
 
@@ -319,15 +320,15 @@ var propertiesToRetrieve = [
 
 common.setSessionPropsFromDb = function(mySession, match){
     var masterPlayer = match.getBean().masterPlayer;
-    util.log("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
+    logger.debug("Player is master? "+(masterPlayer.toString() == mySession.id ? "SI" : "NO"));
     mySession.setMaster( masterPlayer.toString() == mySession.id ? true : false  );
     
     for(var i=0; i< match.getBean().players.length; i++){
       var player = match.getBean().players[i];
-      util.log("playerid: "+player.player+" - mySessionId: "+mySession.id);
+      logger.debug("playerid: "+player.player+" - mySessionId: "+mySession.id);
       if ( player.player.id == mySession.id ){
         mySession.color = player.color;
-        util.log("Color set "+mySession.color);
+        logger.debug("Color set "+mySession.color);
         break;
       }
     }
@@ -335,22 +336,22 @@ common.setSessionPropsFromDb = function(mySession, match){
     /*
     Se il match è stato ripristinato, provvedo a ricaricare le proprietà della sessione (carte giocate, carte attive, etc)
     */
-    util.log("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
+    logger.debug("match "+match+" - restoremap: "+match.getRestoredSessionsMap());
     if ( match && match.getRestoredSessionsMap() !== undefined ){
         var map = match.getRestoredSessionsMap();
         if ( map[mySession.id] !== undefined ){
             var m = cryo.parse(map[mySession.id]);//JSON.parse(map[mySession.id]);
-            util.log("");
+            logger.debug("");
             util.log(" -------------------------------- ");
             for(var idx in propertiesToRetrieve){
                 var prop = propertiesToRetrieve[idx];
-                util.log("chiave "+prop);
-                util.log("valore in sessione: "+mySession[prop]);
-                util.log("valore da db: "+m[prop]);
-                util.log("");
+                logger.debug("chiave "+prop);
+                logger.debug("valore in sessione: "+mySession[prop]);
+                logger.debug("valore da db: "+m[prop]);
+                logger.debug("");
                 mySession[prop] = m[prop];
             }
-            util.log(" -------------------------------- ");
+            logger.debug(" -------------------------------- ");
         }
         
         //Già che ci sono, aggiungo in lista le sessioni abbandonate

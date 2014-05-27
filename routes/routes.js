@@ -12,6 +12,8 @@ var siteEvents = require(rootPath+'/routes/siteEvents');
 var zlib = require("zlib");
 var cryo = require("cryo");
 var util = require("util");
+var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var config = require(rootPath+"/Configuration").Configuration
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -93,6 +95,25 @@ module.exports = function(app, sio) {
       })(req, res);      
   });
 
+    app.get("/logs", ensureAuthenticated, function(req, res){
+      if ( req.user && req.user.isAdmin == true ){
+        res.render("logger.html", {host: config.getHost()});
+        return;
+      }
+      res.end(403);
+    });
+
+    app.get('/download/:file(*)', function(req, res, next){
+        if ( req.user && req.user.isAdmin == true ){
+            var file = req.params.file
+            , path = rootPath + '/logs/' + file;
+
+            res.download(path);
+        }
+        else{
+            res.end("Permission Denied!");
+        }
+    });
 
     app.post("/createNewMatch", ensureAuthenticated, start.createNewMatch);
 
@@ -188,12 +209,10 @@ module.exports = function(app, sio) {
 
     //sio.sockets.on("connection", function(socket){app.get('/auth/google', passport.authenticate('google'));
 
-// Google will redirect the user to this URL after authentication.  Finish
-// the process by verifying the assertion.  If valid, the user will be
-// logged in.  Otherwise, authentication has failed.
-app.get('/auth/google/return', 
-  passport.authenticate('google', { successRedirect: '/',
-                                    failureRedirect: '/login' }));
+    // Google will redirect the user to this URL after authentication.  Finish
+    // the process by verifying the assertion.  If valid, the user will be
+    // logged in.  Otherwise, authentication has failed.
+    app.get('/auth/google/return', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
     sio.sockets.on("connection", function(socket){
       
       //util.log("sio.sockets.on[connection] -> session: "+util.inspect(socket.handshake, true));
