@@ -662,3 +662,13 @@ i.icon-google-plus-sign:hover{
 	background-color: #1ABC9C;
     color: #000000;
 }
+
+span.letter{
+    position: absolute;
+    margin-top: 15px;
+    z-index: 2;
+    margin-left: 23px;
+    font-size: 1.1em;
+    font-weight: bold;
+    font-family: monospace;
+}

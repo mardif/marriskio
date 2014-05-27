@@ -109,10 +109,10 @@
         <ul class="nav row">
           <li data-slide="1" class="col-12 col-sm-2"><a id="menu-link-1" href="#slide-1" title="Home page"><span class="icon icon-home"></span> <span class="text">HOME</span></a></li>
           <li data-slide="2" class="col-12 col-sm-2"><a id="menu-link-3" href="#slide-3" title="Login user"><span class="icon icon-user"></span> <span class="text">LOGIN</span></a></li>
-          <li data-slide="3" class="col-12 col-sm-2"><a id="menu-link-2" href="#slide-2" title="Game description"><span class="icon icon-briefcase"></span> <span class="text">WHAT IS IT?</span></a></li>
-          <li data-slide="4" class="col-12 col-sm-2"><a id="menu-link-4" href="#slide-4" title="How to play"><span class="icon icon-gears"></span> <span class="text">HOW TO PLAY</span></a></li>
-          <li data-slide="5" class="col-12 col-sm-2"><a id="menu-link-5" href="#slide-5" title="What people say about us"><span class="icon icon-heart"></span> <span class="text">SAY ABOUT US</span></a></li>
-          <li data-slide="6" class="col-12 col-sm-2"><a id="menu-link-6" href="#slide-6" title="Next Section"><span class="icon icon-envelope"></span> <span class="text">CONTACT</span></a></li>
+          <li data-slide="3" class="col-12 col-sm-2"><a id="menu-link-2" href="#slide-2" title="Game description"><span class="icon icon-briefcase"></span> <span class="text">{{__("DI COSA SI TRATTA")}}</span></a></li>
+          <li data-slide="4" class="col-12 col-sm-2"><a id="menu-link-4" href="#slide-4" title="How to play"><span class="icon icon-gears"></span> <span class="text">{{__("COME SI GIOCA")}}</span></a></li>
+          <li data-slide="5" class="col-12 col-sm-2"><a id="menu-link-5" href="#slide-5" title="What people say about us"><span class="icon icon-heart"></span> <span class="text">{{__("DICONO DI NOI")}}</span></a></li>
+          <li data-slide="6" class="col-12 col-sm-2"><a id="menu-link-6" href="#slide-6" title="Next Section"><span class="icon icon-envelope"></span> <span class="text">{{__("CONTATTI")}}</span></a></li>
         </ul>
         <div class="row">
           <div class="col-sm-2 active-menu"></div>
@@ -136,15 +136,15 @@
       <div id="home-row-1" class="row clearfix">
         <div class="col-12">
           <h1 class="font-semibold" style="margin-top:25px;padding-top:90px !important;">DEBELLUM</h1>
-          <h4 class="font-thin"><span class="font-semibold">F R E E</span> Strategy Real Time War Game.</h4>
+          <h4 class="font-thin">{{__("GIOCO STRATEGICO REAL-TIME <span class='font-semibold'>G R A T I S</span>")}}</h4>
           <br>
           <br>
         </div><!-- /col-12 -->
       </div><!-- /row -->
       <div id="home-row-2" class="row clearfix">
-        <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="4"><img src="/s02.png"></div><span class="font-semibold" style="background-color:#ce2127;padding:2px 4px;">PRICELESS</span></div>
-        <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="3"><img src="/s01.png"></div><span class="font-semibold" style="background-color:#cdb320;padding:2px 4px;">FUNNY</span></div>
-        <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="5"><img src="/s03.png"></div><span class="font-semibold" style="background-color:#2196cc;padding:2px 4px;">STRATEGIC</span></div>
+          <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="4"><span class="letter">D</span><img src="/s02.png"></div><span class="font-semibold" style="background-color:#ce2127;padding:2px 4px;">DIVERTENTE</span></div>
+          <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="3"><span class="letter">M</span><img src="/s01.png"></div><span class="font-semibold" style="background-color:#cdb320;padding:2px 4px;">MULTIPLAYER</span></div>
+          <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="5"><span class="letter">G</span><img src="/s03.png"></div><span class="font-semibold" style="background-color:#2196cc;padding:2px 4px;">GRATIS</span></div>
       </div><!-- /row -->
     </div><!-- /container -->
   </div><!-- /slide1 -->
@@ -153,12 +153,12 @@
   <div class="slide story" id="slide-2" data-slide="2">
     <div class="container">
       <div class="row title-row">
-        <div class="col-12 col-lg-6 col-sm-6 font-thin">Already signed?<br/><span class="font-semibold">LOGIN AND<BR/>START PLAYING</span></div>
-        <div class="col-12 col-lg-6 col-sm-6 font-thin">Not yet our friend?<br/><span class="font-semibold">Sign up</span><br/><span class="lead">or login via social network</span></div>
+        <div class="col-12 col-lg-6 col-sm-6 font-thin"> {{__("Gi&agrave; registrato?")}}<br/><span class="font-semibold">{{__("AUTENTICATI ED")}}<BR/>{{__("INIZIA A GIOCARE")}}</span></div>
+        <div class="col-12 col-lg-6 col-sm-6 font-thin">{{__("Non sei ancora un nostro amico?")}}<br/><span class="font-semibold">{{__("Registrati ora")}}</span><br/><span class="lead">{{__("oppure autenticati col tuo social network preferito")}}</span></div>
       </div><!-- /row -->
       <div class="row content-row">
         <div class="col-12 col-lg-6 col-sm-6">
-          <div class="message-error">ERRORE</div>
+          <div class="message-error">{{__("Errore")}}</div>
           <form method="POST" id="loginForm">
             <input type="hidden" name="_csrf" value="{{token}}">
             <div class="row content-row">
@@ -166,37 +166,37 @@
             <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
               <span style="font-size:25px;">
                 <span class="icon icon-envelope"></span>
-                <span class="font-thin">Your email</span>
+                <span class="font-thin">{{__("Email")}}</span>
               </span>
             </div>
             <div class="col-12 col-lg-6 col-sm-6">
-                <input data-toggle="tooltip" data-placement="top" data-original-title="Enter your email address" autofocus  class="form-control" name="email" placeholder="email@email.com" size="20" type="email" required>
+                <input data-toggle="tooltip" data-placement="top" data-original-title="Digita il tuo indirizzo email" autofocus  class="form-control" name="email" placeholder="email@email.com" size="20" type="email" required>
             </div>
             </div>
             <div class="row content-row">
               <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
                   <span style="font-size:25px;">
                     <span class="icon icon-asterisk"></span>
-                    <span class="font-thin">Your password</span>
+                    <span class="font-thin">{{__("Password")}}</span>
                   </span>
               </div>
               <div class="col-12 col-lg-6 col-sm-6">
-                  <input data-toggle="tooltip" data-placement="top" data-original-title="Enter your password (min 4 chars)" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
+                  <input data-toggle="tooltip" data-placement="top" data-original-title="Digita la tua password" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
               </div>
             </div><!-- /row -->
             <div class="row content-row">
               <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
-                <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password recovery")}}</i>
+                <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password dimenticata?")}}</i>
               </div>
               <div class="col-12 col-lg-6 col-sm-6">
-                <button class="btn btn-large btn-danger form-control" id="loginFormBtn">{{__("Play!")}}</button>
+                <button class="btn btn-large btn-danger form-control" id="loginFormBtn">{{__("Gioca!")}}</button>
               </div>
             </div>  
             <div class="row line-row" style="margin-top:20px;">
               <div class="hr">&nbsp;</div>
             </div>
             <div class="row subtitle-row" style="padding:10px;">
-              <div class="col-12 col-lg-12 col-sm-6 font-thin">Access from Social Network?<br/><span class="font-semibold">No problem!</span></div>
+              <div class="col-12 col-lg-12 col-sm-6 font-thin">{{__("Accesso da Social Network?")}}<br/><span class="font-semibold">{{__("Nessun problema!")}}</span></div>
             </div>
             <div class="row content-row">
               <div class="col-12 col-lg-6 col-sm-6 with-hover-text">
@@ -213,29 +213,29 @@
         <div class="col-12 col-lg-1 col-sm-1">
         </div>
         <div class="col-12 col-lg-5 col-sm-6">
-          <div class="register-message-error">ERRORE</div>
+          <div class="register-message-error">{{__("Errore")}}</div>
             <form method="POST" id="registerForm" class="form-horizontal" role="form">
               <div class="row content-row">
                 <fieldset>
                   <div class="form-group">
                     <!-- Username -->
-                    <label class="control-label col-sm-2"  for="cognome">{{__("Surname")}}</label>
+                    <label class="control-label col-sm-2"  for="cognome">{{__("Cognome")}}</label>
                     <div class="controls col-sm-8">
-                      <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("Your last name")}}' value="{{newuser.cognome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Your last name, min 2, max 15 chars")}}'>
+                      <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("il tuo cognome")}}' value="{{newuser.cognome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Il tuo cognome, min 2, max 15 caratteri")}}'>
                     </div>
                   </div>
                   <div class="form-group">
                     <!-- Username -->
                     <label class="control-label col-sm-2"  for="nome">{{__("Nome")}}</label>
                     <div class="controls col-sm-8">
-                      <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("Your first name")}}' value="{{newuser.nome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Your first name, min 2, max 15 chars")}}'>
+                      <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("il tuo nome")}}' value="{{newuser.nome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Il tuo nome, min 2, max 15 caratteri")}}'>
                     </div>
                   </div>
                   <div class="form-group">
                     <!-- Username -->
                     <label class="control-label col-sm-2"  for="nick">{{__("Nick")}}</label>
                     <div class="controls col-sm-8">
-                      <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Choose a nickname")}}' value="{{newuser.nick}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Nickname will be used for identify yourself, min 4, max 10 chars")}}'>
+                      <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Scegli un nickname")}}' value="{{newuser.nick}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Il nickname scelto sar&agrave; usato per identificarti durante le partite ed in chat, min 4, max 10 caratteri")}}'>
                     </div>
                   </div>
 
@@ -243,7 +243,7 @@
                     <!-- E-mail -->
                     <label class="control-label col-sm-2" for="email">{{__("E-mail")}}</label>
                     <div class="controls col-sm-8">
-                      <input type="email" id="email" name="email" placeholder='{{__("Your email address")}}' value="{{newuser.email}}" required class="input-xlarge form-control" data-toggle="tooltip" data-placement="top" data-original-title='{{__("Enter a valid mail: you will receive activation link, match reminder and invites")}}'>
+                      <input type="email" id="email" name="email" placeholder='{{__("Il tuo indirizzo email")}}' value="{{newuser.email}}" required class="input-xlarge form-control" data-toggle="tooltip" data-placement="top" data-original-title='{{__("Digita un indirizzo email valido: riceverai un link di attivazione del tuo account, le notifiche, gli inviti. etc etc")}}'>
                     </div>
                   </div>
 
@@ -251,15 +251,15 @@
                     <!-- Password-->
                     <label class="control-label col-sm-2" for="password">{{__("Password")}}</label>
                     <div class="controls col-sm-8">
-                      <input pattern=".{4,}" type="password" id="pass" name="pass" placeholder="password" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Password should be at least 4 chars")}}'>
+                      <input pattern=".{4,}" type="password" id="pass" name="pass" placeholder="password" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("La password deve essere almeno 4 caratteri")}}'>
                     </div>
                   </div>
 
                   <div class="form-group">
                     <!-- Password -->
-                    <label class="control-label col-sm-2"  for="password_confirm">Password ({{__("Confirm")}})</label>
+                    <label class="control-label col-sm-2"  for="password_confirm">Password ({{__("Conferma")}})</label>
                     <div class="controls col-sm-8">
-                      <input pattern=".{4,}" type="password" id="password_confirm" name="password_confirm" placeholder="confirm password" class="input-xlarge form-control" required onfocus="validatePass(document.getElementById('pass'), this);" oninput="validatePass(document.getElementById('pass'), this);"  data-placement="top" data-original-title='{{__("Re-enter password choosen")}}'>
+                      <input pattern=".{4,}" type="password" id="password_confirm" name="password_confirm" placeholder="conferma password" class="input-xlarge form-control" required onfocus="validatePass(document.getElementById('pass'), this);" oninput="validatePass(document.getElementById('pass'), this);"  data-placement="top" data-original-title='{{__("Digita nuovamente la password scelta")}}'>
                     </div>
                   </div>
 
