@@ -2,6 +2,7 @@ var common = require("../games/risiko/common");
 
 module.exports = function(app) {
     /* Risorse */
+
     // JAVASCRIPT
     app.get("/jquery.js", common.staticHandler("./games/risiko/js/jquery-1.9.1.min.js"));
     app.get("/html5shiv.js", common.staticHandler("./games/risiko/js/html5shiv.js"));
@@ -12,12 +13,31 @@ module.exports = function(app) {
     app.get("/script.js", common.staticHandler("./games/risiko/js/script.js"));
     app.get("/bootstrap.min.js", common.staticHandler("./games/risiko/js/bootstrap.min.js"));
     app.get("/bootstrap-acknowledgeinput.min.js", common.staticHandler("./games/risiko/js/bootstrap-acknowledgeinput.min.js"));
+    app.get("/tokeninput.js", common.staticHandler("./games/risiko/js/jquery.tokeninput.js"));
+    app.get("/date.js", common.staticHandler("./games/risiko/js/date-it-IT.js"));
+    app.get("/intro", common.staticHandler("./games/risiko/js/intro.min.js"));
+    app.get("/account-intro.js", common.staticHandler("./games/risiko/js/account-intro.js"));
+    app.get("/pnotify.js", common.staticHandler("./games/risiko/js/jquery.pnotify.js"));
+    app.get("/feedback.js", common.staticHandler("./games/risiko/js/jquery.feedback_me.js"));
+    //OLDBOOSTRAP JS
+    app.get("/bootstrapv2.min.js", common.staticHandler("./games/risiko/js/oldbootstrap/bootstrapv2.min.js"));
 
     // CSS
     app.get("/bootstrap.min.css", common.staticHandler("./css/bootstrap.min.css"));
+    app.get("/bootstrap-responsive.min.css", common.staticHandler("./css/bootstrap-responsive.css"));
     app.get("/font-awesome.min.css", common.staticHandler("./css/font-awesome.min.css"));
     app.get("/style.css", common.staticHandler("./css/style.css"));
     app.get("/jquery.fancybox-v=2.1.5.css", common.staticHandler("./css/jquery.fancybox-v=2.1.5.css"));
+    app.get("/pnotify.css", common.staticHandler("./css/jquery.pnotify.default.css"));
+    app.get("/pnotify.icons.css", common.staticHandler("./css/jquery.pnotify.default.icons.css"));
+    app.get("/token-input.css", common.staticHandler("./css/token-input.css"));
+    app.get("/token-input-fb.css", common.staticHandler("./css/token-input-facebook.css"));
+    app.get("/feedback.css", common.staticHandler("./css/jquery.feedback_me.css"));
+    app.get("/intro.css", common.staticHandler("./css/introjs.min.css"));
+    app.get("/index.css", common.staticHandler("./css/index.css"));
+    //OLDBOOSTRAP CSS
+    app.get("/bootstrapv2.min.css", common.staticHandler("./css/oldbootstrap/bootstrapv2.min.css"));
+    app.get("/bootstrap-responsivev2.min.css", common.staticHandler("./css/oldbootstrap/bootstrap-responsivev2.min.css"));
 
     // SUONI
     app.get("/bell", common.staticHandler("./games/risiko/sounds/small-bell-ring-01.mp3"));
@@ -60,24 +80,6 @@ module.exports = function(app) {
     app.get("/users", common.staticHandler("./images/users.png"));
     app.get("/notes", common.staticHandler("./images/notes.png"));
     app.get("/dices", common.staticHandler("./images/dices2.gif"));
-    app.get("/dice1", common.staticHandler("./images/1.png"));
-    app.get("/dice2", common.staticHandler("./images/2.png"));
-    app.get("/dice3", common.staticHandler("./images/3.png"));
-    app.get("/dice4", common.staticHandler("./images/4.png"));
-    app.get("/dice5", common.staticHandler("./images/5.png"));
-    app.get("/dice6", common.staticHandler("./images/6.png"));
-    app.get("/dice1r", common.staticHandler("./images/1r.png"));
-    app.get("/dice2r", common.staticHandler("./images/2r.png"));
-    app.get("/dice3r", common.staticHandler("./images/3r.png"));
-    app.get("/dice4r", common.staticHandler("./images/4r.png"));
-    app.get("/dice5r", common.staticHandler("./images/5r.png"));
-    app.get("/dice6r", common.staticHandler("./images/6r.png"));
-    app.get("/dice1g", common.staticHandler("./images/1g.png"));
-    app.get("/dice2g", common.staticHandler("./images/2g.png"));
-    app.get("/dice3g", common.staticHandler("./images/3g.png"));
-    app.get("/dice4g", common.staticHandler("./images/4g.png"));
-    app.get("/dice5g", common.staticHandler("./images/5g.png"));
-    app.get("/dice6g", common.staticHandler("./images/6g.png"));
     app.get("/arrow",  common.staticHandler("./images/arrow.gif"));
     app.get("/arrow2",  common.staticHandler("./images/arrow_rev.gif"));
     app.get("/arrow3",  common.staticHandler("./images/arrow_rev_up.gif"));
@@ -130,4 +132,24 @@ module.exports = function(app) {
     app.get("/google_share", common.staticHandler("./images/google_share.png"));
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
+
+    // IMMAGINI PARTITA RISIKO
+    app.get("/dice1", common.staticHandler("./images/risiko/1.png"));
+    app.get("/dice2", common.staticHandler("./images/risiko/2.png"));
+    app.get("/dice3", common.staticHandler("./images/risiko/3.png"));
+    app.get("/dice4", common.staticHandler("./images/risiko/4.png"));
+    app.get("/dice5", common.staticHandler("./images/risiko/5.png"));
+    app.get("/dice6", common.staticHandler("./images/risiko/6.png"));
+    app.get("/dice1r", common.staticHandler("./images/risiko/1r.png"));
+    app.get("/dice2r", common.staticHandler("./images/risiko/2r.png"));
+    app.get("/dice3r", common.staticHandler("./images/risiko/3r.png"));
+    app.get("/dice4r", common.staticHandler("./images/risiko/4r.png"));
+    app.get("/dice5r", common.staticHandler("./images/risiko/5r.png"));
+    app.get("/dice6r", common.staticHandler("./images/risiko/6r.png"));
+    app.get("/dice1g", common.staticHandler("./images/risiko/1g.png"));
+    app.get("/dice2g", common.staticHandler("./images/risiko/2g.png"));
+    app.get("/dice3g", common.staticHandler("./images/risiko/3g.png"));
+    app.get("/dice4g", common.staticHandler("./images/risiko/4g.png"));
+    app.get("/dice5g", common.staticHandler("./images/risiko/5g.png"));
+    app.get("/dice6g", common.staticHandler("./images/risiko/6g.png"));
 };

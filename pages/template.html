@@ -12,7 +12,7 @@
 
       <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
       <link rel="stylesheet" href="/jquery.fancybox-v=2.1.5.css" type="text/css" media="screen">
-      <link rel="stylesheet" href="/font-awesome.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="/font-awesome.min.css">
       <link rel="stylesheet" type="text/css" href="/style.css">  
       <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,600,300,200&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
       <link rel="prefetch" href="images/zoom.png">
@@ -20,13 +20,13 @@
       <script src="/html5shiv.js"></script>
       <script src="/jquery-1.10.2.min.js"></script>
       <script src="/jquery-migrate-1.2.1.min.js"></script>
-      <script src="/bootstrap.min.js"></script>
+      <!--script src="/bootstrap.min.js"></script>-->
       <script src="/jquery.easing.1.3.js"></script>
       <script type="text/javascript" src="/jquery.fancybox.pack-v=2.1.5.js"></script>
       <script src="/script.js"></script>
 
       <script type="text/javascript">
-        $(document).ready(function(e) {
+        $(document).ready(function() {
             var lis = $('.nav > li');
             menu_focus( lis[0], 1 );
             
@@ -42,7 +42,7 @@
           });
 
         function showAlertBox(title, message){
-          $("#alertBox DIV.modal-header h3").html(title);
+          $("#alertBox").find(" DIV.modal-header h3").html(title);
           $("#alertBox DIV.modal-body p").html(message);
           $("#alertBox").modal("show");
         }
