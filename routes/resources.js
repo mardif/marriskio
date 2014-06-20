@@ -53,6 +53,7 @@ module.exports = function(app) {
     // CSS RISIKO
     app.get("/map.css", common.staticHandler("./css/map.css"));
     app.get("/scrollbar.css", common.staticHandler("./css/jquery.jscrollpane.css"));
+    app.get("/risiko.css", common.staticHandler("./css/risiko.css"));
 
     // SUONI
     app.get("/bell", common.staticHandler("./games/risiko/sounds/small-bell-ring-01.mp3"));
@@ -93,8 +94,6 @@ module.exports = function(app) {
     app.get("/seatBusy", common.staticHandler("./images/seatBusy.png"));
     app.get("/play", common.staticHandler("./images/play.png"));
     app.get("/loading-small", common.staticHandler("./images/loading-small.gif"));
-    app.get("/user_add", common.staticHandler("./images/glyphicons_006_user_add.png"));
-    app.get("/user_remove", common.staticHandler("./images/glyphicons_007_user_remove.png"));
     app.get("/logo_small", common.staticHandler("./images/logo_small.png"));
     app.get("/logo", common.staticHandler("./images/logo.png"));
     app.get("/beta", common.staticHandler("./images/beta.png"));
@@ -168,6 +167,8 @@ module.exports = function(app) {
     app.get("/disconnected", common.staticHandler("./images/risiko/disconnected.png"));
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
+    app.get("/user_add", common.staticHandler("./images/risiko/glyphicons_006_user_add.png"));
+    app.get("/user_remove", common.staticHandler("./images/risiko/glyphicons_007_user_remove.png"));
 
 
 };

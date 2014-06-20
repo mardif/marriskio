@@ -404,7 +404,7 @@ body {
 		margin: 0 auto;
 		width: 100%;
 	}
-	
+
 @media (max-width: 991px) {
 	#slide-3 {
 		text-align: center;
@@ -440,7 +440,7 @@ body {
 #slide-4 {
 	background-color: #34495e;
 	color: #e4e6e5;
-	padding-top: 90px;
+	padding-top: 50px;
 }
 
 #slide-4 i {
@@ -453,6 +453,10 @@ body {
 	background-color: #f39c12;
 	color: #e4e6e5;
 	padding-top: 90px;
+}
+
+#slide-5 .subtitle-row{
+    font-size: 28px;
 }
 
 #slide-6 {
@@ -487,7 +491,7 @@ body {
 }
 	
 	#contact-row-4 {
-		padding-top: 125px;
+		padding-top: 30px;
 	}
 	
 	#contact-row-4 .col-12 {
@@ -511,7 +515,7 @@ body {
 	
 	#contact-row-4 .col-12 .hover-text {
 		display: none;
-		font-size: 20px;
+		font-size: 14px;
 	}
 
 #slide-7 {
