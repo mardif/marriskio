@@ -1,19 +1,25 @@
-{% extends 'template.html' %}
+{% extends 'old_template.html' %}
 {% block head %}
     {% parent %}
     {% block title %}Debellum - Real-time war game{% endblock %}
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/tokeninput.js"></script>
-    <script type="text/javascript" src="/date.js"></script>
-    <script type="text/javascript" src="/account-intro.js"></script>
     <link rel="stylesheet" href="/token-input.css" type="text/css" />
     <link rel="stylesheet" href="/token-input-fb.css" type="text/css" />
     <link href="pnotify.css" media="screen" rel="stylesheet" type="text/css">
     <link href="pnotify.icons.css" media="screen" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="feedback.css" type="text/css"/>
+    <link rel="stylesheet" href="intro.css" type="text/css"/>
+    <link rel="stylesheet" href="bootstrap-responsivev2.min.css" type="text/css"/>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/tokeninput.js"></script>
+    <script type="text/javascript" src="/date.js"></script>
+    <script type="text/javascript" src="/account-intro.js"></script>
     <script type="text/javascript" src="https://apis.google.com/js/platform.js">
       {lang: 'it'}
     </script>
     <script type="text/javascript" src="pnotify.js"></script>
+    <script src="feedback.js" type="text/javascript"></script>
+    <script src="intro" type="text/javascript"></script>
 
     <style>
         #___plusone_0 {
@@ -760,6 +766,20 @@
     </script>
 {% endblock %}
 {%block content%}
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/"><img src='/logo_small' border='0'></a>
+            <!--a href='/it'>IT</a>
+            <a href='/en'>EN</a-->
+            <div class="navbar-content">
+                <ul class="nav " style=""></ul>
+            </div>
+            <p class="head-logo"><span id="beta"><img src="/beta" width="10" border="0"></span>D E B E L L U M</p>
+            <p class="chrome">{{__("Compatibile con")}} <a href='https://www.google.com/intl/it/chrome/browser/' target="_CHROME"><img src="/chrome"></a></p>
+        </div>
+    </div>
+</div>
 <div class="hero-unit" style="position:relative;top:80px;padding:10px 60px;">
     <div class="row-fluid">
         <h2 style="float:left;" id='step1'>

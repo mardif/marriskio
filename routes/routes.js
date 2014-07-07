@@ -68,12 +68,31 @@ module.exports = function(app, sio) {
   app.get('/activate', start.activateUser);
 
   app.post('/loginAuth', function(req, res){
+     /*
+     //autenticazione via submit
      return passport.authenticate('local',
       {
         successRedirect: req.session.redirect_to ? req.session.redirect_to : "/account",
         failureRedirect: '/loginAuth',
         failureFlash: "Invalid username/password, please try again!"
       })(req, res);
+      */
+
+      //autenticazione via ajax
+      passport.authenticate('local', function(err, user) {
+        if (req.xhr) {
+          //thanks @jkevinburton
+          if (err)   { return res.json({ error: err.message }); }
+          if (!user) { return res.json({ error : "Invalid Login"}); }
+
+          req.login(user, {}, function(err) {
+            if (err) { return res.json({error:err.message}); }
+            return res.json(
+              { success: true }
+            );
+          });
+        }
+      })(req, res);      
   });
 
     app.get("/logs", ensureAuthenticated, function(req, res){

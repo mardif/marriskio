@@ -39,6 +39,7 @@
   
   #users ul li{
       margin-bottom:1px;
+      color: #ebebeb;
   }
   
   #chat{
@@ -233,9 +234,9 @@
   .bandellaButton, .bandellaButtonV{
 	  position:absolute;
 	  float:right;
-	  margin-top:2px;
+	  margin-top:0px;
 	  right: 0px;
-	  top: -1px;
+	  top: -px;
   }
   
   #arrow{
@@ -252,8 +253,8 @@
     padding: 5px;
 	border: 2px solid black;
 	background-color:#cacaca;
-	width:189px;
-	height:31px;
+	width:200px;
+	height:45px;
 	top:22px;
 	left: 10px;
 	/*overflow:auto;*/
@@ -277,7 +278,7 @@
 	border-radius: 6px;
 	background-color: #dedede;
     padding:2px;
-    height:24px;
+    height:33px;
     margin-right:1px;
   }
   

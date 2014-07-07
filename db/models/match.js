@@ -82,7 +82,7 @@ MatchSchema.virtual("infos")
              "<ul>";
           for(var idx=0; idx < this.players.length; idx++){
             var p = this.players[idx];
-            if ( p ){
+            if ( p && p.__id ){
               info += "<li id='"+p.id+"'>"+(p.player ? p.player.nick : "")+"</li>";
             }
           }

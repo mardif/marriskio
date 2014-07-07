@@ -2,19 +2,24 @@
 {% block head %}
     {% parent %}
     {% block title %}Debellum - Real-time war game{% endblock %}
+    <script type="application/javascript" src="/bootstrap.min.js"></script>
     <script>
       var ischromeMobile = /CriOS/.test(navigator.userAgent);
       var ischrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
       var isfirefox = /firefox/.test(navigator.userAgent.toLowerCase());
-      console.log("firefox: "+isfirefox);
-      console.log("chrome: "+ischrome);
       $(document).ready(function(){
         if ( isfirefox ){
-          showAlertBox("Attenzione", "Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>CHROME</a>");
+          showAlertBox("Attenzione", "Stai usando Firefox? Ok, può andare, ma sarebbe meglio utilizzare <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>Chrome</a>");
         }
         else if ( !ischrome && !ischromeMobile ){
-          showAlertBox("Attenzione", "Spiacente, Debellum è compatibile solo con <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>CHROME</a> (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
+          showAlertBox("Attenzione", "Spiacente, Debellum è compatibile solo con <a href='https://www.google.com/intl/it/chrome/browser/' target='_CHROME'>Chrome</a> (al massimo con Firefox)! Continua a tuo rischio e pericolo...");
         }
+
+        $("#loginForm input.form-control, #registerForm input.form-control").tooltip({'trigger':'focus'});
+
+        var lis = $('.nav > li');
+        menu_focus( lis[0], 1 );
+
       });
 
       function showAlertBox(title, message){
@@ -23,66 +28,393 @@
         $("#alertBox").modal("show");
       }
 
+      function send(url){
+        document.location.href = url;
+        //alert("todo in ajax");
+      }
+
+      function validatePass(p1, p2) {
+            if (p1.value != p2.value || p1.value == '' || p2.value == '') {
+                p2.setCustomValidity('{{__("Password errata")}}');
+            } else {
+                p2.setCustomValidity('');
+            }
+      }
+
+      $(document).on('submit', "#loginForm", function(event){
+
+        event.preventDefault();
+
+        var data = $("#loginForm").serialize();
+        makeAjaxCall("/loginAuth", "POST", data, 
+          function(data){
+            if ( data && data.success == true ){
+              document.location.href = "/account";
+            }
+            else{
+              showAlertBox("Authentication failed", data.error);
+            }
+          },
+          function(err){
+            showAlertBox("Authentication failed");
+          }
+        );
+
+      });
+
+      $(document).on("submit", "#registerForm", function(event){
+        event.preventDefault();
+        var data = $("#registerForm").serialize();
+        makeAjaxCall("/register", "POST", data, 
+          function(data){
+            if ( data && data.success == true ){
+              showAlertBox("Registration completed", data.message);
+              document.location.href = "/#slide-2";
+              $("#registerForm input").each(function(idx){ $(this).val("") });
+            }
+            else{
+              showAlertBox("Registration failed", data.error);
+            }
+          },
+          function(err){
+            showAlertBox("Registration failed");
+          }
+        );
+
+      });
+
+
     </script>
+    <style type="text/css">
+
+      .modal-dialog {
+        left:0px;
+      }
+
+    </style>
 {% endblock %}
 {% block content %}
-    <div class="container" style="margin-top:80px;">
-        <div class="row-fluid">
-            <div class="span12">
-                <div class="span1">
-                </div>
-                <div class="span3">
-                  <div class="well">
-                    <h4>{{__("Di cosa si tratta?")}}</h4>
-                    <p>{{__("E' un gioco strategico di guerra real-time multi-giocatore")}}<br/>
-                        <a href="/register">{{__("Registrati")}}</a> {{__("e gioca <b>gratis</b>!<br/>Una volta entrato, ricordati di dare un'occhiata al tutorial!")}} </a>
-                    </p>
-                  </div>
-                  <div class="well">
-                    <h4>{{__("Come funziona?")}}</h4>
-                    <p>{{__("Nessun programma da scaricare o installare, tutto via web e tutto rigorosamente in real-time, grazie al motore NodeJS ed allo standard HTML5")}}</p>
-                    <!--a class="btn btn-info" href="/tutorial"><span class="btn-label">Tutorial</span></a-->
-                  </div>
-                  <div class="well">
-                    <h4>{{__("Sei già registrato?")}}</h4>
-                    <p>{{__("Non perdere altro tempo ed entra!")}}</p>
-                    <a href="/loginAuth" role="button" class="btn btn-primary" data-toggle="modal">{{__("Fammi entrare ORA!")}}<br></a>
-                  </div>
-                  <div class="well visible-phone">
-                    <h3>{{__("Registrati per giocare SUBITO e GRATIS")}}</h3>
-                    <p>{{__("Cosa aspetti?")}}</p>
-                    <a class="btn btn-large btn-inverse" href="/register"><span class="btn-label">{{__("Registrati ed inizia a giocare!")}}</span></a>
-                  </div>
-                </div>
-                <div class="span8">
-                      <div class="hero-unit hidden-phone" style="position:absolute;padding-bottom:0px;">
-                        <div style='text-align:center;'>
-                            <img src='/main' border='0' style="height:410px;">
-                            <p style="position:relative;">
-                                <span class='ca-quote'>&ldquo;</span>
-                                <i>{{__("Attacca i nemici, difendi i territori, gioca le tue carte, ed infine... conquista il mondo!")}}</i>
-                                <span class='ca-quote-r'>&rdquo;</span>
-                            </p>
-                            <p>
-                              <a class="btn btn-large btn-inverse" href="/register"><span class="btn-label">{{__("Registrati ed inizia a giocare!")}}</span></a>
-                            </p>
-                        </div>
-                      </div>
-                </div>
+
+  <div class="navbar navbar-fixed-top" data-activeslide="1">
+    <div class="container">
+    
+      <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      
+      <div class="nav-collapse collapse navbar-responsive-collapse">
+        <ul class="nav row">
+          <li data-slide="1" class="col-12 col-sm-2"><a id="menu-link-1" href="#slide-1" title="Home page"><span class="icon icon-home"></span> <span class="text">HOME</span></a></li>
+          <li data-slide="2" class="col-12 col-sm-2"><a id="menu-link-2" href="#slide-2" title="Autenticazione utente"><span class="icon icon-user"></span> <span class="text">LOGIN</span></a></li>
+          <!--li data-slide="3" class="col-12 col-sm-2"><a id="menu-link-4" href="#slide-4" title="Game description"><span class="icon icon-briefcase"></span> <span class="text">{{__("DI COSA SI TRATTA")}}</span></a></li-->
+          <li data-slide="4" class="col-12 col-sm-2"><a id="menu-link-4" href="#slide-4" title="Come si gioca?"><span class="icon icon-gears"></span> <span class="text">{{__("COME SI GIOCA")}}</span></a></li>
+          <li data-slide="5" class="col-12 col-sm-2"><a id="menu-link-5" href="#slide-5" title="Cosa dicono di noi?"><span class="icon icon-heart"></span> <span class="text">{{__("DICONO DI NOI")}}</span></a></li>
+          <li data-slide="6" class="col-12 col-sm-2"><a id="menu-link-6" href="#slide-6" title="Contatti"><span class="icon icon-envelope"></span> <span class="text">{{__("CONTATTI")}}</span></a></li>
+        </ul>
+        <div class="row">
+          <div class="col-sm-2 active-menu"></div>
+        </div>
+      </div><!-- /.nav-collapse -->
+    </div><!-- /.container -->
+  </div><!-- /.navbar -->
+  
+  <!-- === Arrows === -->
+  <div id="arrows">
+    <div id="arrow-up" class="disabled"></div>
+    <div id="arrow-down"></div>
+    <div id="arrow-left" class="disabled visible-lg"></div>
+    <div id="arrow-right" class="disabled visible-lg"></div>
+  </div><!-- /.arrows -->
+  
+  
+  <!-- === MAIN Background === -->
+  <div class="slide story" id="slide-1" data-slide="1">
+    <div class="container">
+      <div id="home-row-1" class="row clearfix">
+        <div class="col-12">
+          <h1 class="font-semibold" style="margin-top:25px;padding-top:90px !important;">DEBELLUM</h1>
+          <h4 class="font-thin">{{__("GIOCO STRATEGICO REAL-TIME <span class='font-semibold'>G R A T I S</span>")}}</h4>
+          <br>
+          <br>
+        </div><!-- /col-12 -->
+      </div><!-- /row -->
+      <div id="home-row-2" class="row clearfix">
+          <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="4"><span class="letter">D</span><img src="/s02.png"></div><span class="font-semibold" style="background-color:#ce2127;padding:2px 4px;">DIVERTENTE</span></div>
+          <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="3"><span class="letter">M</span><img src="/s01.png"></div><span class="font-semibold" style="background-color:#cdb320;padding:2px 4px;">MULTIPLAYER</span></div>
+          <div class="col-12 col-sm-4"><div class="home-hover navigation-slide" data-slide="5"><span class="letter">G</span><img src="/s03.png"></div><span class="font-semibold" style="background-color:#2196cc;padding:2px 4px;">GRATIS</span></div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /slide1 -->
+  
+  <!-- === Slide 2 === -->
+  <div class="slide story" id="slide-2" data-slide="2">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 col-lg-6 col-sm-6 font-thin"> {{__("Gi&agrave; registrato?")}}<br/><span class="font-semibold">{{__("AUTENTICATI ED")}}<BR/>{{__("INIZIA A GIOCARE")}}</span></div>
+        <div class="col-12 col-lg-6 col-sm-6 font-thin">{{__("Non sei ancora un nostro amico?")}}<br/><span class="font-semibold">{{__("Registrati ora")}}</span><br/><span class="lead">{{__("oppure autenticati col tuo social network preferito")}}</span></div>
+      </div><!-- /row -->
+      <div class="row content-row">
+        <div class="col-12 col-lg-6 col-sm-6">
+          <div class="message-error">{{__("Errore")}}</div>
+          <form method="POST" id="loginForm">
+            <input type="hidden" name="_csrf" value="{{token}}">
+            <div class="row content-row">
+
+            <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
+              <span style="font-size:25px;">
+                <span class="icon icon-envelope"></span>
+                <span class="font-thin">{{__("Email")}}</span>
+              </span>
             </div>
+            <div class="col-12 col-lg-6 col-sm-6">
+                <input data-toggle="tooltip" data-placement="top" data-original-title="Digita il tuo indirizzo email" autofocus  class="form-control" name="email" placeholder="email@email.com" size="20" type="email" required>
+            </div>
+            </div>
+            <div class="row content-row">
+              <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
+                  <span style="font-size:25px;">
+                    <span class="icon icon-asterisk"></span>
+                    <span class="font-thin">{{__("Password")}}</span>
+                  </span>
+              </div>
+              <div class="col-12 col-lg-6 col-sm-6">
+                  <input data-toggle="tooltip" data-placement="top" data-original-title="Digita la tua password" class="form-control" pattern=".{4,}" placeholder="password"  name="pass" size="20" type="password" required>
+              </div>
+            </div><!-- /row -->
+            <div class="row content-row">
+              <div class="col-12 col-lg-5 col-sm-6" style="text-align:right;">
+                <i onClick="send('/recoveryPassword');" class="icon-recovery icon icon-key"> {{__("Password dimenticata?")}}</i>
+              </div>
+              <div class="col-12 col-lg-6 col-sm-6">
+                <button class="btn btn-large btn-danger form-control" id="loginFormBtn">{{__("Gioca!")}}</button>
+              </div>
+            </div>  
+            <div class="row line-row" style="margin-top:20px;">
+              <div class="hr">&nbsp;</div>
+            </div>
+            <div class="row subtitle-row" style="padding:10px;">
+              <div class="col-12 col-lg-12 col-sm-6 font-thin">{{__("Accesso da Social Network?")}}<br/><span class="font-semibold">{{__("Nessun problema!")}}</span></div>
+            </div>
+            <div class="row content-row">
+              <div class="col-12 col-lg-6 col-sm-6 with-hover-text">
+                <i onClick='send("/auth/facebook");' class="icon-social icon-facebook-sign"></i>
+                 <span class="hover-text font-light ">{{__("Login with Facebook")}}</span>
+              </div>
+              <div class="col-12 col-lg-6 col-sm-6 with-hover-text">
+                <i onClick='send("/auth/google");' class="icon-social icon-google-plus-sign"></i>
+                <span class="hover-text font-light ">{{__("Login with Google")}}</span>
+              </div>
+            </div>  
+          </form>
         </div>
+        <div class="col-12 col-lg-1 col-sm-1">
+        </div>
+        <div class="col-12 col-lg-5 col-sm-6">
+          <div class="register-message-error">{{__("Errore")}}</div>
+            <form method="POST" id="registerForm" class="form-horizontal" role="form">
+              <div class="row content-row">
+                <fieldset>
+                  <div class="form-group">
+                    <!-- Username -->
+                    <label class="control-label col-sm-2"  for="cognome">{{__("Cognome")}}</label>
+                    <div class="controls col-sm-8">
+                      <input autofocus pattern=".{2,15}" type="text" id="cognome" name="cognome" placeholder='{{__("il tuo cognome")}}' value="{{newuser.cognome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Il tuo cognome, min 2, max 15 caratteri")}}'>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <!-- Username -->
+                    <label class="control-label col-sm-2"  for="nome">{{__("Nome")}}</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{2,15}" type="text" id="nome" name="nome" placeholder='{{__("il tuo nome")}}' value="{{newuser.nome}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Il tuo nome, min 2, max 15 caratteri")}}'>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <!-- Username -->
+                    <label class="control-label col-sm-2"  for="nick">{{__("Nick")}}</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{4,10}" type="text" id="nick" name="nick" placeholder='{{__("Scegli un nickname")}}' value="{{newuser.nick}}" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("Il nickname scelto sar&agrave; usato per identificarti durante le partite ed in chat, min 4, max 10 caratteri")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- E-mail -->
+                    <label class="control-label col-sm-2" for="email">{{__("E-mail")}}</label>
+                    <div class="controls col-sm-8">
+                      <input type="email" id="email" name="email" placeholder='{{__("Il tuo indirizzo email")}}' value="{{newuser.email}}" required class="input-xlarge form-control" data-toggle="tooltip" data-placement="top" data-original-title='{{__("Digita un indirizzo email valido: riceverai un link di attivazione del tuo account, le notifiche, gli inviti. etc etc")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Password-->
+                    <label class="control-label col-sm-2" for="password">{{__("Password")}}</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{4,}" type="password" id="pass" name="pass" placeholder="password" class="input-xlarge form-control" required data-toggle="tooltip" data-placement="top" data-original-title='{{__("La password deve essere almeno 4 caratteri")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Password -->
+                    <label class="control-label col-sm-2"  for="password_confirm">Password ({{__("Conferma")}})</label>
+                    <div class="controls col-sm-8">
+                      <input pattern=".{4,}" type="password" id="password_confirm" name="password_confirm" placeholder="conferma password" class="input-xlarge form-control" required onfocus="validatePass(document.getElementById('pass'), this);" oninput="validatePass(document.getElementById('pass'), this);"  data-placement="top" data-original-title='{{__("Digita nuovamente la password scelta")}}'>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                      <div class="controls col-sm-offset-1 col-sm-10">
+                          {% autoescape false %}
+                              {{recaptcha_form}}
+                          {% endautoescape %}
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                    <!-- Button -->
+                    <div class="col-sm-offset-2 col-sm-8">
+                      <button class="btn btn-inverse" onClick="javascript:history.go(-1);">{{__("Indietro")}}</button>&nbsp;
+                      <button class="btn btn-danger">{{__("Registrati")}}</button>
+                    </div>
+                  </div>
+                </fieldset>
+                <input type="hidden" name="_csrf" value="{{token}}">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- /container -->
+  </div><!-- /slide2 -->
+  
+  <!-- === SLide 3 - Portfolio -->
+  <!--<div class="slide story" id="slide-3" data-slide="3">
+    <div class="row">
+      
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p01-large.jpg"><img class="thumb" src="images/portfolio/p01-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p02-large.jpg"><img class="thumb" src="images/portfolio/p02-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p09-large.jpg"><img class="thumb" src="images/portfolio/p09-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p010-large.jpg"><img class="thumb" src="images/portfolio/p10-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p05-large.jpg"><img class="thumb" src="images/portfolio/p05-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p06-large.jpg"><img class="thumb" src="images/portfolio/p06-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p07-large.jpg"><img class="thumb" src="images/portfolio/p07-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p08-large.jpg"><img class="thumb" src="images/portfolio/p08-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p03-large.jpg"><img class="thumb" src="images/portfolio/p03-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p04-large.jpg"><img class="thumb" src="images/portfolio/p04-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p11-large.jpg"><img class="thumb" src="images/portfolio/p11-small.jpg" alt=""></a></div>
+      <div class="col-12 col-sm-6 col-lg-2"><a data-fancybox-group="portfolio" class="fancybox" href="images/portfolio/p12-large.jpg"><img class="thumb" src="images/portfolio/p12-small.jpg" alt=""></a></div>
     </div>
-    <div id="alertBox" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3></h3>
+    <!-- /row -->
+  <!--</div>--><!-- /slide3 -->
+  
+  <!-- === Slide 4 - Process === -->
+  <div class="slide story" id="slide-4" data-slide="4">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-thin">{{__("Come si")}} <span class="font-semibold">{{__("GIOCA")}}</span></div>
+      </div><!-- /row -->
+      <div class="row line-row">
+        <div class="hr">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row subtitle-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-10 font-light">Chi non ha mai giocato al caro vecchio <span class="font-semibold">Risiko</span>?<br/>Bene, immaginate un gioco di strategia simile ma....</div>
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row content-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-bolt"></i></p>
+          <h2 class="font-thin"><span class="font-semibold" >Real-Time</span></h2>
+          <h4 class="font-thin">Puoi giocare in tempo reale con i tuoi amici vicini e lontani</i>.<br/>E se un giocatore si assenta? Nessun problema:<br/>verr&agrave; avvisato tramite email che &egrave; giunto il suo turno!</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-spinner"></i></p>
+          <h2 class="font-thin">Partite<br/><span class="font-semibold">infinite</span></h2>
+          <h4 class="font-thin">E' una partita avvincente, ma stai cedendo alla stanchezza?<br/>Tranquillo, il sistema salva la partita ad ogni turno: si ricomincia da dove si era terminato senza problemi</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-trophy"></i></p>
+          <h2 class="font-thin"><span class="font-semibold">Strategia</span></h2>
+          <h4 class="font-thin">Scegli la tua strategia vincente, stringi alleanze grazie alla chat integrata, ma ricorda il tuo UNICO scopo: conquistare il mondo senza piet&agrave; n&eacute; compromessi</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-map-marker"></i></p>
+          <h2 class="font-thin">Integrazione<br><span class="font-semibold">Social</span></h2>
+          <h4 class="font-thin">Condividi le tue partite e partecipa a quelle dei tuoi amici, anche tramite Google+ e Facebook!</h4>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-2">
+          <p><i class="icon icon-gift"></i></p>
+          <h2 class="font-thin"><span class="font-semibold">GRATIS</span></h2>
+          <h4 class="font-thin">Ebbene s&igrave;, &egrave; tutto gratis! In cambio del vostro divertimento, vi chiediamo solo di aiutarci a crescere e farci conoscere ai vostri amici</h4>
+        </div><!-- /col12 -->
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /slide4 -->
+  
+  <!-- === Slide 5 === -->
+  <div class="slide story" id="slide-5" data-slide="5">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-thin"><span class="font-semibold">Cosa dicono di noi?</span></div>
+      </div><!-- /row -->
+      <div class="row line-row">
+        <div class="hr">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row subtitle-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-10 font-light">
+            Debellum &egrave; nato quasi per caso: ogni volta che si voleva giocare a Risiko<br/>non si riusciva mai ad organizzarsi causa orario, luogo, tempi stretti...<br/>
+            Cos&igrave; &egrave; nata l'idea di realizzare qualcosa online,<br/>utilizzando tecnologie <span class="font-semibold">opensource</span>,<br/>introducendo qualche variante nel gioco per renderlo pi&ugrave; dinamico e divertente.<br/>
+            Amico dopo amico, <span class="font-semibold">Debellum</span> ha conquistato sempre pi&ugrave; consensi,<br/>finch&eacute; &egrave; sbarcato finalmente online, a disposizione di voi tutti.<br/>
+            Un grazie agli amici di <a href="http://www.fantagiochi.it/2013/11/debellum.php" target="_FANTAGIOCHI">Fantagiochi.it</a> che ci hanno recensito positivamente!<br/>Attendiamo i commenti e le critiche anche di altre testate.
         </div>
-        <div class="modal-body">
-            <p class="lead"></p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">{{__("Chiudi")}}</a>
-        </div>
-    </div>
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /slide5 -->
+  
+  <!-- === Slide 6 / Contact === -->
+  <div class="slide story" id="slide-6" data-slide="6">
+    <div class="container">
+      <div class="row title-row">
+        <div class="col-12 font-light">Hai qualche dubbio, domande, perplessit&agrave;? <span class="font-semibold">Scrivici!</span></div>
+      </div><!-- /row -->
+      <div class="row line-row">
+        <div class="hr">&nbsp;</div>
+      </div><!-- /row -->
+      <div class="row subtitle-row">
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+        <div class="col-12 col-sm-10 font-light">Siamo ben felici di ascoltarti,<br/>che siano critiche o complimenti.<br/>L'importante &egrave; che <span class="font-semibold">giochi, ti diverti<br/>e ci fai conoscere ai tuoi amici</span>!</div>
+        <div class="col-sm-1 hidden-sm">&nbsp;</div>
+      </div><!-- /row -->
+      <div id="contact-row-4" class="row">
+        <div class="col-12 col-sm-3 with-hover-text">
+          <p><a target="_blank" href="mailto:info@debellum.net"><i class="icon icon-envelope"></i></a></p>
+          <span class="hover-text font-light ">info@debellum.net</span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-3 with-hover-text">
+          <p><a target="_blank" href="#"><i class="icon icon-home"></i></a></p>
+          <span class="hover-text font-light ">
+              @author: Mariano Di Felice<br/>
+              @team: Alfredo Gagliardi<br/>
+              @location: Monteprandone (AP) <br/>
+              @country: Italy
+          </span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-3 with-hover-text">
+          <p><a target="_blank" href="https://it-it.facebook.com/debellum" target="_FACEBOOK_"><i class="icon icon-facebook"></i></a></p>
+          <span class="hover-text font-light ">facebook/debellum</span></a>
+        </div><!-- /col12 -->
+        <div class="col-12 col-sm-3 with-hover-text">
+          <p><a target="_blank" href="https://plus.google.com/+DebellumNet" target="_GPLUS_"><i class="icon icon-google-plus"></i></a></p>
+          <span class="hover-text font-light ">+DebellumNet</span></a>
+        </div><!-- /col12 -->
+      </div><!-- /row -->
+    </div><!-- /container -->
+  </div><!-- /Slide 6 -->
 
 {% endblock %}

@@ -866,20 +866,17 @@ function show_infoWindow(offenderId, defenderId){
 
 	var footer = $("#moveTroupes .modal-footer");
 	footer.children().remove();
-	var back = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin:0 20px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+", true);' title='Ogni click riporti indietro una truppa dal territorio conquistato!'><img src='/user_remove' border='0'></a>");
+	var back = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin:0 20px;border:1px solid black;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+", true);' title='Ogni click riporti indietro una truppa dal territorio conquistato!'><img src='/user_remove' border='0'></a>");
 	back.appendTo(footer);
 
-	var move = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin-right:20px;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");' title='Ogni click sposti una truppa nel territorio conquistato!'><img src='/user_add' border='0'></a>");
+	var move = $("<a href='javascript:void(0);' class='btn btn-mini' style='margin-right:20px;border:1px solid black;' onClick='moveTroupToStateConquered("+offenderId+", "+defenderId+");' title='Ogni click sposti una truppa nel territorio conquistato!'><img src='/user_add' border='0'></a>");
 	move.appendTo(footer);
 
 	$("<a href='javascript:void(0);' data-dismiss='modal' class='btn btn-success btn-large'>Termina spostamento</a>").appendTo(footer);
 
-	var d = $("#moveTroupes").modal({
-		show: true,
-		keyboard: false
-	});
+	var d = $("#moveTroupes").modal('show');
 
-	d.unbind("hidden").bind("hidden", function(e){
+	d.unbind("hidden.bs.modal").bind("hidden.bs.modal", function(e){
 		gmap.setZoom(old_zoom);
 		gmap.setCenter(old_center);
 	});
