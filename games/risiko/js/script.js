@@ -206,6 +206,7 @@ function enable_arrows( dataslide ) {
 		$('#arrow-down').removeClass('disabled');
 	}
 	if ( dataslide == 3 ) {
+        return;
 		$('#arrow-left').removeClass('disabled');
 		$('#arrow-right').removeClass('disabled');
 	}
@@ -333,10 +334,10 @@ jQuery(document).ready(function ($) {
 		
 		switch( $(this).attr('id') ) {
 			case 'arrow-up':
-				offset_top = ( datasheet - 1 == 1 ) ? '0px' : $('.slide[data-slide="' + (datasheet-1) + '"]').offset().top;
+				offset_top = ( datasheet - 1 == 1 ) ? '0px' : $('.slide[data-slide="' + (datasheet-1 == 3 ? datasheet-2 : datasheet-1) + '"]').offset().top;
 				break;
 			case 'arrow-down':
-				offset_top = $('.slide[data-slide="' + (datasheet+1) + '"]').offset().top;
+				offset_top = $('.slide[data-slide="' + (datasheet+1 == 3 ? datasheet+2 : datasheet+1) + '"]').offset().top;
 				break;
 			case 'arrow-left':
 				offset_left = $('#slide-3 .row').offset().left + 452;
