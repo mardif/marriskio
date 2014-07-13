@@ -1048,7 +1048,7 @@ module.exports = function(sio, socket){
         var winner = match.getBean().winner;
         var nickWinner;
         if ( winner ){
-            nickWinner = match.getEngine().getSession(winner.id).nick;
+            nickWinner = match.getEngine().getSession(winner.toString()).nick;
         }
         logger.debug("user winner: "+winner);
         sio.sockets.in(socket.store.data.matchId).emit("buildEntireMap", {
