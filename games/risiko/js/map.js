@@ -445,7 +445,7 @@ socket.on("attackResults", function(data){
 
 			socket.emit("getActualWorld", {nextStep: false, matchId: matchId, sessionId: sessionId});
 
-			if ( data.sessionId == sessionId && offenderTroupes > 1 ){
+			if ( data.sessionId == sessionId && offenderTroupes > 1 && data.haveWeAWinner != true ){
 				show_infoWindow(data.offender.statoId, data.defender.statoId);
 			}
 

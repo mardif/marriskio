@@ -209,7 +209,7 @@ module.exports = function(sio, socket){
         var result = engine.attack(data.stateToAttack);
         result.defenderName = data.defenderName;
 
-        //result.haveWeAWinner = engine.haveWeAWinner(data);
+        result.haveWeAWinner = engine.haveWeAWinner(data);
 
         setTimeout(function(){
             sio.sockets.in(socket.store.data.matchId).emit("attackResults", result);
