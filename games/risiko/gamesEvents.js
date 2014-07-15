@@ -337,8 +337,40 @@ module.exports = function(sio, socket){
         }
         else if ( data && data.nextStep === false ){
             logger.debug("salvataggio dei rinforzi initiali effettuato: ora si iniziano i turni preliminari");
-            saveMatch(match);
+            logger.debug("TERMINE RAFFORZAMENTO INIZIALE");
+
             var turnSession = engine.getSession(engine.getSessioneDiTurno());
+
+            /*
+            * Invio email notifica del termine fase di rafforzamento iniziale
+            * */
+            var body = common.getHeaderMailTemplate();
+            body += "Un saluto dal team di Debellum!<br/>\
+                                    <br/>Volevamo informarti che la fase di posizionamento iniziale delle truppe nella partita "+match.getBean().name+"! &egrave; terminato!<br/>\
+                                    <br/><b>Entra subito, gioca le tue carte e conquista il mondo!</b>";
+            body += common.getFooterMailTemplate();
+
+            var addresses = [];
+            for(var i=0; i < match.getBean().players.length; i++){
+                var player = match.getBean().players[i].player;
+                addresses.push(player.email);
+            }
+
+
+            var headers = {
+                text:    body,
+                from:    "debellum.reminder@debellum.net",
+                bcc:      addresses.join(","),
+                subject: "Debellum: partita "+match.getBean().name+" posizionamento iniziale terminato!"
+            };
+
+            common.sendEmail(headers);
+            /*
+             * FINE email notifica del termine fase di rafforzamento iniziale
+             * */
+
+            saveMatch(match);
+
             if ( turnSession && turnSession.statusActive === false ){
                 var body = common.getHeaderMailTemplate();
                 body += "Un saluto dal team di Debellum!<br/>\
