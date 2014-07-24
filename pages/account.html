@@ -37,6 +37,12 @@
         A.shareMatchFacebook img, A.shareMatchGoogle img{
             cursor: pointer;
         }
+
+        .control-group2{
+            width: 50%;
+            float: left;
+        }
+
     </style>
     <script>
     window.___gcfg = {lang: 'it'};
@@ -261,6 +267,15 @@
             if( flashMessage == true ){
                 $("#message").show();
             }
+
+        });
+
+        $(document).on("change", "#num_players", function(){
+            $("#num_players_ai").empty();
+            var num = $(this).val()-1;
+            for(i=0; i<=num; i++){
+                $("<option value='"+i+"'>"+i+"</option>").appendTo($("#num_players_ai"));
+            }
         });
 
         $(document).on("click", "IMG.playMatchIcon", function(){
@@ -388,9 +403,9 @@
                     
                     if ( idx < mm.players.length ){
                         var p = mm.players[idx];
-                        $("<li>"+p.player.nick+"</li>").appendTo(elenco);
+                        $("<li>"+p.nick+"</li>").appendTo(elenco);
                         $(this).attr("href", "javascript:void(0);").find(" > img")
-                        .attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick);
+                        .attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.nick);
                     }
                     else{
                         $(this).attr("href", "javascript:confirmJoinMatch('"+mm._id+"');").find(" > img")
@@ -479,8 +494,8 @@
                     //setup degli slot occupate
                     if ( indice < mm.players.length ){
                         var p = mm.players[indice];
-                        $("<li>"+p.player.nick+"</li>").appendTo(elenco);
-                        $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.player.nick).attr("mid", mm._id).attr("id", p.player._id);
+                        $("<li>"+p.nick+"</li>").appendTo(elenco);
+                        $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.nick).attr("mid", mm._id).attr("id", p.player._id);
                     }
                     //setup degli slot liberi
                     else if (indice < mm.players.length + mm.free) {
@@ -994,7 +1009,6 @@
         </div>
     </div>
 </div>
-
 <div id="newMatch" class="modal hide fade">
     <form method="POST" action="/createNewMatch">
       <div class="modal-header">
@@ -1009,23 +1023,31 @@
                 <p class="help-block">{{__("Non sono ammessi spazi. Se lasciato vuoto, verrà dato un nome in automatico.")}} <br/><span class='verysmall'>{{__("min 3, max 15 caratteri")}}</span></p>
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label"  for="num_players">{{__("Numero di giocatori")}}</label>
+            <div class="control-group2">
+              <label class="control-label"  for="num_players">{{__("Numero di giocatori reali")}}</label>
               <div class="controls">
-                <select name="num_players">
+                <select name="num_players" id="num_players">
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                     <option value="6">6</option>
                 </select>
-                <p class="help-block">{{__("Seleziona il tuo colore")}}</p>
+              </div>
+            </div>
+            <div class="control-group2">
+              <label class="control-label"  for="num_players_ai">{{__("Numero di giocatori computer")}}</label>
+              <div class="controls">
+                  <select name="num_players_ai" id="num_players_ai">
+                      <option value="0">0</option>
+                  </select>
               </div>
             </div>
             <div class="control-group">
               <label class="control-label"  for="player_color">{{__("Colore")}}</label>
               <select name="player_color" id="player_color">
               </select>
+              <p class="help-block">{{__("Seleziona il tuo colore")}}</p>
             </div>
             <div class="control-group">
                 {% if user.socialName != "facebook" %}

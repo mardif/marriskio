@@ -16,6 +16,7 @@ var MatchSchema = new Schema({
     players:[{
       player: {type: Schema.ObjectId, ref: 'User'},
       color: {type: String, required: true, default: "#000000"},
+	  nick: {type: String, required: true},
       stats: {
         dicesWon: 0,
         dicesLost: 0
@@ -27,6 +28,7 @@ var MatchSchema = new Schema({
     running: { type: Boolean, default: false },
     masterPlayer: {type: Schema.ObjectId, ref: 'User'},
     num_players: { type: Number, required: true },
+    num_players_ai: { type: Number, default: 0 },
     pause: {type: Boolean, default: false},
     isPublic: {type: Boolean, default: true},
     frozen: { 

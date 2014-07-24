@@ -19,6 +19,7 @@ var passport = require('passport')
 var User = require('./models/user');
 var Match = require('./models/match');
 var Recovery = require("./models/temp");
+var AIPlayer =
 //var PlayerMatch = require('./models/playerMatch');
 
 // Define local strategy for Passport
@@ -140,17 +141,22 @@ var sessionStore = new mongoStore({url: conn});
 var AccessDB = function(){
 
   // Define class variable
-  var myEventID = null
+  var myEventID = null;
+  this.AIPlayer = null;
 
   // initialize DB
   this.startup = function(callback) {
     mongoose.connect(conn);
+	var $this = this;
     // Check connection to mongoDB
     mongoose.connection.on('open', function() {
       logger.log('We have connected to mongodb');
       if ( callback ){
         callback();
       }
+	  $this.getAIPlayer(function(err, player){
+		  $this.AIPlayer = player;
+	  });
     });
 
   },
@@ -230,15 +236,31 @@ var AccessDB = function(){
   },
 
   this.createNewMatch = function(req, callback){
+
+	  var players = [];
+	  players.push({player: req.user._id, color: req.body.player_color, nick: req.user.nick});
+	  if ( req.body.num_players_ai > 0 ){
+		  for(var i=1; i<= req.body.num_players_ai; i++) {
+			  players.push({ player: this.AIPlayer._id, color: "#cacaca", nick: "AI " + i });
+		  }
+	  }
       var newMatch = new Match({
           name: (req.body.name.trim() ? req.body.name : ""+Date.now()),
           num_players: req.body.num_players,
-          players: [ {player: req.user._id, color: req.body.player_color} ],
+          num_players_ai: req.body.num_players_ai,
+          players: players,
           masterPlayer: req.user._id
       });
       newMatch.save(function(err) {
-        if (err) return errorHelper(err, callback);
-        callback(null, newMatch);
+          if (err) return errorHelper(err, callback);
+          callback(null, newMatch);
+      });
+
+  },
+
+  this.getAIPlayer = function(callback){
+      User.findOne({"nick": "AI"}, function(err, AIPlayer){
+          callback(err, AIPlayer);
       });
   },
 
@@ -301,7 +323,7 @@ var AccessDB = function(){
       callback(err, players);
     });
   };
-  
+
   this.saveMatchStatus = function(engine, matchBean, callback){
         
     //Trovato il match, provvedo a salvare lo stato serializzato
