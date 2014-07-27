@@ -43,6 +43,11 @@
             float: left;
         }
 
+        .AISeat{
+            opacity: 0.5;
+            filter: alpha(opacity=50); /* For IE8 and earlier */
+        }
+
     </style>
     <script>
     window.___gcfg = {lang: 'it'};
@@ -406,6 +411,9 @@
                         $("<li>"+p.nick+"</li>").appendTo(elenco);
                         $(this).attr("href", "javascript:void(0);").find(" > img")
                         .attr("src", "seatBusy").addClass("playerImage").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.nick);
+                        if (p.player.isAI == true ){
+                            $(this).addClass("AISeat").attr("data-original-title", "Intelligenza Artificiale<br/>"+p.nick);
+                        }
                     }
                     else{
                         $(this).attr("href", "javascript:confirmJoinMatch('"+mm._id+"');").find(" > img")
@@ -440,7 +448,7 @@
                 var td = $('<td class="seats"></td>');
                 for(var idx in m.players){
                     var p = m.players[idx];
-                    td.append('<a href="javascript:void(0);"><img src="seatBusy" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+p.player.nick+'"></a>');
+                    td.append('<a href="javascript:void(0);"><img src="seatBusy" class="playerImage '+ (p.player.isAI == true ? "AISeat" : "") +'" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+(p.player.isAI == true ? "Intelligenza Artificiale "+p.nick : p.nick)+'"></a>');
                 }
                 for(var idx=0; idx < m.free;idx++){
                     td.append('<a href="javascript:confirmJoinMatch(\''+m._id+'\');"><img src="seatFree" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="Posto Libero! Partecipa!"></a>');
@@ -496,6 +504,9 @@
                         var p = mm.players[indice];
                         $("<li>"+p.nick+"</li>").appendTo(elenco);
                         $(this).attr("src", "seatBusy").addClass("playerImage seatBusy").attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", "").attr("data-original-title", p.nick).attr("mid", mm._id).attr("id", p.player._id);
+                        if (p.player.isAI == true ){
+                            $(this).addClass("AISeat").attr("data-original-title", "Intelligenza Artificiale\n"+p.nick);
+                        }
                     }
                     //setup degli slot liberi
                     else if (indice < mm.players.length + mm.free) {
@@ -568,7 +579,7 @@
                     var td = $('<td class="seats"></td>');
                     for(var idx in m.players){
                         var p = m.players[idx];
-                        td.append('<a href="javascript:void(0);"><img src="seatBusy" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+p.player.nick+'"></a>');
+                        td.append('<a href="javascript:void(0);"><img src="seatBusy" class="playerImage" border="0" data-toggle="tooltip" data-placement="top" title="" data-original-title="'+p.nick+'"></a>');
                     }
                     tr.append(td);
                     tr.append('<td class="winner">'+m.winner.nick+'</td>');
@@ -828,7 +839,7 @@
                         </thead>
                         <tbody class='match'>
                             {% for m in myMatchList %}
-                                {% if !m.winner %}
+                                {% if !m.winner && false %}
                                     <tr id="{{m._id}}">
                                         <td class="actions">
                                             <div class="btn-group">
@@ -860,7 +871,7 @@
                                         <td class="master">{{m.masterPlayer.nick}}</td>
                                         <td class="seats">
                                             {% for p in m.players %}
-                                                <img src='seatBusy' id='{{p.player._id}}' mid='{{m._id}}' class='playerImage seatBusy' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                                <img src='seatBusy' id='{{p.player._id}}' mid='{{m._id}}' class='playerImage seatBusy {% if p.player.isAI == true %} AISeat {% endif %}' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.nick}}">
                                             {% endfor %}
                                             {% for idx in m.free|buildArray %}
                                                 <img src='seatFree' border='0'>
@@ -910,14 +921,14 @@
                         </thead>
                         <tbody class='match'>
                             {% for m in allMatches %}
-                                {% if m|length == 0 %}
+                                {% if false %}
                                 <tr id="{{m._id}}">
                                     <td class="infos"><a href='#' id="{{m._id}}" rel="popover" data-toggle="popover" data-placement="right" title="" data-content="{{m.infos}}" data-original-title='{{__("Match Infos")}}'>{{m.name}}</a></td>
                                     <td class="date">new Date('{{m.started_at|date('j F Y H:i:s')}}').toString("d MMMM yyyy HH:mm:ss")</td>
                                     <td class="master">{{m.masterPlayer.nick}}</td>
                                     <td class="seats">
                                         {% for p in m.players %}
-                                            <a href='javascript:void(0);'><img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}"></a>
+                                            <a href='javascript:void(0);'><img src='seatBusy' class='playerImage {% if p.player.isAI == true %} AISeat {% endif %}' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.nick}}"></a>
                                         {% endfor %}
                                         {% for idx in m.free|buildArray %}
                                             <a href="javascript:confirmJoinMatch('{{m._id}}');"><img src='seatFree' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title='{{__("Posto libero! Partecipa!")}}'></a>
@@ -964,7 +975,7 @@
                                         <td>{{m.masterPlayer.nick}}</td>
                                         <td>
                                             {% for p in m.players %}
-                                                <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.player.nick}}">
+                                                <img src='seatBusy' class='playerImage' border='0' data-toggle="tooltip" data-placement="top" title="" data-original-title="{{p.nick}}">
                                             {% endfor %}
                                             {% for idx in m.free|buildArray %}
                                                 <img src='seatFree' border='0'>

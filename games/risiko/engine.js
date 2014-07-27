@@ -526,6 +526,7 @@ var Engine = function(matchId){
 			}
 
 		}
+
 		this.setEngineLoaded(true);
 
 		this.inizializzaTurni();

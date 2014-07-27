@@ -21,7 +21,7 @@ function ensureAuthenticated(req, res, next) {
   if ( req.session.redirect_to == "/getMatchUpdates" ){  //non devo beccare la chiamata ajax di aggiornamento partite
     req.session.redirect_to = "/account";
   }
-  res.redirect('/loginAuth');
+  res.redirect('/#slide-2');
 }
 
 function indexRedirect(req, res, next){
