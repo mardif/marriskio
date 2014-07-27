@@ -34,11 +34,12 @@ var Session = function(user){
 	this.alliances = [];
     
     this.AIActivated = false;
-    this.realPlayer = user.realPlayer ? user.realPlayer : true;
+	this.isAI = user.isAI;
+	this.AI = null;
 
-    this.isRealPlayer = function(){
-        return this.realPlayer;
-    }
+	this.isAI = function(){
+		return this.isAI;
+	}
 
 	/* METODO PUBBLICO DA CHIAMARE QUANDO VENGONO APPLICATE LE CARTE BONUS */
 	this.applyCard = function(card){

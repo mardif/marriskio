@@ -2,6 +2,7 @@ var common = require("./common");
 var util = require("util");
 var cards = require("./cards");
 var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var AI = require("./AI.js");
 
 var Engine = function(matchId){
 	this.states = {};
@@ -63,6 +64,9 @@ var Engine = function(matchId){
 			}
 		}
 		if ( exists === false ){
+			if ( session.isAI == true ){
+				session.AI = new AI(this);
+			}
 			this.sessions.push(session);
 		}
 	};

@@ -238,10 +238,10 @@ var AccessDB = function(){
   this.createNewMatch = function(req, callback){
 
 	  var players = [];
-	  players.push({player: req.user._id, color: req.body.player_color, nick: req.user.nick});
+	  players.push({player: req.user._id, color: req.body.player_color, nick: req.user.nick, isAI: false});
 	  if ( req.body.num_players_ai > 0 ){
 		  for(var i=1; i<= req.body.num_players_ai; i++) {
-			  players.push({ player: this.AIPlayer._id, color: "#cacaca", nick: "AI " + i });
+			  players.push({ player: this.AIPlayer._id, color: "#cacaca", nick: "AI " + i, isAI: true });
 		  }
 	  }
       var newMatch = new Match({

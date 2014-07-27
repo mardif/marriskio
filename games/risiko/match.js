@@ -55,7 +55,7 @@ var Match = function(bean){
   this.init = function(){
     for(var i = 0; i < bean.num_players; i++){
       var sess = bean.players[i];
-      mySession = new Session({_id: sess.player.id, nick: sess.player.nick, color: sess.color, email: sess.player.email});
+      mySession = new Session({_id: sess.player.id, nick: sess.nick, color: sess.color, email: sess.player.email, isAI: sess.isAI});
       mySession.setMatchId(id);
       mySession.disconnected = true;
       mySession.statusActive = false;

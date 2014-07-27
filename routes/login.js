@@ -363,6 +363,31 @@ module.exports = {
             });
         }
 
+	    //controllo se sto facendo una partita da 2 giocatori, di cui 1 con AI
+	    if ( match.players.length == match.num_players ){
+		    //ora che tutti gli slot sono assegnati, provvedo a creare il mondo!
+
+		    db.getMatchById(match.id.toString(), "players name num_players masterPlayer", function(err, allOk){
+
+			    var m = sessionManager.getMatchList().getMatch(match.id.toString());
+			    if ( !m ){
+				    m = sessionManager.getMatchList().createMatch(allOk);
+			    }
+			    m.getBean().running = true;
+
+			    var engine = m.getEngine();
+			    engine.caricaStati();
+
+			    db.saveMatchStatus(engine, m.getBean(), function(err, dbMatch){
+				    if ( err ){
+					    logger.error("Error saving match "+result.id);
+					    return;
+				    }
+				    logger.info("Match "+m.getId()+" was saved correctly");
+			    });
+		    });
+	    }
+
       res.redirect("/account");
     });
 

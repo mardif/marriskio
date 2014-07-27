@@ -839,7 +839,7 @@
                         </thead>
                         <tbody class='match'>
                             {% for m in myMatchList %}
-                                {% if !m.winner && false %}
+                                {% if !m.winner %}
                                     <tr id="{{m._id}}">
                                         <td class="actions">
                                             <div class="btn-group">
@@ -1035,7 +1035,7 @@
               </div>
             </div>
             <div class="control-group2">
-              <label class="control-label"  for="num_players">{{__("Numero di giocatori reali")}}</label>
+              <label class="control-label"  for="num_players">{{__("Numero totale di giocatori")}}</label>
               <div class="controls">
                 <select name="num_players" id="num_players">
                     <option value="2">2</option>
@@ -1047,10 +1047,11 @@
               </div>
             </div>
             <div class="control-group2">
-              <label class="control-label"  for="num_players_ai">{{__("Numero di giocatori computer")}}</label>
+              <label class="control-label"  for="num_players_ai">{{__("di cui giocatori artificiali")}}</label>
               <div class="controls">
                   <select name="num_players_ai" id="num_players_ai">
-                      <option value="0">0</option>
+                      <option value="0" selected>0</option>
+                      <option value="1">1</option>
                   </select>
               </div>
             </div>
