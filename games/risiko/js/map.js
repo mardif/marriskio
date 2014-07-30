@@ -337,8 +337,14 @@ socket.on("initialTroupAdded", function(data){
 			}
 		}
 
+		/*
+		    data.initialTurnFinished
+			indica la fine del turno di rafforzamento iniziale,
+			 ma per l'invio email mi devo basare, oltre a questo flag, anche dell'utente che ha terminato la fase
+			 in modo da inviare una sola email di avvertimento agli utenti, per questo: initialTurnFinished: data.sessionId == sessionId
+		*/
 		if ( data.initialTurnFinished ){
-			socket.emit("getActualWorld", {nextStep: false, matchId: matchId, sessionId: sessionId});
+			socket.emit("getActualWorld", {nextStep: false, matchId: matchId, sessionId: sessionId, initialTurnFinished: data.sessionId == sessionId});
 		}
 	}
 });
