@@ -548,7 +548,7 @@ module.exports = {
             }
 
 
-            match.players.push({player: req.session.passport.user._id, color: color});
+            match.players.push({player: req.session.passport.user._id, color: color, nick: req.session.passport.user.nick});
 
             var num_players = match.num_players;
 

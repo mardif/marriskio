@@ -176,9 +176,9 @@ module.exports = function(app, sio) {
 
     app.post("/removeUserAndSlotFromMatch", ensureAuthenticated, start.removeUserAndSlotFromMatch);
 
-    app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['read_stream', 'publish_actions', 'email'] }));
+    app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['read_friendlists', 'publish_actions', 'email'] }));
 
-    app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/loginAuth' }), 
+    app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/' }),
       function(err, req, res, callback){
         if ( err ){
           req.flash("error", "Ooops, si è verificato il seguente errore: "+err.message.split(":")[0]+". Prova ad accedere con Google oppure registrati!");
@@ -191,7 +191,7 @@ module.exports = function(app, sio) {
     app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
                                             'https://www.googleapis.com/auth/userinfo.email'] }));
     
-    app.get('/auth/google/oauth2callback', passport.authenticate('google', { successRedirect: '/account', failureRedirect: '/loginAuth' }), 
+    app.get('/auth/google/oauth2callback', passport.authenticate('google', { successRedirect: '/account', failureRedirect: '/' }),
       function(err, req, res, callback){
         if ( err ){
           req.flash("error", "Ooops, si è verificato il seguente errore: "+err.message.split(":")[0]+". Prova ad accedere con Facebook oppure registrati!");
