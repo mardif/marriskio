@@ -142,7 +142,7 @@ var AccessDB = function(){
 
   // Define class variable
   var myEventID = null;
-  this.AIPlayer = null;
+  this.AIPlayers = [];
 
   // initialize DB
   this.startup = function(callback) {
@@ -154,8 +154,8 @@ var AccessDB = function(){
       if ( callback ){
         callback();
       }
-	  $this.getAIPlayer(function(err, player){
-		  $this.AIPlayer = player;
+	  $this.getAIPlayers(function(err, players){
+		  $this.AIPlayers = players;
 	  });
     });
 
@@ -241,7 +241,7 @@ var AccessDB = function(){
 	  players.push({player: req.user._id, color: req.body.player_color, nick: req.user.nick, isAI: false});
 	  if ( req.body.num_players_ai > 0 ){
 		  for(var i=1; i<= req.body.num_players_ai; i++) {
-			  players.push({ player: this.AIPlayer._id, color: "#cacaca", nick: "AI " + i, isAI: true });
+			  players.push({ player: this.AIPlayers[i-1]._id, color: "#cacaca", nick: this.AIPlayers[i-1].nick, isAI: true });
 		  }
 	  }
       var newMatch = new Match({
@@ -258,9 +258,9 @@ var AccessDB = function(){
 
   },
 
-  this.getAIPlayer = function(callback){
-      User.findOne({"nick": "AI"}, function(err, AIPlayer){
-          callback(err, AIPlayer);
+  this.getAIPlayers = function(callback){
+      User.find({"isAI": true}, function(err, AIPlayers){
+          callback(err, AIPlayers);
       });
   },
 

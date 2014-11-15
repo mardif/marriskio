@@ -162,13 +162,14 @@ module.exports = function(app) {
     app.get("/thumbnails", common.staticHandler("./images/risiko/thumbnails.png"));
     app.get("/notes", common.staticHandler("./images/risiko/notes.png"));
     app.get("/user", common.staticHandler("./images/risiko/glyphicons_003_user.png"));
-    app.get("/bug", common.staticHandler("./images/risiko/glyphicons_360_bug.png"));
+    app.get("/bug", common.staticHandler("./images/risiko/glyphicons_290_skull.png"));
     app.get("/connected", common.staticHandler("./images/risiko/connected.png"));
     app.get("/disconnected", common.staticHandler("./images/risiko/disconnected.png"));
     app.get("/glyphicons-halflings.png", common.staticHandler("./images/bootstrap/glyphicons-halflings.png"));
     app.get("/glyphicons-halflings-white.png", common.staticHandler("./images/bootstrap/glyphicons-halflings-white.png"));
     app.get("/user_add", common.staticHandler("./images/risiko/glyphicons_006_user_add.png"));
     app.get("/user_remove", common.staticHandler("./images/risiko/glyphicons_007_user_remove.png"));
+	app.get("/AI_icon", common.staticHandler("./images/risiko/glyphicons_137_cogwheels.png"));
 
 
 };

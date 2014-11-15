@@ -542,7 +542,7 @@ module.exports = {
             var addresses = [];
             for(var i=0; i < match.players.length; i++){
                 var p = match.players[i].player;
-                if ( p.id != req.session.passport.user._id ){
+                if ( p.id != req.session.passport.user._id && p.isAI ){
                     addresses.push(p.email);
                 }
             }
