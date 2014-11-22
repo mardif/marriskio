@@ -3,6 +3,7 @@ var util = require("util");
 var cards = require("./cards");
 var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 var AI = require("./AI.js").AI;
+var _ = require("underscore");
 
 var Engine = function(matchId){
 	this.states = {};
@@ -509,9 +510,37 @@ var Engine = function(matchId){
 		/* reset delle vecchie associazioni */
 		this.resetStates();
 
-		var justAssigned = {};
+		//var justAssigned = {};
 		var idx = 0;
+		var freeStates = [];
+		for(var i=1;i<=this.worldSize;i++){
+			freeStates[i-1] = i;
+		}
 
+		while ( freeStates.length > 0 ) {
+			var s = common.random(1, freeStates.length);
+			logger.info("indice stato: "+(s-1)+" - stato " + (freeStates[s]));
+			this.initializeState(players[idx].id, freeStates[s-1], 2);
+			idx++;
+			if ( idx >= players.length ){
+				idx = 0;
+			}
+			freeStates.splice(s-1,1);
+		}
+
+		//DEBUG
+		this.initializeState(players[1].id, 9, 2);
+		this.initializeState(players[1].id, 10, 2);
+		this.initializeState(players[1].id, 11, 2);
+		this.initializeState(players[1].id, 12, 2);
+		this.initializeState(players[1].id, 13, 2);
+		this.initializeState(players[1].id, 36, 2);
+		this.initializeState(players[1].id, 22, 2);
+		this.initializeState(players[1].id, 18, 2);
+		//FINE DEBUG
+
+		/*
+		//vecchio metodo
 		for(var i=0; i< this.worldSize; i++){
 
 			var s = common.random(1,this.worldSize);
@@ -533,6 +562,7 @@ var Engine = function(matchId){
 			}
 
 		}
+		*/
 
 		this.setEngineLoaded(true);
 
