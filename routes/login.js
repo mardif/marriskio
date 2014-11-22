@@ -378,6 +378,13 @@ module.exports = {
 			    var engine = m.getEngine();
 			    engine.caricaStati();
 
+			    for(var i = 0; i < engine.getSessions().length; i++){
+				    var session = engine.getSessions()[i];
+				    if ( session.isAI == true ){
+					    session.AI.positionateInitialTroupes();
+				    }
+			    }
+
 			    db.saveMatchStatus(engine, m.getBean(), function(err, dbMatch){
 				    if ( err ){
 					    logger.error("Error saving match "+result.id);

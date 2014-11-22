@@ -223,6 +223,7 @@
               makeAjaxCall("/allColours", "GET", {},
               function(data){
                 if ( data ){
+                  $("#newMatch select#player_color").empty();
                   for(var idx in data){
                     var d = data[idx];
                     $("<option value='"+d.color+"'>"+d.name+"</option>").appendTo($("#newMatch select#player_color"));

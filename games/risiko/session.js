@@ -37,10 +37,6 @@ var Session = function(user){
 	this.isAI = user.isAI;
 	this.AI = null;
 
-	this.isAI = function(){
-		return this.isAI;
-	}
-
 	/* METODO PUBBLICO DA CHIAMARE QUANDO VENGONO APPLICATE LE CARTE BONUS */
 	this.applyCard = function(card){
 		if ( card ){

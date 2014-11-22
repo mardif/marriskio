@@ -9,6 +9,7 @@ var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 var config = require(rootPath+"/Configuration").Configuration;
 var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var common = require(rootPath+"/games/risiko/common");
 
 // dependencies for authentication
 var passport = require('passport')
@@ -238,10 +239,20 @@ var AccessDB = function(){
   this.createNewMatch = function(req, callback){
 
 	  var players = [];
+	  var colours = common.colours.slice(0);
+	  //elimino il colore preso dall'utente che ha creato il match
+	  for(var i=0; i < colours.length; i++){
+		  var color = colours[i];
+		  if ( color.color == req.body.player_color ){
+			  var removed = colours.splice(i,1);
+			  logger.debug("rimosso colore "+removed[0].color);
+			  break;
+		  }
+	  }
 	  players.push({player: req.user._id, color: req.body.player_color, nick: req.user.nick, isAI: false});
 	  if ( req.body.num_players_ai > 0 ){
 		  for(var i=1; i<= req.body.num_players_ai; i++) {
-			  players.push({ player: this.AIPlayers[i-1]._id, color: "#cacaca", nick: this.AIPlayers[i-1].nick, isAI: true });
+			  players.push({ player: this.AIPlayers[i-1]._id, color: colours[i-1].color, nick: this.AIPlayers[i-1].nick, isAI: true });
 		  }
 	  }
       var newMatch = new Match({

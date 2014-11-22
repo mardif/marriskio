@@ -5,7 +5,7 @@ var common = require("./common");
 var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
 
 var Match = function(bean){
-  var bean = bean
+  var bean = bean;
 	var id = bean.id;
 	var motore = new engine.Engine(id);
   var restoredSessionsMap = undefined;
@@ -55,7 +55,7 @@ var Match = function(bean){
   this.init = function(){
     for(var i = 0; i < bean.num_players; i++){
       var sess = bean.players[i];
-      mySession = new Session({_id: sess.player.id, nick: sess.nick, color: sess.color, email: sess.player.email, isAI: sess.isAI});
+      var mySession = new Session({_id: sess.player.id, nick: sess.nick, color: sess.color, email: sess.player.email, isAI: sess.isAI});
       mySession.setMatchId(id);
       mySession.disconnected = true;
       mySession.statusActive = false;

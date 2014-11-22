@@ -805,32 +805,9 @@ function fillJoinUsers(data){
               masterSession = user;
             }
             
-            $("<li id='"+user.id+"' class='user-"+(user.statusActive ? "active" : "inactive")+"' style='background-color:"+user.color+"'><img src='/"+(user.AIActivated ? "bug" : "user")+"' title='"+(user.AIActivated ? "Il generale "+user.nick+" ha abbandonato la partita! Il sistema gestirà le sue truppe solo per la difesa!" : "Generale "+user.nick+" online e pronto a combattere!")+"' border='0'><span>"+user.nick+"</span><span style='float:right;'><img title='"+(user.statusActive ? "Connesso! Pronto per giocare!" : "Non connesso")+"' src='/"+(user.statusActive ? "connected" : "disconnected")+"'></span></li>").appendTo($("#elenco"));;
+            $("<li id='"+user.id+"' class='user-"+(user.statusActive || user.isAI ? "active" : "inactive")+"' style='background-color:"+user.color+"'><img src='/"+(user.AIActivated ? "bug" : user.isAI == true ? "AI_icon" : "user")+"' title='"+(user.AIActivated ? "Il generale "+user.nick+" ha abbandonato la partita! Il sistema gestirà le sue truppe solo per la difesa!" : "Generale "+user.nick+" online e pronto a combattere!")+"' border='0'><span>"+user.nick+"</span><span style='float:right;'><img title='"+(user.statusActive || user.isAI ? "Connesso! Pronto per giocare!" : "Non connesso")+"' src='/"+(user.statusActive || user.isAI ? "connected" : "disconnected")+"'></span></li>").appendTo($("#elenco"));;
             
         }
-        /*
-        if ( data.engineLoaded === false ){
-          if ( masterSession && masterSession.id == sessionId && data.users.length == data.num_players ){
-            $("#makeWorld").css("display", "inline-block");
-            $("#stepStatus").html("Siete tutti online! Ora puoi cliccare sul pulsante \"Crea Mondo\"");
-          }
-          else{
-            if ( data.users.length == data.num_players ){
-              $("#stepStatus").html("Tutti i giocatori sono online! Resta in attesa ...");
-            }
-            $("#makeWorld").css("display", "none");
-          }
-        }
-        */
-        
-        /*
-        if ( data.gameEnd === true ){
-            $("#stepStatus").html("<h1>VITTORIA!!!!<br/>Il generale "+data.winner.nick+" è riuscito a vincere la partita... COMPLIMENTI!</h1>");
-            $("#buttonbar").hide();
-            return;
-        }
-        */
-        
     }
 }
 

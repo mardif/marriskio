@@ -2,7 +2,7 @@ var common = require("./common");
 var util = require("util");
 var cards = require("./cards");
 var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
-var AI = require("./AI.js");
+var AI = require("./AI.js").AI;
 
 var Engine = function(matchId){
 	this.states = {};
@@ -65,7 +65,7 @@ var Engine = function(matchId){
 		}
 		if ( exists === false ){
 			if ( session.isAI == true ){
-				session.AI = new AI(this);
+				session.AI = new AI(this, session);
 			}
 			this.sessions.push(session);
 		}
@@ -464,8 +464,11 @@ var Engine = function(matchId){
 
 			var n = common.random(1, players.length);
 			while ( common.inArray(this.turni, players[n-1].id) ){
-				//util.log("duplicato!!!!");
-				n = common.random(1, players.length);
+				//
+				if ( n == players.length ){
+					n = 0;
+				}
+				n += 1;
 			}
 			players[n-1].turno = this.turni.length;
 			this.turni.push(players[n-1].id);
