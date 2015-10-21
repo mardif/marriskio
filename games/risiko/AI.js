@@ -23,29 +23,58 @@ var AI = function(engine, parent){
 		logger.info("Miglior stato per posizionamento iniziale: "+JSON.stringify(bestState));
 		if ( bestState.num == 0 ){
 			logger.info("ok, dovrei avere tutto il continente, per cui rinforzo i confini...");
-			var confiniEsterni = [];
+			var confini = [];
 			var statiDaControllare = continent.states;
+			var exit = false;
 
-			confiniEsterni = checkConfiniEsterni(statiDaControllare);
+			do {
+				var result = checkConfiniEsterni(statiDaControllare);
+				statiDaControllare = statiDaControllare.concat(result.miei);
+				if ( result.nemici.length == 0 ){
+					for(var idx in result.miei) {
+						logger.info("aggiungo 1 rinforzo nello stato "+result.miei[idx]+" per l'utente "+session.nick);
+						for(var i=0;i<2;i++) {
+							var obj = session.addTroupToState(result.miei[idx], 1, true);
+							if (obj.initialTroupes > 0) {
+								engine.addTroupToState(result.miei[idx], 1);
+							}
+							else {
+								exit = true;
+							}
+						}
+					}
 
-			logger.info("confiniEsterni: "+JSON.stringify(confiniEsterni));
+				}
+			}
+			while( result.nemici.length == 0 || exit == true );
+
+			if ( session.initialTroupes == 1 ){
+				session.addTroupToState(result.miei[result.miei.length-1], 1, true);
+				engine.addTroupToState(result.miei.length-1, 1);
+			}
+
+
+				logger.info("confiniEsterni: "+JSON.stringify(result));
 
 		}
 		else{
-			engine.addTroupToState(bestState.id, parent.initialTroupes);
+			var troupes = parent.initialTroupes;
+			session.addTroupToState(bestState.id, troupes, true);
+			engine.addTroupToState(bestState.id, troupes);
 		}
 
 	}
 
 	var checkConfiniEsterni = function(states){
-		var confiniEsterni = [];
+		var confiniEsterni = {"miei": [], "nemici": []};
 		for( var idx in states ){
 			var mieiConfini = engine.getMyConfini(states[idx].toString(), session.id);
 			for(var j in mieiConfini){
 				if ( !_.contains(states, parseInt(mieiConfini[j])) ){
-					confiniEsterni.push(mieiConfini[j]);
+					confiniEsterni.miei.push(parseInt(mieiConfini[j]));
 				}
 			}
+			confiniEsterni.nemici = confiniEsterni.nemici.concat(engine.getConfini(states[idx].toString(), session.id).confini);
 		}
 		return confiniEsterni;
 	}
