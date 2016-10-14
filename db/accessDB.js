@@ -127,7 +127,8 @@ passport.deserializeUser(function(user, done) {
   });
 });
 
-var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb';
+//var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb'; //OLD compose.io
+var conn = 'mongodb://risiko:r1s1k0@ds021326.mlab.com:21326:10091/risiko'; //NEW mlab
 if ( process.env.NODE_ENV == "development" ){
   conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
 }
