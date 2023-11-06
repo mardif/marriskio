@@ -1,5 +1,7 @@
 // Module dependencies
-var mongoStore = require('connect-mongodb');
+//var mongoStore = require('connect-mongodb');
+const session = require('express-session');
+const mongoStore = require('connect-mongodb-session')(session);
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var cryo = require("cryo");
@@ -130,7 +132,7 @@ passport.deserializeUser(function(user, done) {
 //var conn = 'mongodb://risiko:r1s1k0@dharma.mongohq.com:10091/risikodb'; //OLD compose.io
 var conn = 'mongodb://risiko:r1s1k0@ds021326.mlab.com:21326:10091/risiko'; //NEW mlab
 if ( process.env.NODE_ENV == "development" ){
-  conn = 'mongodb://risikodb:risiko@localhost:27017/risikodb';
+  conn = 'mongodb+srv://risikodb:risiko@marriskio.23tgcsc.mongodb.net/?retryWrites=true&w=majority';
 }
 
 logger.debug("CONNECTION URL: "+conn);

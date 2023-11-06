@@ -10,17 +10,20 @@ var schemaOptions = {
     }
   };
 
+// Definisci uno schema per il campo "stats"
+var statsSchema = new Schema({
+  dicesWon: { type: Number, default: 0 },
+  dicesLost: { type: Number, default: 0 }
+});
+
 // Define schema
 var MatchSchema = new Schema({
     name: {type: String, required: true},
     players:[{
       player: {type: Schema.ObjectId, ref: 'User'},
       color: {type: String, required: true, default: "#000000"},
-      stats: {
-        dicesWon: 0,
-        dicesLost: 0
-      },
-      abandoned: false
+      stats: statsSchema,
+      abandoned: { type: Boolean, default: false }
     }],
     started_at: { type: Date, default: Date.now },
     winner: {type: Schema.ObjectId, ref: 'User', default: null},
