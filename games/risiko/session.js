@@ -1,7 +1,7 @@
 var util = require("util");
 var c = require("./cards");
 var common = require("./common");
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 var Session = function(user){
 

@@ -1,88 +1,44 @@
-var winston = require('winston');
-var fs = require('fs');
+const winston = require('winston');
+const fs = require('fs');
+const errorPath = 'logs';
 
-fs.mkdir('./logs', function(err) {
+fs.mkdir('./'+errorPath, function(err) {
     //if (err) throw err;
 });
 
-// Define levels to be like log4j in java
-var customLevels = {
-  levels: {
-    debug: 0,
-    info: 1,
-    warn: 2,
-    error: 3
-  },
-  colors: {
-    debug: 'blue',
-    info: 'green',
-    warn: 'yellow',
-    error: 'red'
-  }
-};
-
-// create the main logger
-var logger = new(winston.Logger)({
-    level: 'debug',
-    levels: customLevels.levels,
-    transports: [
-        // setup console logging
-        new(winston.transports.Console)({
-            level: 'debug', // Only write logs of info level or higher
-            levels: customLevels.levels,
-            colorize: true
-        }),
-        // setup logging to file
-        new(winston.transports.File)({
-            filename: './logs/project-debug.log',
-            maxsize: 1024 * 1024 * 10, // 10MB
-            level: 'debug',
-            levels: customLevels.levels
-        })
-    ]
+const format = winston.format;
+const customFormatter = format((info) => {
+    return Object.assign({
+        timestamp: info.timestamp
+    }, info);
 });
 
-// create the data logger - I only log specific app output socket data here
-var datalogger = new (winston.Logger) ({
+let settings = {
     level: 'debug',
-    levels: customLevels.levels,
+    format: winston.format.simple(),
     transports: [
-        // setup console logging
-        new(winston.transports.Console)({
-            level: 'debug', // Only write logs of info level or higher
-            levels: customLevels.levels,
-            colorize: true
-        }),
-        new (winston.transports.File) ({
-            filename: './logs/project-socket.log',
-            maxsize: 1024 * 1024 * 10, // 10MB
+        new (winston.transports.File)({
+            filename: errorPath + '/error.log',
             level: 'debug',
-            levels: customLevels.levels
+            handleExceptions: true,
+            stack: true,
+            format: format.combine(
+                format.timestamp(),
+                customFormatter(),
+                format.simple()
+            )
+        }),
+        new (winston.transports.File)({
+            filename: errorPath + '/console.log',
+            format: format.combine(
+                format.timestamp(),
+                customFormatter(),
+                format.simple()
+            )
         })
-    ]
-});
-
-// make winston aware of your awesome colour choices
-winston.addColors(customLevels.colors);
-
-var Logger = function() {
-    var loggers = {};
-
-    // always return the singleton instance, if it has been initialised once already.
-    if (Logger.prototype._singletonInstance) {
-        return Logger.prototype._singletonInstance;
-    }
-
-    this.getLogger = function(name) {
-        return loggers[name];
-    }
-
-    Logger.prototype.get = this.getLogger;
-
-    loggers['project-debug.log'] = logger;
-    loggers['project-socket.log'] = datalogger;
-
-    Logger.prototype._singletonInstance = this;
+    ],
+    exitOnError: false
 };
+//settings.transports.push(new (winston.transports.Console)());
 
-exports.Logger = new Logger();
+module.exports = new winston.createLogger(settings);

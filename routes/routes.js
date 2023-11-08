@@ -12,7 +12,7 @@ var siteEvents = require(rootPath+'/routes/siteEvents');
 var zlib = require("zlib");
 var cryo = require("cryo");
 var util = require("util");
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 var config = require(rootPath+"/Configuration").Configuration
 
 function ensureAuthenticated(req, res, next) {

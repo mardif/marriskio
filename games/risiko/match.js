@@ -2,7 +2,7 @@ var engine = require("./engine");
 var util = require("util");
 var Session = require("./session").Session;
 var common = require("./common");
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 var Match = function(bean){
   var bean = bean

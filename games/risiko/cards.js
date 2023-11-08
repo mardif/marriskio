@@ -1,5 +1,5 @@
 var _ = require("underscore");
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 var EPIDEMIA = "EPIDEMIA";
 var ATOMIC_BOMB_CARD = "ATOMIC_BOMB_CARD";

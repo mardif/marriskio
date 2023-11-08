@@ -4,10 +4,10 @@ var common = require(rootPath+"/games/risiko/common"),
 	MatchList = require(rootPath+"/games/risiko/MatchList").MatchList,
 	Session = require(rootPath+"/games/risiko/session").Session,
 	db = require('../db/accessDB').getDBInstance,
-    _ = require("underscore"),
-    Tail = require("tail").Tail;
+    _ = require("underscore");
+    // Tail = require("tail").Tail;
 
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 var GlobalSessionManager = function(){
     
@@ -156,8 +156,8 @@ var sendRemovedUserNotification = function (req, res)
 };
 
 var globalSio;
-var tailDebug = new Tail(rootPath+"/logs/project-debug.log");
-var tailSocket = new Tail(rootPath+"/logs/project-socket.log");
+// var tailDebug = new Tail(rootPath+"/logs/project-debug.log");
+// var tailSocket = new Tail(rootPath+"/logs/project-socket.log");
 
 var initializeEvents =  function(sio, socket){
 
@@ -184,22 +184,22 @@ var initializeEvents =  function(sio, socket){
         sio.sockets.emit("userOnlineResponse", {users: globalSessionManager.getUsersOnLine()});
     });
 
-    tailDebug.on("line", function(data) {
-        var data = JSON.parse(data);
-        data.fileSlug = "all-site";
-        data.fileName = "project-debug.log";
-        data.channel = "01";
-        data.value = data.message.replace("/(\[[0-9]+m)*/g"),
-        socket.emit("new-data", data);
-    });
-    tailSocket.on("line", function(data) {
-        var data = JSON.parse(data);
-        data.fileSlug = "game";
-        data.fileName = "project-socket.log";
-        data.channel = "02";
-        data.value = data.message.replace("/(\[[0-9]+m)*/g"),
-        socket.emit("new-data", data);
-    });
+    // tailDebug.on("line", function(data) {
+    //     var data = JSON.parse(data);
+    //     data.fileSlug = "all-site";
+    //     data.fileName = "project-debug.log";
+    //     data.channel = "01";
+    //     data.value = data.message.replace("/(\[[0-9]+m)*/g"),
+    //     socket.emit("new-data", data);
+    // });
+    // tailSocket.on("line", function(data) {
+    //     var data = JSON.parse(data);
+    //     data.fileSlug = "game";
+    //     data.fileName = "project-socket.log";
+    //     data.channel = "02";
+    //     data.value = data.message.replace("/(\[[0-9]+m)*/g"),
+    //     socket.emit("new-data", data);
+    // });
 
 
 

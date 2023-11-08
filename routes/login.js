@@ -11,7 +11,7 @@ var common = require("../games/risiko/common"),
     sessionManager = require(rootPath+"/games/risiko/sessionManager"),
     config = require(rootPath+"/Configuration").Configuration;
 
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 var gsm = siteEvents.globalSessionManager;
 var SSL = false;  //da impostare se l'url sarà HTTPS o no

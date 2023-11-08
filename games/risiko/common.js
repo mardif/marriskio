@@ -1,9 +1,9 @@
 var util = require("util");
 var readFile = require("fs").readFile;
 var engine = require("./engine");
-var email = require("emailjs");
+var nodemailer = require("nodemailer");
 var cryo = require("cryo");
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 var common = exports;
 
@@ -260,27 +260,37 @@ common.inArray = function (array, value)
     return false;
 };
 
-var mailServer = email.server.connect({
-           //user:    "mardifoto",
-           //password:"martina2010",
-           //host:    "smtp.gmail.com",
-           user: "debellum.net",
-           password: "eewaashu",
-           host:    "mail.debellum.net",
-           ssl:     false,
-           tls:     true
-        });
+// var mailServer = email.server.connect({
+//            //user:    "mardifoto",
+//            //password:"martina2010",
+//            //host:    "smtp.gmail.com",
+//            user: "debellum.net",
+//            password: "eewaashu",
+//            host:    "mail.debellum.net",
+//            ssl:     false,
+//            tls:     true
+//         });
+
+const transporter = nodemailer.createTransport({
+    host: 'mail.debellum.net',
+    port: 587, // Porta SMTP
+    secure: false, // Uso di TLS
+    auth: {
+        user: 'debellum.net',
+        pass: 'eewaashu',
+    },
+});
+
 
 common.sendEmail = function(headers){
-    var message = email.message.create(headers);
     logger.info("invio della email in corso...");
-    message.attach_alternative(headers.text);
-    mailServer.send(message, function(err, message) {
-        if (err) {
-            logger.error("error sending email: "+err);
+    transporter.sendMail(headers, (error, info) => {
+        if (error) {
+            logger.error("error sending email: "+error);
             return;
-        };
-        logger.info("mail sending OK: "+util.inspect(message, true));
+        } else {
+            logger.info("mail sending OK: "+util.inspect(message, true));
+        }
     });
 }
 

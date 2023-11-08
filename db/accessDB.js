@@ -10,7 +10,7 @@ var util = require("util");
 var bcrypt = require('bcrypt');
 var EngineData = require(rootPath+"/games/risiko/EngineData").EngineData;
 var config = require(rootPath+"/Configuration").Configuration;
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-debug.log');
+var logger = require(rootPath+"/Logger.js");
 
 // dependencies for authentication
 var passport = require('passport')

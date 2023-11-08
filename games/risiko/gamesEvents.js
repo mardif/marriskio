@@ -1,11 +1,11 @@
 var util = require("util"),
     //sessionManager = require("./sessionManager"),
     cards = require("./cards"),
-    parseCookie = require('connect').utils.parseCookie,
+    // parseCookie = cookieParser = require('cookie-parser'),
     db = require(rootPath+'/db/accessDB').getDBInstance,
     common = require("./common"),
     _ = require("underscore");
-var logger = require(rootPath+"/Logger.js").Logger.getLogger('project-socket.log');
+var logger = require(rootPath+"/Logger.js");
 
 module.exports = function(sio, socket){
   
